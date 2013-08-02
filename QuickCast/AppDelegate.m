@@ -460,7 +460,7 @@ NSString *const MoviePath = @"Movies/QuickCast";
         if(decisionWindowController)
            [decisionWindowController.window orderOut:nil];
         
-        
+        NSLog(@"got to publsih %@", finishWindowController.width);
         // Finish Window Controller was instantiated when DecisionWindow was so is ready to go
         [finishWindowController.window setLevel: NSNormalWindowLevel];
         [finishWindowController.window makeKeyAndOrderFront:nil];
@@ -1598,6 +1598,7 @@ NSString *const MoviePath = @"Movies/QuickCast";
                 else
                     [finishWindowController setMicroVideo:NO];
                 
+                NSLog(@"seeting height and width in finishwin %@",[NSString stringWithFormat:@"%0.0f", round(movieSize.width)]);
                 [finishWindowController setWidth:[NSString stringWithFormat:@"%0.0f", round(movieSize.width)]];
                 [finishWindowController setHeight:[NSString stringWithFormat:@"%0.0f", round(movieSize.height)]];
                 
@@ -1640,7 +1641,6 @@ NSString *const MoviePath = @"Movies/QuickCast";
                 
              });
 
-			//[self stopAndTearDownCaptureSession];
 		}
 		else {
 			[self showError:[assetWriter error]];
@@ -1790,7 +1790,10 @@ NSString *const MoviePath = @"Movies/QuickCast";
     ScreenDetails *main = [Utilities getDisplayByName:selectedDisp];
     selectedDisplay = main.screenId;
     selectedDisplayName = main.screenName;
-    movieSize = selectedCrop.size;
+    if(selectedCrop.size.width == 0)
+        movieSize = main.screen.frame.size;
+    else
+        movieSize = selectedCrop.size;
     
     self.captureScreenInput = nil;
     self.captureScreenInput = [[AVCaptureScreenInput alloc] initWithDisplayID:selectedDisplay];

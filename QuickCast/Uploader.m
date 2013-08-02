@@ -16,10 +16,10 @@
     NSString *videoLength;
     NSString *videoWidth;
     NSString *videoHeight;
+    NSString *castId;
     
 }
 
-@synthesize castId;
 
 -(void)request:(AmazonServiceRequest *)request didReceiveResponse:(NSURLResponse *)aResponse{
     //NSLog(@"didReceiveResponse");

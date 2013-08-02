@@ -7,11 +7,8 @@
 #import <Foundation/Foundation.h>
 #import "AmazonRequestDelegate.h"
 
-@interface Uploader : NSObject <AmazonServiceRequestDelegate>{
-    NSString *castId;
-}
+@interface Uploader : NSObject <AmazonServiceRequestDelegate>
 
-@property (strong) NSString *castId;
 
 - (void)performUpload:(NSString *)filename video:(NSURL *)videoUrl thumbnail:(NSURL *)thumbnailUrl details:(NSDictionary *)details  length:(NSString *)length width:(NSString *)width height:(NSString *)height;
 

@@ -74,7 +74,7 @@
 
 - (void)startUpload:(NSDictionary *)details width:(NSString *)width height:(NSString *)height{
     
-    dispatch_async(dispatch_get_main_queue(),^ {
+    //dispatch_async(dispatch_get_main_queue(),^ {
         
         NSDate *time = [NSDate date];
         NSDateFormatter* df = [NSDateFormatter new];
@@ -397,7 +397,7 @@
 //                [self exportDidFinish:exporter details:details length:totalLength width:width height:height];
 //            });
 //        }];
-    });
+   // });
 }
 
 //- (void)exportDidFinish:(AVAssetExportSession*)session details:(NSDictionary *)details length:(NSString *)length width:(NSString *)width height:(NSString *)height{

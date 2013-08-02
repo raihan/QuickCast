@@ -315,7 +315,7 @@
 								</description>
 
 		         </item>
-		         
+
 		         <item>
 		            <title>Version 0.73 beta</title>
 								<sparkle:minimumSystemVersion>10.7.0</sparkle:minimumSystemVersion>
@@ -325,6 +325,20 @@
 								<description><![CDATA[
 										<h2>QuickCast</h2> 
 										<p>Animated gif LOOP!</p>
+										
+									]]>
+								</description>
+
+		         </item>
+		         <item>
+		            <title>Version 0.74 beta</title>
+								<sparkle:minimumSystemVersion>10.7.0</sparkle:minimumSystemVersion>
+
+		            <pubDate>Fri, 02 Aug 2013 16:40:11 +0000</pubDate>
+		            <enclosure url="https://github.com/petetak/QuickCast/releases/download/0.74/QuickCast.zip" sparkle:version="0.74" length="8886358" type="application/octet-stream" />
+								<description><![CDATA[
+										<h2>QuickCast</h2> 
+										<p>Bug fixes</p>
 										
 									]]>
 								</description>

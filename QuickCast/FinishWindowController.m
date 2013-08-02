@@ -18,15 +18,16 @@
 
 @implementation FinishWindowController{
     
-    Exporter *exporter;
-    BOOL uploadFailed;
     
+    BOOL uploadFailed;
+    NSString *newCastId;
 }
 
 @synthesize formIsValid;
 @synthesize microVideo;
 @synthesize width;
 @synthesize height;
+@synthesize exporter;
 
 - (id)initWithWindow:(NSWindow *)window{
     
@@ -211,10 +212,20 @@
                         
                         NSDictionary *user = [response objectForKey:@"user"];
                         NSString *userId = [user objectForKey:@"id"];
+                        NSDictionary *cast = [response objectForKey:@"cast"];
+                        newCastId = [cast objectForKey:@"addcast"];
                         [[Analytics sharedAnalytics] identify:userId traits:user];
                         [[Analytics sharedAnalytics] track:@"publish" properties:response];
                         exporter = [[Exporter alloc] init];
-                        [exporter startUpload:response width:width height:height];
+                        //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                            
+                            [exporter startUpload:response width:width height:height];
+                            //dispatch_async(dispatch_get_main_queue(), ^{
+                                NSLog(@"export %@",exporter.description);
+                            NSLog(@"export %@",exporter.uploader.description);
+                           // });
+                        //});
+                        
                         
                     });
                     
@@ -237,6 +248,9 @@
 
 - (IBAction)publishClick:(id)sender{
     
+    
+    NSLog(@"export %@",exporter.description);
+    NSLog(@"export %@",exporter.uploader.description);
     AppDelegate *app = (AppDelegate *)[NSApp delegate];
     
     if(!app.reachable){
@@ -265,7 +279,7 @@
         NSString *name = _name.stringValue;
         NSString *tags = _tags.stringValue;
         
-        NSString *castId = exporter.uploader.castId;
+        NSString *castId = newCastId;
         
         QuickcastAPI *api = [[QuickcastAPI alloc] init];
         
