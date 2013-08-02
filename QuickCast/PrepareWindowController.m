@@ -123,6 +123,7 @@
     audioLevelTimer = nil;
     
     AppDelegate *app = (AppDelegate *)[NSApp delegate];
+    [app setFullScreen];
     [app toggleCamera:NO];
     
 }

@@ -220,10 +220,7 @@
                         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                             
                             [exporter startUpload:response width:width height:height];
-                            //dispatch_async(dispatch_get_main_queue(), ^{
-                                NSLog(@"export %@",exporter.description);
-                            NSLog(@"export %@",exporter.uploader.description);
-                           // });
+                    
                         });
                         
                         
@@ -248,9 +245,6 @@
 
 - (IBAction)publishClick:(id)sender{
     
-    
-    NSLog(@"export %@",exporter.description);
-    NSLog(@"export %@",exporter.uploader.description);
     AppDelegate *app = (AppDelegate *)[NSApp delegate];
     
     if(!app.reachable){
