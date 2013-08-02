@@ -217,14 +217,14 @@
                         [[Analytics sharedAnalytics] identify:userId traits:user];
                         [[Analytics sharedAnalytics] track:@"publish" properties:response];
                         exporter = [[Exporter alloc] init];
-                        //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                             
                             [exporter startUpload:response width:width height:height];
                             //dispatch_async(dispatch_get_main_queue(), ^{
                                 NSLog(@"export %@",exporter.description);
                             NSLog(@"export %@",exporter.uploader.description);
                            // });
-                        //});
+                        });
                         
                         
                     });

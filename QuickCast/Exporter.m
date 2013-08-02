@@ -65,10 +65,12 @@
         [self saveThumbnail:newSize thumb:thumb suffix:@"_thumb"];
     }
     
-    self.uploader = [[Uploader alloc] init];
+    // upload is async so can be done on the main thread
+    dispatch_async(dispatch_get_main_queue(),^ {
+        self.uploader = [[Uploader alloc] init];
     
-    [self.uploader performUpload:filename video:finishedUrl thumbnail:[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"quickcast_thumb.jpg"]] details:details length:length width:width height:height];
-
+        [self.uploader performUpload:filename video:finishedUrl thumbnail:[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"quickcast_thumb.jpg"]] details:details length:length width:width height:height];
+    });
 }
 
 
