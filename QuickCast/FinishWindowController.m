@@ -100,6 +100,8 @@
     
     [self setFormIsValid:NO];
     
+    [_maxLengthFormatter setMaximumLength:255];
+    
     [_message setHidden:YES];
     [_greenMessage setHidden:YES];
     [_orangeMessage setHidden:YES];

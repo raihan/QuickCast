@@ -7,6 +7,7 @@
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
 #import "Exporter.h"
+#import "MaxLengthFormatter.h"
 
 @interface FinishWindowController : NSWindowController<NSTextViewDelegate>{
     BOOL formIsValid;
@@ -25,6 +26,7 @@
 - (IBAction)cancelClick:(id)sender;
 - (IBAction)agreeClick:(id)sender;
 
+@property (strong) IBOutlet MaxLengthFormatter *maxLengthFormatter;
 
 @property (strong) IBOutlet NSTextField *name;
 @property (strong) IBOutlet NSBox *statusBlock;

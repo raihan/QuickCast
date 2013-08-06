@@ -146,14 +146,6 @@ NSString *const MoviePath = @"Movies/QuickCast";
     
     [Analytics sharedAnalyticsWithSecret:@"z8me0tz0xmyir1xkp6gr"];
     
-    // set launch at login
-    LaunchAtLoginController *launchController = [[LaunchAtLoginController alloc] init];
-    BOOL launch = [launchController launchAtLogin];
-    
-    if(!launch){
-        [launchController setLaunchAtLogin:YES];
-    }
-    
     [[SGHotKeyCenter sharedCenter] unregisterHotKey:hotKey];
     SGKeyCombo *keyCombo = [SGKeyCombo keyComboWithKeyCode:12
                                                  modifiers:controlKey+cmdKey+optionKey];
@@ -2000,6 +1992,13 @@ NSString *const MoviePath = @"Movies/QuickCast";
 - (void)firstRun{
     
     dispatch_async(dispatch_get_main_queue(), ^{
+        // set launch at login
+        LaunchAtLoginController *launchController = [[LaunchAtLoginController alloc] init];
+        BOOL launch = [launchController launchAtLogin];
+        
+        if(!launch){
+            [launchController setLaunchAtLogin:YES];
+        }
         NSAlert * alert = [NSAlert alertWithMessageText:@"Welcome to QuickCast"
                                           defaultButton:@"OK"
                                         alternateButton:nil

@@ -34,7 +34,10 @@
     // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
     [_validationLabel setHidden:YES];
     [_message setHidden:NO];
-    _messageImageView.image = [NSImage imageNamed:@"warning"];    
+    _messageImageView.image = [NSImage imageNamed:@"warning"];
+    
+    [_usernameFormatter setMaximumLength:15];
+    [_passwordFormatter setMaximumLength:100];
 }
 
 - (IBAction)signUpClick:(id)sender{

@@ -1427,7 +1427,6 @@
 											<string key="NSFrameSize">{24, 24}</string>
 											<reference key="NSSuperview" ref="113679350"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView"/>
 											<string key="NSReuseIdentifierKey">_NS:9</string>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSButtonCell" key="NSCell" id="569346544">
@@ -1490,7 +1489,6 @@
 									<string key="NSFrame">{{16, 0}, {12, 12}}</string>
 									<reference key="NSSuperview" ref="229734955"/>
 									<reference key="NSWindow"/>
-									<reference key="NSNextKeyView"/>
 									<bool key="NSViewIsLayerTreeHost">YES</bool>
 									<string key="NSReuseIdentifierKey">_NS:9</string>
 									<bool key="NSEnabled">YES</bool>
@@ -1530,7 +1528,6 @@
 									<string key="NSFrameSize">{20, 20}</string>
 									<reference key="NSSuperview" ref="429202890"/>
 									<reference key="NSWindow"/>
-									<reference key="NSNextKeyView"/>
 									<bool key="NSViewIsLayerTreeHost">YES</bool>
 									<string key="NSReuseIdentifierKey">_NS:9</string>
 									<bool key="NSEnabled">YES</bool>
@@ -1585,7 +1582,6 @@
 						<string key="NSFrame">{{-3, 44}, {361, 34}}</string>
 						<reference key="NSSuperview" ref="704732185"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<bool key="NSViewIsLayerTreeHost">YES</bool>
 						<double key="NSViewAlphaValue">0.70000000000000007</double>
 						<string key="NSReuseIdentifierKey">_NS:1535</string>

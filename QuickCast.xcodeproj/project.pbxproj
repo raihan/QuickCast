@@ -229,6 +229,7 @@
 		E4D9793217A6BCF300379D2B /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D9793117A6BCF300379D2B /* Growl.framework */; };
 		E4D9793917A6BEBD00379D2B /* Growl Registration Ticket.growlRegDict in Resources */ = {isa = PBXBuildFile; fileRef = E4D9793817A6BEBD00379D2B /* Growl Registration Ticket.growlRegDict */; };
 		E4D9793A17A6BF3D00379D2B /* Growl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E4D9793117A6BCF300379D2B /* Growl.framework */; };
+		E4DAFA1017B16C000017D648 /* MaxLengthFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = E4DAFA0F17B16C000017D648 /* MaxLengthFormatter.m */; };
 		E4E4566617A8210100999CA6 /* growl.txt in Resources */ = {isa = PBXBuildFile; fileRef = E4E4566217A8210100999CA6 /* growl.txt */; };
 		E4E4566717A8210100999CA6 /* LaunchAtLogin.txt in Resources */ = {isa = PBXBuildFile; fileRef = E4E4566317A8210100999CA6 /* LaunchAtLogin.txt */; };
 		E4E4566817A8210100999CA6 /* MMMarkdown.txt in Resources */ = {isa = PBXBuildFile; fileRef = E4E4566417A8210100999CA6 /* MMMarkdown.txt */; };
@@ -1888,6 +1889,8 @@
 		E4C7C86717A9291500DD478A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		E4D9793117A6BCF300379D2B /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Growl.framework; sourceTree = "<group>"; };
 		E4D9793817A6BEBD00379D2B /* Growl Registration Ticket.growlRegDict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Growl Registration Ticket.growlRegDict"; sourceTree = "<group>"; };
+		E4DAFA0E17B16C000017D648 /* MaxLengthFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MaxLengthFormatter.h; sourceTree = "<group>"; };
+		E4DAFA0F17B16C000017D648 /* MaxLengthFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MaxLengthFormatter.m; sourceTree = "<group>"; };
 		E4E4566217A8210100999CA6 /* growl.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = growl.txt; sourceTree = "<group>"; };
 		E4E4566317A8210100999CA6 /* LaunchAtLogin.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LaunchAtLogin.txt; sourceTree = "<group>"; };
 		E4E4566417A8210100999CA6 /* MMMarkdown.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MMMarkdown.txt; sourceTree = "<group>"; };
@@ -2034,6 +2037,8 @@
 				E4EB419217A6761D004E5AD9 /* DecisionWindowController.xib */,
 				E4E4566C17A86C6A00999CA6 /* FFMPEGEngine.h */,
 				E4E4566D17A86C6A00999CA6 /* FFMPEGEngine.m */,
+				E4DAFA0E17B16C000017D648 /* MaxLengthFormatter.h */,
+				E4DAFA0F17B16C000017D648 /* MaxLengthFormatter.m */,
 			);
 			path = QuickCast;
 			sourceTree = "<group>";
@@ -4116,6 +4121,7 @@
 				E4FADB0A179BEA7400A24EBC /* LaunchAtLoginController.m in Sources */,
 				E4EB419317A6761D004E5AD9 /* DecisionWindowController.m in Sources */,
 				E4E4566E17A86C6A00999CA6 /* FFMPEGEngine.m in Sources */,
+				E4DAFA1017B16C000017D648 /* MaxLengthFormatter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

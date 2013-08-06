@@ -5,6 +5,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "MaxLengthFormatter.h"
 
 @interface SignInWindowController : NSWindowController{
     BOOL uploading;
@@ -18,5 +19,7 @@
 @property (strong) IBOutlet NSTextField *message;
 - (IBAction)signUpClick:(id)sender;
 - (IBAction)signInClick:(id)sender;
+@property (strong) IBOutlet MaxLengthFormatter *usernameFormatter;
+@property (strong) IBOutlet MaxLengthFormatter *passwordFormatter;
 
 @end

@@ -34,6 +34,12 @@
     [_message setHidden:NO];
     [_validationLabel setHidden:YES];
     [_validationImageView setImage:[NSImage imageNamed:@"warning"]];
+    
+    [_usernameFormatter setMaximumLength:15];
+    [_nameFormatter setMaximumLength:100];
+    [_emailFormatter setMaximumLength:255];
+    [_passwordFormatter setMaximumLength:100];
+    
 }
 
 - (IBAction)signInClick:(id)sender{
