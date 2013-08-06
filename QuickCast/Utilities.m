@@ -37,11 +37,27 @@
 
 + (NSString *)minutesSeconds:(int)seconds{
     
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:seconds];
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"mm:ss"];
+    NSNumber *totalDays = [NSNumber numberWithDouble:
+                           (seconds / 86400)];
+    NSNumber *totalHours = [NSNumber numberWithDouble:
+                            ((seconds / 3600) -
+                             ([totalDays intValue] * 24))];
+    NSNumber *totalMinutes = [NSNumber numberWithDouble:
+                              ((seconds / 60) -
+                               ([totalDays intValue] * 24 * 60) -
+                               ([totalHours intValue] * 60))];
+    NSNumber *totalSeconds = [NSNumber numberWithInt:
+                              (seconds % 60)];
     
-    return [NSString stringWithFormat:@"%@", [formatter stringFromDate:date]];
+    //NSLog(@"min %@ sec %@",totalMinutes,totalSeconds);
+    
+    //NSDate *date = [NSDate dateWithTimeIntervalSince1970:seconds];
+    //NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    //[formatter setDateFormat:@"mm:ss"];
+    
+    //return [NSString stringWithFormat:@"%@", [formatter stringFromDate:date]];
+    
+    return [[NSString stringWithFormat:@"%02d:", totalMinutes.intValue] stringByAppendingString:[NSString stringWithFormat:@"%02d", totalSeconds.intValue]];
     
 }
 

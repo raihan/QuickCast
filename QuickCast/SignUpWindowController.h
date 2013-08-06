@@ -22,5 +22,6 @@
 @property (strong) IBOutlet NSImageView *validationImageView;
 - (IBAction)signInClick:(id)sender;
 - (IBAction)signUpClick:(id)sender;
+@property (strong) IBOutlet NSButton *signupButton;
 
 @end

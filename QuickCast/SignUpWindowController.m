@@ -46,7 +46,7 @@
 - (IBAction)signUpClick:(id)sender{
     
     QuickcastAPI *api = [[QuickcastAPI alloc] init];
-    
+    [_signupButton setEnabled:NO];
     [_message setHidden:NO];
     [_validationLabel setHidden:YES];
     [_validationImageView setImage:[NSImage imageNamed:@"warning"]];
@@ -77,6 +77,7 @@
                     AppDelegate *app = (AppDelegate *)[NSApp delegate];
                     app.loggedIn = YES;
                     [app completeLogIn:uploading];
+                    [_signupButton setEnabled:YES];
                     [self.window orderOut:nil];
                     
                 });
@@ -93,7 +94,7 @@
                     [_statusBlock setBorderColor: [NSColor colorWithCalibratedRed:rFloat green:gFloat blue:bFloat alpha:1.0]];
                     
                     NSArray *errors = [response objectForKey:@"errors"];
-                    
+                    [_signupButton setEnabled:YES];
                     if(errors){
                         for(NSDictionary *error in errors){
                             _validationLabel.stringValue = [error objectForKey:@"message"];

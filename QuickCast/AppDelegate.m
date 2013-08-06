@@ -483,7 +483,19 @@ NSString *const MoviePath = @"Movies/QuickCast";
 
 
 /* Draws a crop rect on the display. */
-- (void)drawMouseBoxView:(DrawMouseBoxView*)view didSelectRect:(NSRect)rect{
+- (void)drawMouseBoxView:(DrawMouseBoxView*)view didSelectRect:(NSRect)selectedRect{
+    
+    //Because of an Amazon Elastic Transcoder bug we need to make sure width is even numbered
+    int selectedX = ceilf(selectedRect.origin.x);
+    int selectedY = ceilf(selectedRect.origin.y);
+    int selectedWidth = ceilf(selectedRect.size.width);
+    int selectedHeight = ceilf(selectedRect.size.height);
+    
+    if(selectedWidth % 2){
+        selectedWidth = selectedWidth + 1;
+    }
+    
+    NSRect rect = NSMakeRect(selectedX, selectedY, selectedWidth, selectedHeight);
     
 	/* Map point into global coordinates. */
     NSRect globalRect = rect;
