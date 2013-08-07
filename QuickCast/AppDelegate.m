@@ -116,7 +116,7 @@ NSString *kGlobalHotKey = @"Global Hot Key";
 NSString *const MoviePath = @"Movies/QuickCast";
 
 
-
+@synthesize exporter;
 @synthesize loggedIn;
 @synthesize statusItem;
 @synthesize retina;

@@ -27,7 +27,7 @@
 @synthesize microVideo;
 @synthesize width;
 @synthesize height;
-@synthesize exporter;
+
 
 - (id)initWithWindow:(NSWindow *)window{
     
@@ -83,8 +83,9 @@
     
     if (returnCode == NSAlertDefaultReturn)
     {
-        //retry in case never made it
-        uploadFailed = YES;
+        // start the upload again
+        [self startUpload];
+        [self.window makeKeyAndOrderFront:nil];
         
     }
     else{
@@ -201,6 +202,7 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
                     NSLog(@"Error: %@",error.description);
+                    [self failed:nil];
                     
                 });
             }
@@ -218,10 +220,10 @@
                         newCastId = [cast objectForKey:@"addcast"];
                         [[Analytics sharedAnalytics] identify:userId traits:user];
                         [[Analytics sharedAnalytics] track:@"publish" properties:response];
-                        exporter = [[Exporter alloc] init];
+                        app.exporter = [[Exporter alloc] init];
                         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                             
-                            [exporter startUpload:response width:width height:height];
+                            [app.exporter startUpload:response width:width height:height];
                     
                         });
                         
@@ -233,7 +235,7 @@
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
                         NSLog(@"publish error");
-                        
+                        [self failed:nil];
                     });
                     
                 }
@@ -255,12 +257,6 @@
     }
     
     else if([self isReadyForUpload]){
-        
-        //if it had previously failed, retry the upload here after form submit
-        if(uploadFailed){
-            [self startUpload];
-            uploadFailed = NO;
-        }
         
         [GrowlApplicationBridge notifyWithTitle:@"Publishing your QuickCast" description:@"We'll let you know as soon as it's ready." notificationName:@"Alert" iconData:nil priority:1 isSticky:NO clickContext:@"notify"];
         
@@ -288,13 +284,14 @@
             if (error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
-                    CGFloat rFloat = 219/255.0;
+                    /*CGFloat rFloat = 219/255.0;
                     CGFloat gFloat = 60/255.0;
                     CGFloat bFloat = 78/255.0;
                     
                     [_statusBlock setFillColor: [NSColor colorWithCalibratedRed:rFloat green:gFloat blue:bFloat alpha:0.04]];
                     [_statusBlock setBorderColor: [NSColor colorWithCalibratedRed:rFloat green:gFloat blue:bFloat alpha:1.0]];
-                    
+                    */
+                    [self failed:nil];
                     NSLog(@"Error: %@",error.description);
                     
                 });
@@ -328,13 +325,14 @@
                 else{
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
-                        CGFloat rFloat = 219/255.0;
+                        /*CGFloat rFloat = 219/255.0;
                         CGFloat gFloat = 60/255.0;
                         CGFloat bFloat = 78/255.0;
                         
                         [_statusBlock setFillColor: [NSColor colorWithCalibratedRed:rFloat green:gFloat blue:bFloat alpha:0.04]];
                         [_statusBlock setBorderColor: [NSColor colorWithCalibratedRed:rFloat green:gFloat blue:bFloat alpha:1.0]];
-                        
+                        */
+                        [self failed:nil];
                         NSLog(@"publish error");
                         
                     });
@@ -352,7 +350,7 @@
         
         [_statusBlock setFillColor: [NSColor colorWithCalibratedRed:rFloat green:gFloat blue:bFloat alpha:0.04]];
         [_statusBlock setBorderColor: [NSColor colorWithCalibratedRed:rFloat green:gFloat blue:bFloat alpha:1.0]];
-        [_orangeMessage setStringValue:@"Please complete title, description and check the checkbox"];
+        [_orangeMessage setStringValue:@"Please complete the title and check the checkbox"];
         
         [_orangeMessage setHidden:NO];
         [_message setHidden:YES];

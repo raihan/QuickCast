@@ -14,9 +14,9 @@
     BOOL microVideo;
     NSString *width;
     NSString *height;
-    Exporter *exporter;
+    
 }
-@property (strong) Exporter *exporter;
+
 @property BOOL formIsValid;
 @property BOOL microVideo;
 @property (strong) NSString *width;

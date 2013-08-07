@@ -10,6 +10,7 @@
 #import <SGHotKey.h>
 #import <Growl/Growl.h>
 #import <CoreMedia/CMBufferQueue.h>
+#import "Exporter.h"
 
 extern NSString *kGlobalHotKey;
 
@@ -49,11 +50,15 @@ extern NSString *kGlobalHotKey;
 	BOOL recordingWillBeStopped;
     
 	BOOL recording;
+    
+    Exporter *exporter;
 
     
     
     
 }
+
+@property (strong) Exporter *exporter;
 
 #pragma mark - AVVideoDataOutput
 
