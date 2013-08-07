@@ -108,6 +108,9 @@ NSString *kGlobalHotKey = @"Global Hot Key";
     // For monitoring escape key on countdown
     id eventMonitor;
     
+    //check pixels for the green that is the failing screen capture due to OSX bug
+    BOOL checkedForGreen;
+    
 }
 
 NSString *const MoviePath = @"Movies/QuickCast";
@@ -225,7 +228,7 @@ NSString *const MoviePath = @"Movies/QuickCast";
         [prefs synchronize];
         [self firstRun];
     }
-    
+        
 }
 
 - (void)stopRecordingKeys:(id)sender {
@@ -1538,7 +1541,9 @@ NSString *const MoviePath = @"Movies/QuickCast";
 {
     dispatch_async(movieWritingQueue, ^{
         
-		if ( recordingWillBeStarted || self.recording )
+		checkedForGreen = NO;
+        
+        if ( recordingWillBeStarted || self.recording )
 			return;
         
 		recordingWillBeStarted = YES;
@@ -1654,22 +1659,42 @@ NSString *const MoviePath = @"Movies/QuickCast";
 
 #pragma mark Processing
 
-- (void)processPixelBuffer: (CVImageBufferRef)pixelBuffer
+- (BOOL)checkForGreen: (CVImageBufferRef)pixelBuffer
 {
-	CVPixelBufferLockBaseAddress( pixelBuffer, 0 );
+	// this is the color we are looking for NSCalibratedRGBColorSpace 0.0823529 0.388235 0 1
+    
+    CVPixelBufferLockBaseAddress( pixelBuffer, 0 );
 	
-	int bufferWidth = CVPixelBufferGetWidth(pixelBuffer);
-	int bufferHeight = CVPixelBufferGetHeight(pixelBuffer);
+	long bufferWidth = CVPixelBufferGetWidth(pixelBuffer);
+	long bufferHeight = CVPixelBufferGetHeight(pixelBuffer);
+    BOOL isGreen = NO;
 	unsigned char *pixel = (unsigned char *)CVPixelBufferGetBaseAddress(pixelBuffer);
     
 	for( int row = 0; row < bufferHeight; row++ ) {
 		for( int column = 0; column < bufferWidth; column++ ) {
-			pixel[1] = 0; // De-green (second pixel in BGRA is green)
-			pixel += BYTES_PER_PIXEL;
+            int blue = pixel[0];
+            int green = pixel[1];
+            int red = pixel[2];
+            int alpha = pixel[3];
+            
+            if(blue != 9 || green != 100 || red != 23 || alpha != 255){
+                
+                break;
+                break;
+            }
+            else{
+                
+                isGreen = YES;
+            }
+            
+            //pixel[1] = 0; // De-green (second pixel in BGRA is green)
+			//pixel += BYTES_PER_PIXEL;
 		}
 	}
 	
 	CVPixelBufferUnlockBaseAddress( pixelBuffer, 0 );
+    
+    return isGreen;
 }
 
 #pragma mark Capture
@@ -1692,11 +1717,7 @@ NSString *const MoviePath = @"Movies/QuickCast";
 		if ( self.videoType == 0 )
 			self.videoType = CMFormatDescriptionGetMediaSubType( formatDescription );
         
-        //CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-		
-		// Synchronously process the pixel buffer to de-green it.
-		//[self processPixelBuffer:pixelBuffer];
-		
+        
 		// Enqueue it for preview.  This is a shallow queue, so if image processing is taking too long,
 		// we'll drop this frame for preview (this keeps preview latency low).
 //		OSStatus err = CMBufferQueueEnqueue(previewBufferQueue, sampleBuffer);
@@ -1728,8 +1749,19 @@ NSString *const MoviePath = @"Movies/QuickCast";
 					readyToRecordVideo = [self setupAssetWriterVideoInput:formatDescription];
 				
 				// Write video data to file
-				if (readyToRecordVideo && readyToRecordAudio)
+				if (readyToRecordVideo && readyToRecordAudio){
+                    
+                    if(!checkedForGreen){
+                        CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+                        // Synchronously analyse the pixel buffer for the unwanted green
+                        checkedForGreen = YES;
+                        BOOL gre = [self checkForGreen:pixelBuffer];
+                        if(gre){
+                            [self greenWarning];
+                        }
+                    }
 					[self writeSampleBuffer:sampleBuffer ofType:AVMediaTypeVideo];
+                }
 			}
 			else if (conn == audioConnection) {
 				
@@ -2008,6 +2040,28 @@ NSString *const MoviePath = @"Movies/QuickCast";
         
         [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
         [alert runModal];
+    });
+    
+    
+}
+
+#pragma mark - Green warning
+
+- (void)greenWarning{
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [self finishRecord];
+        NSAlert * alert = [NSAlert alertWithMessageText:@"There is a problem"
+                                          defaultButton:@"OK"
+                                        alternateButton:nil
+                                            otherButton:nil
+                              informativeTextWithFormat:@"We detected an issue with your recording. It looks like your recording is just a green screen. This is a known bug affecting some Macs please read our FAQs for more information."];
+        
+        
+        [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
+        [alert runModal];
+        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://quickcast.io/faqs#green-bug"]];
     });
     
     

@@ -83,6 +83,16 @@
                     AppDelegate *app = (AppDelegate *)[NSApp delegate];
                     app.loggedIn = YES;
                     [app completeLogIn:uploading];
+                    
+                    NSAlert * alert = [NSAlert alertWithMessageText:@"Welcome to QuickCast"
+                                                      defaultButton:@"OK"
+                                                    alternateButton:nil
+                                                        otherButton:nil
+                                          informativeTextWithFormat:@"Thanks for registering! You are now ready to upload your first QuickCast."];
+                    
+                    
+                    [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
+                    [alert runModal];
                     [_signupButton setEnabled:YES];
                     [self.window orderOut:nil];
                     

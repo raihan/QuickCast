@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "QuickCast/AppDelegate.m"
-         timestampString = "397503855.171449"
+         timestampString = "397561248.71993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1567"
-         endingLineNumber = "1567"
+         startingLineNumber = "1579"
+         endingLineNumber = "1579"
          landmarkName = "-startRecording"
          landmarkType = "5">
       </FileBreakpoint>
@@ -21,11 +21,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "QuickCast/AppDelegate.m"
-         timestampString = "397503855.171449"
+         timestampString = "397561248.71993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1318"
-         endingLineNumber = "1318"
+         startingLineNumber = "1328"
+         endingLineNumber = "1328"
          landmarkName = "-markUploadCompleted"
          landmarkType = "5">
       </FileBreakpoint>
@@ -60,11 +60,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "QuickCast/AppDelegate.m"
-         timestampString = "397503855.171449"
+         timestampString = "397561248.71993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1608"
-         endingLineNumber = "1608"
+         startingLineNumber = "1620"
+         endingLineNumber = "1620"
          landmarkName = "-stopRecording"
          landmarkType = "5">
       </FileBreakpoint>
@@ -73,11 +73,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "QuickCast/AppDelegate.m"
-         timestampString = "397503855.171449"
+         timestampString = "397561248.71993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "639"
-         endingLineNumber = "639"
+         startingLineNumber = "649"
+         endingLineNumber = "649"
          landmarkName = "-finishRecord"
          landmarkType = "5">
       </FileBreakpoint>
@@ -86,11 +86,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "QuickCast/AppDelegate.m"
-         timestampString = "397503855.171449"
+         timestampString = "397561248.71993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "426"
-         endingLineNumber = "426"
+         startingLineNumber = "436"
+         endingLineNumber = "436"
          landmarkName = "-toggleCamera:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -99,11 +99,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "QuickCast/AppDelegate.m"
-         timestampString = "397503855.171449"
+         timestampString = "397561248.71993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "432"
-         endingLineNumber = "432"
+         startingLineNumber = "442"
+         endingLineNumber = "442"
          landmarkName = "-toggleCamera:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -112,11 +112,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "QuickCast/AppDelegate.m"
-         timestampString = "397503855.171449"
+         timestampString = "397561248.71993"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "209"
-         endingLineNumber = "209"
+         startingLineNumber = "212"
+         endingLineNumber = "212"
          landmarkName = "-applicationDidFinishLaunching:"
          landmarkType = "5">
       </FileBreakpoint>
