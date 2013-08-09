@@ -418,6 +418,21 @@
 								</description>
 
 		         </item>
+		         <item>
+		            <title>Version 0.80 beta</title>
+								<sparkle:minimumSystemVersion>10.7.0</sparkle:minimumSystemVersion>
+
+		            <pubDate>Fri, 09 Aug 2013 09:40:11 +0000</pubDate>
+		            <enclosure url="https://s3.amazonaws.com/quickcast-app/mac/QuickCast.zip" sparkle:version="0.80" length="8853443" type="application/octet-stream" />
+								<description><![CDATA[
+										<h2>QuickCast</h2> 
+										<p>Integrate newer AWS lib for more stable uploads</p>
+										
+										
+									]]>
+								</description>
+
+		         </item>
 		         
 
 
