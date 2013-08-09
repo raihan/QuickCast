@@ -23,6 +23,7 @@
 
 -(void)request:(AmazonServiceRequest *)request didReceiveResponse:(NSURLResponse *)aResponse{
     //NSLog(@"didReceiveResponse");
+    
 }
 
 -(void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)aResponse{
@@ -91,6 +92,7 @@
 
 -(void)request:(AmazonServiceRequest *)request didReceiveData:(NSData *)data{
     NSLog(@"didReceiveData");
+    
 }
 
 -(void)request:(AmazonServiceRequest *)request didSendData:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite{
