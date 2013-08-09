@@ -18,7 +18,6 @@
 
 @implementation FinishWindowController{
     
-    
     BOOL uploadFailed;
     NSString *newCastId;
 }
@@ -39,6 +38,7 @@
                                                      name:@"FailedUploading"
                                                    object:nil];
         [self setMicroVideo:NO];
+        uploadFailed = NO;
     }
     
     return self;
@@ -64,10 +64,12 @@
 
 - (void)failed:(NSNotification *)note{
     
-    [self.window makeKeyAndOrderFront:nil];
+    // Do nothing for now - S3TransferManager should be able to recover so let's not involve the user
+    
+    /*[self.window makeKeyAndOrderFront:nil];
     
     NSAlert * alert = [NSAlert alertWithMessageText:@"Upload Failed"
-                                      defaultButton:@"Try Again"
+                                      defaultButton:@"OK"
                                     alternateButton:nil
                                         otherButton:@"Cancel"
                           informativeTextWithFormat:@"The upload failed - would you like to try again"];
@@ -76,6 +78,7 @@
                       modalDelegate:self
                      didEndSelector:@selector(failedDidEnd:returnCode:contextInfo:)
                         contextInfo:nil];
+     */
     
 }
 
@@ -84,7 +87,7 @@
     if (returnCode == NSAlertDefaultReturn)
     {
         // start the upload again
-        [self startUpload];
+        
         [self.window makeKeyAndOrderFront:nil];
         
     }

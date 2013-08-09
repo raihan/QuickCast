@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,18 +13,19 @@
  * permissions and limitations under the License.
  */
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceException.h>
+#else
 #import "../AmazonServiceException.h"
+#endif
 
 
 
 
 /**
  * <p>
- * This exception is thrown when an expected value does not match what
- * was found in the system
+ * A condition specified in the operation could not be evaluated.
  * </p>
- *
- * \ingroup DynamoDB
  */
 @interface DynamoDBConditionalCheckFailedException:AmazonServiceException
 {

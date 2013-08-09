@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,13 +14,18 @@
  */
 
 #import <Foundation/Foundation.h>
+
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceException.h>
+#import <AWSRuntime/AmazonUnmarshallerXMLParserDelegate.h>
+#else
 #import "../AmazonServiceException.h"
 #import "../AmazonUnmarshallerXMLParserDelegate.h"
+#endif
 
 /** Parse an error response from Amazon S3 and construct the corresponding
  * AWSServiceException object.
  *
- * \ingroup S3
  */
 @interface S3ErrorResponseHandler:AmazonUnmarshallerXMLParserDelegate {
     AmazonServiceException *exception;

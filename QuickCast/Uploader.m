@@ -8,6 +8,7 @@
 #import "AmazonS3Client.h"
 #import "AppDelegate.h"
 #import "QuickcastAPI.h"
+#import "S3TransferManager.h"
 
 
 @implementation Uploader{
@@ -166,22 +167,22 @@
     //now upload to Amazon
     AmazonCredentials *credentials = [[AmazonCredentials alloc] initWithAccessKey:[creds objectForKey:@"AccessKeyId"] withSecretKey:[creds objectForKey:@"SecretAccessKey"] withSecurityToken:[creds objectForKey:@"SessionToken"] ];
     
+    AppDelegate *app = (AppDelegate *)[NSApp delegate];
+    
+    // TransferManager
+    app.transferManager = [[S3TransferManager alloc] init];
     AmazonS3Client *s3 = [[AmazonS3Client alloc] initWithCredentials:credentials];
     
-    
+    [app.transferManager setS3:s3];
     NSString *relativePath = [NSString stringWithFormat:@"%@/%@/%@",userId,castId,@"quickcast.mp4"];
     
     S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:relativePath inBucket:rawBucket];
-    
-    por.delegate = self;
-    
     por.data  = [NSData dataWithContentsOfURL:videoUrl];
-    //por.contentType = [Utilities MIMETypeForExtension:[theURL.path pathExtension]];
-    
-    por.expires = 2147483647; //max int value
+   
+    //por.expires = 2147483647; //max int value
     por.cannedACL = [S3CannedACL publicRead];
-    
-    [s3 putObject:por];
+    [app.transferManager setDelegate:self];
+    [app.transferManager upload:por];
     
     // If we have got a gif
     if([[NSFileManager defaultManager] fileExistsAtPath:[[videoUrl.path stringByDeletingPathExtension] stringByAppendingPathExtension:@"gif"]]){
@@ -193,7 +194,7 @@
         porGif.data  = [NSData dataWithContentsOfFile:[[videoUrl.path stringByDeletingPathExtension] stringByAppendingPathExtension:@"gif"]];
         porGif.contentType = @"image/gif";
         
-        porGif.expires = 2147483647; //max int value
+        //porGif.expires = 2147483647; //max int value
         porGif.cannedACL = [S3CannedACL publicRead];
         
         //porThumb.delegate = self;
@@ -211,7 +212,7 @@
         porThumb.data  = [NSData dataWithContentsOfFile:[NSTemporaryDirectory() stringByAppendingPathComponent:@"quickcast_thumb.jpg"]];
         //por.contentType = [Utilities MIMETypeForExtension:[theURL.path pathExtension]];
         
-        porThumb.expires = 2147483647; //max int value
+        //porThumb.expires = 2147483647; //max int value
         porThumb.cannedACL = [S3CannedACL publicRead];
         porThumb.contentType = @"image/jpeg";
         //porThumb.delegate = self;

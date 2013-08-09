@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 
 @implementation S3CopyObjectResultUnmarshaller
 
+@synthesize objectCopyResult;
+
 #pragma mark NSXMLParserDelegate implementation
 
 -(void) parser:(NSXMLParser *)parser
@@ -27,12 +29,12 @@ qualifiedName:(NSString *)qName
     [super parser:parser didEndElement:elementName namespaceURI:namespaceURI qualifiedName:qName];
 
     if ([elementName isEqualToString:@"LastModified"]) {
-        self.copyObjectResult.lastModified = self.currentText;
+        self.objectCopyResult.lastModified = self.currentText;
         return;
     }
 
     if ([elementName isEqualToString:@"ETag"]) {
-        self.copyObjectResult.etag = self.currentText;
+        self.objectCopyResult.etag = self.currentText;
         return;
     }
 
@@ -42,7 +44,7 @@ qualifiedName:(NSString *)qName
         }
 
         if (parentObject != nil && [parentObject respondsToSelector:parentSetter]) {
-            [parentObject performSelector:parentSetter withObject:self.copyObjectResult];
+            [parentObject performSelector:parentSetter withObject:self.objectCopyResult];
         }
 
         return;
@@ -51,18 +53,18 @@ qualifiedName:(NSString *)qName
 
 #pragma mark Unmarshalled object property
 
--(S3CopyObjectResult *)copyObjectResult
+-(S3CopyObjectResult *)objectCopyResult
 {
-    if (nil == copyObjectResult)
+    if (nil == objectCopyResult)
     {
-        copyObjectResult = [[S3CopyObjectResult alloc] init];
+        objectCopyResult = [[S3CopyObjectResult alloc] init];
     }
-    return copyObjectResult;
+    return objectCopyResult;
 }
 
 -(void)dealloc
 {
-    [copyObjectResult release];
+    [objectCopyResult release];
     [super dealloc];
 }
 

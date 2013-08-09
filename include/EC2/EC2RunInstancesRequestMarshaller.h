@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,28 +13,49 @@
  * permissions and limitations under the License.
  */
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequest.h>
+#else
 #import "../AmazonServiceRequest.h"
+#endif
 
 #import "EC2Request.h"
 #import "EC2RunInstancesRequest.h"
 #import "EC2Placement.h"
 #import "EC2InstanceLicenseSpecification.h"
+#import "EC2IamInstanceProfileSpecification.h"
 #import "EC2BlockDeviceMapping.h"
 #import "EC2EbsBlockDevice.h"
+#import "EC2PrivateIpAddressSpecification.h"
+#import "EC2PrivateIpAddressSpecification.h"
 #import "EC2InstanceNetworkInterfaceSpecification.h"
 #import "EC2EbsBlockDevice.h"
+#import "EC2PrivateIpAddressSpecification.h"
+#import "EC2PrivateIpAddressSpecification.h"
 #import "EC2BlockDeviceMapping.h"
 #import "EC2EbsBlockDevice.h"
+#import "EC2PrivateIpAddressSpecification.h"
+#import "EC2PrivateIpAddressSpecification.h"
 #import "EC2InstanceNetworkInterfaceSpecification.h"
 #import "EC2EbsBlockDevice.h"
+#import "EC2PrivateIpAddressSpecification.h"
+#import "EC2PrivateIpAddressSpecification.h"
 #import "EC2BlockDeviceMapping.h"
 #import "EC2EbsBlockDevice.h"
+#import "EC2PrivateIpAddressSpecification.h"
+#import "EC2PrivateIpAddressSpecification.h"
 #import "EC2InstanceNetworkInterfaceSpecification.h"
 #import "EC2EbsBlockDevice.h"
+#import "EC2PrivateIpAddressSpecification.h"
+#import "EC2PrivateIpAddressSpecification.h"
 #import "EC2BlockDeviceMapping.h"
 #import "EC2EbsBlockDevice.h"
+#import "EC2PrivateIpAddressSpecification.h"
+#import "EC2PrivateIpAddressSpecification.h"
 #import "EC2InstanceNetworkInterfaceSpecification.h"
 #import "EC2EbsBlockDevice.h"
+#import "EC2PrivateIpAddressSpecification.h"
+#import "EC2PrivateIpAddressSpecification.h"
 
 
 /**

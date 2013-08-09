@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 #import <Foundation/Foundation.h>
 
 /** Contains all the information about the listMultipartUploads method.
- * \ingroup s3
  */
 @interface S3ListMultipartUploadsResult:NSObject {
     NSString       *bucket;
@@ -31,7 +30,7 @@
     NSMutableArray *uploads;
 
     bool           isTruncated;
-    int            maxUploads;
+    NSInteger      maxUploads;
 }
 
 
@@ -63,7 +62,7 @@
 @property (nonatomic, readonly) NSMutableArray *uploads;
 
 /** The maxUploads that was specified in the request. */
-@property (nonatomic) int maxUploads;
+@property (nonatomic) NSInteger maxUploads;
 
 /** Indicates whether the returned list of multipart uploads is truncated. */
 @property (nonatomic) bool isTruncated;

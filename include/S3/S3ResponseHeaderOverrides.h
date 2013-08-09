@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,7 +14,12 @@
  */
 
 #import <Foundation/Foundation.h>
+
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonSDKUtil.h>
+#else
 #import "../AmazonSDKUtil.h"
+#endif
 
 #define kS3ResponseHdrContentType           @"response-content-type"
 #define kS3ResponseHdrContentLanguage       @"response-content-language"
@@ -28,7 +33,6 @@
  * response from a GetObject request.  These values override any headers that were set
  * when the object was uploaded to S3.
  *
- * \ingroup S3
  */
 @interface S3ResponseHeaderOverrides:NSObject {
     NSString *contentType;

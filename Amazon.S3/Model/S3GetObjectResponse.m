@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -17,10 +17,25 @@
 
 @implementation S3GetObjectResponse
 
-
 @synthesize lastModified;
 @synthesize contentType;
+@synthesize redirectLocation;
 
+
+- (id)init
+{
+    if(self = [super init])
+    {
+        metadata = nil;
+        outputStream = nil;
+
+        lastModified = nil;
+        contentType = nil;
+        redirectLocation = nil;
+    }
+
+    return self;
+}
 
 // This method overrides the S3Response version, processing x-aws-meta-
 // headers, passing all others to the superclass.
@@ -35,6 +50,9 @@
         }
         [metadata setValue:value forKey:keyName];
         //NSLog( @"Setting metadata value [%@] for key [%@] from header [%@]", [value description], keyName, header );
+    }
+    else if ([tmp isEqualToString:kHttpHdrAmzWebsiteRedirectLocation]) {
+        self.redirectLocation = value;
     }
     else {
         [super setValue:value forHTTPHeaderField:header];
@@ -74,8 +92,14 @@
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
     if (outputStream) {
-        [super connection:connection didReceiveData:data];
+        
+        //[super connection:connection didReceiveData:data];
         [outputStream write:(uint8_t *)[data bytes] maxLength:[data length]];
+        
+        // skip super's data handling, go directly to delegate
+        if ([(NSObject *)self.request.delegate respondsToSelector:@selector(request:didReceiveData:)]) {
+            [self.request.delegate request:self.request didReceiveData:data];
+        }
     }
     else {
         [super connection:connection didReceiveData:data];
@@ -87,6 +111,7 @@
     [metadata release];
     [lastModified release];
     [contentType release];
+    [redirectLocation release];
 
     [super dealloc];
 }

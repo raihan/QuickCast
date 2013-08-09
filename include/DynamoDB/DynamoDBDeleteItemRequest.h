@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,32 +13,36 @@
  * permissions and limitations under the License.
  */
 
-#import "DynamoDBKey.h"
+#import "DynamoDBAttributeValue.h"
 #import "DynamoDBExpectedAttributeValue.h"
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Delete Item Request
- *
- * \ingroup DynamoDB
  */
 
 @interface DynamoDBDeleteItemRequest:AmazonServiceRequestConfig
 
 {
     NSString            *tableName;
-    DynamoDBKey         *key;
+    NSMutableDictionary *key;
     NSMutableDictionary *expected;
     NSString            *returnValues;
+    NSString            *returnConsumedCapacity;
+    NSString            *returnItemCollectionMetrics;
 }
 
 
 
 /**
- * The value of the TableName property for this object.
+ * The name of the table from which to delete the item.
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Length: </b>3 - 255<br/>
@@ -47,37 +51,82 @@
 @property (nonatomic, retain) NSString *tableName;
 
 /**
- * The primary key that uniquely identifies each item in a table. A
- * primary key can be a one attribute (hash) primary key or a two
- * attribute (hash-and-range) primary key.
+ * A map of attribute names to <i>AttributeValue</i> objects,
+ * representing the primary key of the item to delete.
  */
-@property (nonatomic, retain) DynamoDBKey *key;
+@property (nonatomic, retain) NSMutableDictionary *key;
 
 /**
- * Designates an attribute for a conditional modification. The Expected
- * parameter allows you to provide an attribute name, and whether or not
- * Amazon DynamoDB should check to see if the attribute has a particular
- * value before modifying it.
+ * A map of attribute/condition pairs. This is the conditional block for
+ * the <i>DeleteItem</i>operation. All the conditions must be met for the
+ * operation to succeed. <p><i>Expected</i> allows you to provide an
+ * attribute name, and whether or not Amazon DynamoDB should check to see
+ * if the attribute value already exists; or if the attribute value
+ * exists and has a particular value before changing it. <p>Each item in
+ * <i>Expected</i> represents an attribute name for Amazon DynamoDB to
+ * check, along with the following: <ul> <li> <p><i>Value</i> - The
+ * attribute value for Amazon DynamoDB to check. </li> <li>
+ * <p><i>Exists</i> - Causes Amazon DynamoDB to evaluate the value before
+ * attempting a conditional operation: <ul> <li> <p>If <i>Exists</i> is
+ * <code>true</code>, Amazon DynamoDB will check to see if that attribute
+ * value already exists in the table. If it is found, then the operation
+ * succeeds. If it is not found, the operation fails with a
+ * <i>ConditionalCheckFailedException</i>. </li> <li> <p>If <i>Exists</i>
+ * is <code>false</code>, Amazon DynamoDB assumes that the attribute
+ * value does <i>not</i> exist in the table. If in fact the value does
+ * not exist, then the assumption is valid and the operation succeeds. If
+ * the value is found, despite the assumption that it does not exist, the
+ * operation fails with a <i>ConditionalCheckFailedException</i>. </li>
+ * </ul> <p>The default setting for <i>Exists</i> is <code>true</code>.
+ * If you supply a <i>Value</i> all by itself, Amazon DynamoDB assumes
+ * the attribute exists: You don't have to set <i>Exists</i> to
+ * <code>true</code>, because it is implied. <p>Amazon DynamoDB returns a
+ * <i>ValidationException</i> if: <ul> <li> <p><i>Exists</i> is
+ * <code>true</code> but there is no <i>Value</i> to check. (You expect a
+ * value to exist, but don't specify what that value is.) </li> <li>
+ * <p><i>Exists</i> is <code>false</code> but you also specify a
+ * <i>Value</i>. (You cannot expect an attribute to have a value, while
+ * also expecting it not to exist.) </li> </ul> </li> </ul> <p>If you
+ * specify more than one condition for <i>Exists</i>, then all of the
+ * conditions must evaluate to true. (In other words, the conditions are
+ * ANDed together.) Otherwise, the conditional operation will fail.
  */
 @property (nonatomic, retain) NSMutableDictionary *expected;
 
 /**
- * Use this parameter if you want to get the attribute name-value pairs
- * before or after they are modified. For put operations, the possible
- * parameter values are NONE (default) or ALL_OLD. For update operations,
- * the possible parameter values are NONE (default) or ALL_OLD,
- * UPDATED_OLD, ALL_NEW or UPDATED_NEW. NONE : Nothing is returned.
- * ALL_OLD : Returns the attributes of the item as they were before the
- * operation. UPDATED_OLD : Returns the values of the updated attributes,
- * only, as they were before the operation. ALL_NEW : Returns all the
- * attributes and their new values after the operation. UPDATED_NEW :
- * Returns the values of the updated attributes, only, as they are after
- * the operation.
+ * Use <i>ReturnValues</i> if you want to get the item attributes as they
+ * appeared before they were deleted. For <i>DeleteItem</i>, the valid
+ * values are: <ul> <li> <p><code>NONE</code> - If <i>ReturnValues</i> is
+ * not specified, or if its value is <code>NONE</code>, then nothing is
+ * returned. (This is the default for <i>ReturnValues</i>.) </li> <li>
+ * <p><code>ALL_OLD</code> - The content of the old item is returned.
+ * </li> </ul>
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Allowed Values: </b>NONE, ALL_OLD, UPDATED_OLD, ALL_NEW, UPDATED_NEW
  */
 @property (nonatomic, retain) NSString *returnValues;
+
+/**
+ * If set to <code>TOTAL</code>, <i>ConsumedCapacity</i> is included in
+ * the response; if set to <code>NONE</code> (the default),
+ * <i>ConsumedCapacity</i> is not included.
+ * <p>
+ * <b>Constraints:</b><br/>
+ * <b>Allowed Values: </b>TOTAL, NONE
+ */
+@property (nonatomic, retain) NSString *returnConsumedCapacity;
+
+/**
+ * If set to <code>SIZE</code>, statistics about item collections, if
+ * any, that were modified during the operation are returned in the
+ * response. If set to <code>NONE</code> (the default), no statistics are
+ * returned..
+ * <p>
+ * <b>Constraints:</b><br/>
+ * <b>Allowed Values: </b>SIZE, NONE
+ */
+@property (nonatomic, retain) NSString *returnItemCollectionMetrics;
 
 
 /**
@@ -90,12 +139,19 @@
  * Constructs a new DeleteItemRequest object.
  * Callers should use properties to initialize any additional object members.
  *
- * @param theTableName
- * @param theKey The primary key that uniquely identifies each item in a
- * table. A primary key can be a one attribute (hash) primary key or a
- * two attribute (hash-and-range) primary key.
+ * @param theTableName The name of the table from which to delete the
+ * item.
+ * @param theKey A map of attribute names to <i>AttributeValue</i>
+ * objects, representing the primary key of the item to delete.
  */
--(id)initWithTableName:(NSString *)theTableName andKey:(DynamoDBKey *)theKey;
+-(id)initWithTableName:(NSString *)theTableName andKey:(NSMutableDictionary *)theKey;
+
+
+/**
+ * Set a value in the dictionary key for the specified key.
+ * This function will alloc and init key if not already done.
+ */
+-(void)setKeyValue:(DynamoDBAttributeValue *)theValue forKey:(NSString *)theKey;
 
 
 /**

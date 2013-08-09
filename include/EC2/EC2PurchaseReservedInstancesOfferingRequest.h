@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,22 +13,26 @@
  * permissions and limitations under the License.
  */
 
+#import "EC2ReservedInstanceLimitPrice.h"
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Purchase Reserved Instances Offering Request
- *
- * \ingroup EC2
  */
 
 @interface EC2PurchaseReservedInstancesOfferingRequest:AmazonServiceRequestConfig
 
 {
-    NSString *reservedInstancesOfferingId;
-    NSNumber *instanceCount;
+    NSString                      *reservedInstancesOfferingId;
+    NSNumber                      *instanceCount;
+    EC2ReservedInstanceLimitPrice *limitPrice;
 }
 
 
@@ -42,6 +46,11 @@
  * The number of Reserved Instances to purchase.
  */
 @property (nonatomic, retain) NSNumber *instanceCount;
+
+/**
+ * The value of the LimitPrice property for this object.
+ */
+@property (nonatomic, retain) EC2ReservedInstanceLimitPrice *limitPrice;
 
 
 /**

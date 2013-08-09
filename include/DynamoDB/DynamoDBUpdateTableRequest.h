@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,14 +15,16 @@
 
 #import "DynamoDBProvisionedThroughput.h"
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Update Table Request
- *
- * \ingroup DynamoDB
  */
 
 @interface DynamoDBUpdateTableRequest:AmazonServiceRequestConfig
@@ -35,7 +37,7 @@
 
 
 /**
- * The value of the TableName property for this object.
+ * The name of the table to be updated.
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Length: </b>3 - 255<br/>
@@ -44,14 +46,12 @@
 @property (nonatomic, retain) NSString *tableName;
 
 /**
- * Provisioned throughput reserves the required read and write resources
- * for your table in terms of ReadCapacityUnits and WriteCapacityUnits.
- * Values for provisioned throughput depend upon your expected read/write
- * rates, item size, and consistency. Provide the expected number of read
- * and write operations, assuming an item size of 1KB and strictly
- * consistent reads. For 2KB item size, double the value, 3KB, triple the
- * value, etc. Eventually consistent reads consume half the resources of
- * strictly consistent reads.
+ * The provisioned throughput settings for the specified table. The
+ * settings can be modified using the <i>UpdateTable</i> operation.
+ * <p>For current minimum and maximum provisioned throughput values, see
+ * <a
+ * mazon.com/amazondynamodb/latest/developerguide/Limits.html">Limits</a>
+ * in the <i>Amazon DynamoDB Developer Guide</i>.
  */
 @property (nonatomic, retain) DynamoDBProvisionedThroughput *provisionedThroughput;
 
@@ -66,16 +66,13 @@
  * Constructs a new UpdateTableRequest object.
  * Callers should use properties to initialize any additional object members.
  *
- * @param theTableName
- * @param theProvisionedThroughput Provisioned throughput reserves the
- * required read and write resources for your table in terms of
- * ReadCapacityUnits and WriteCapacityUnits. Values for provisioned
- * throughput depend upon your expected read/write rates, item size, and
- * consistency. Provide the expected number of read and write operations,
- * assuming an item size of 1KB and strictly consistent reads. For 2KB
- * item size, double the value, 3KB, triple the value, etc. Eventually
- * consistent reads consume half the resources of strictly consistent
- * reads.
+ * @param theTableName The name of the table to be updated.
+ * @param theProvisionedThroughput The provisioned throughput settings
+ * for the specified table. The settings can be modified using the
+ * <i>UpdateTable</i> operation. <p>For current minimum and maximum
+ * provisioned throughput values, see <a
+ * mazon.com/amazondynamodb/latest/developerguide/Limits.html">Limits</a>
+ * in the <i>Amazon DynamoDB Developer Guide</i>.
  */
 -(id)initWithTableName:(NSString *)theTableName andProvisionedThroughput:(DynamoDBProvisionedThroughput *)theProvisionedThroughput;
 

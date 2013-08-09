@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,21 +18,19 @@
 
 /**
  * Key Schema Element
- *
- * \ingroup DynamoDB
  */
 
 @interface DynamoDBKeySchemaElement:NSObject
 
 {
     NSString *attributeName;
-    NSString *attributeType;
+    NSString *keyType;
 }
 
 
 
 /**
- * The value of the AttributeName property for this object.
+ * Represents the name of a key attribute.
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Length: </b>1 - 255<br/>
@@ -40,12 +38,13 @@
 @property (nonatomic, retain) NSString *attributeName;
 
 /**
- * The value of the AttributeType property for this object.
+ * Represents the attribute data, consisting of the data type and the
+ * attribute value itself.
  * <p>
  * <b>Constraints:</b><br/>
- * <b>Allowed Values: </b>S, N
+ * <b>Allowed Values: </b>HASH, RANGE
  */
-@property (nonatomic, retain) NSString *attributeType;
+@property (nonatomic, retain) NSString *keyType;
 
 
 /**
@@ -58,10 +57,11 @@
  * Constructs a new KeySchemaElement object.
  * Callers should use properties to initialize any additional object members.
  *
- * @param theAttributeName
- * @param theAttributeType
+ * @param theAttributeName Represents the name of a key attribute.
+ * @param theKeyType Represents the attribute data, consisting of the
+ * data type and the attribute value itself.
  */
--(id)initWithAttributeName:(NSString *)theAttributeName andAttributeType:(NSString *)theAttributeType;
+-(id)initWithAttributeName:(NSString *)theAttributeName andKeyType:(NSString *)theKeyType;
 
 /**
  * Returns a string representation of this object; useful for testing and

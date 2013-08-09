@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,14 +14,16 @@
  */
 
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Describe Instance Attribute Request
- *
- * \ingroup EC2
  */
 
 @interface EC2DescribeInstanceAttributeRequest:AmazonServiceRequestConfig
@@ -44,6 +46,9 @@
  * <code>userData</code>, <code>disableApiTermination</code>,
  * <code>instanceInitiatedShutdownBehavior</code>,
  * <code>rootDeviceName</code>, <code>blockDeviceMapping</code>
+ * <p>
+ * <b>Constraints:</b><br/>
+ * <b>Allowed Values: </b>instanceType, kernel, ramdisk, userData, disableApiTermination, instanceInitiatedShutdownBehavior, rootDeviceName, blockDeviceMapping, productCodes, sourceDestCheck, groupSet, ebsOptimized
  */
 @property (nonatomic, retain) NSString *attribute;
 

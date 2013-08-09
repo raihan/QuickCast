@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,14 +15,16 @@
 
 #import "EC2InstanceBlockDeviceMappingSpecification.h"
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Modify Instance Attribute Request
- *
- * \ingroup EC2
  */
 
 @interface EC2ModifyInstanceAttributeRequest:AmazonServiceRequestConfig
@@ -42,6 +44,8 @@
     NSString       *userData;
     NSString       *instanceInitiatedShutdownBehavior;
     NSMutableArray *groups;
+    bool           ebsOptimized;
+    bool           ebsOptimizedIsSet;
 }
 
 
@@ -58,6 +62,9 @@
  * <code>disableApiTermination</code>,
  * <code>instanceInitiatedShutdownBehavior</code>,
  * <code>rootDevice</code>, <code>blockDeviceMapping</code>
+ * <p>
+ * <b>Constraints:</b><br/>
+ * <b>Allowed Values: </b>instanceType, kernel, ramdisk, userData, disableApiTermination, instanceInitiatedShutdownBehavior, rootDeviceName, blockDeviceMapping, productCodes, sourceDestCheck, groupSet, ebsOptimized
  */
 @property (nonatomic, retain) NSString *attribute;
 
@@ -120,6 +127,13 @@
  * The value of the Groups property for this object.
  */
 @property (nonatomic, retain) NSMutableArray *groups;
+
+/**
+ * Boolean value
+ */
+@property (nonatomic) bool           ebsOptimized;
+
+@property (nonatomic, readonly) bool ebsOptimizedIsSet;
 
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,25 +15,31 @@
 
 #import <Foundation/Foundation.h>
 
+
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonSDKUtil.h>
+#import <AWSRuntime/AmazonAuthUtils.h>
+#import <AWSRuntime/AmazonServiceRequest.h>
+#else
 #import "../AmazonSDKUtil.h"
 #import "../AmazonAuthUtils.h"
 #import "../AmazonServiceRequest.h"
+#endif
 
 #import "S3Constants.h"
 
 /** Contains the parameters common to Amazon S3 operations.
  *
- * \ingroup S3
  */
 @interface S3Request:AmazonServiceRequest {
-    NSString *authorization;
-    int      contentLength;
-    NSString *contentType;
-    NSDate   *date;
-    NSString *securityToken;
-    NSString *bucket;
-    NSString *key;
-    NSString *subResource;
+    NSString  *authorization;
+    int64_t   contentLength;
+    NSString  *contentType;
+    NSDate    *date;
+    NSString  *securityToken;
+    NSString  *bucket;
+    NSString  *key;
+    NSString  *subResource;
 }
 
 #pragma mark Properties
@@ -42,7 +48,7 @@
 @property (nonatomic, retain) NSString *authorization;
 
 /** Length of the message (without the headers) according to RFC 2616. */
-@property (nonatomic) int contentLength;
+@property (nonatomic) int64_t contentLength;
 
 /** The content type of the resource.
 * Example: <code>text/plain</code> */
@@ -87,17 +93,6 @@
 -(NSString *)protocol;
 
 /** Returns the host portion of the endpoint. */
--(NSString *)endpointHost;
+-(NSString *)endpointHost __attribute__((deprecated)); 
 
 @end
-
-#pragma mark Categories
-
-/** Add a Request formatter to the NSDate class */
-@interface NSDate (WithS3RequestFormat)
-
-/** Format a date for use with Amazon S3 requests */
--(NSString *)requestFormat;
-
-@end
-

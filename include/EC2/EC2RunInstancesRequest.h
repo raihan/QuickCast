@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -17,44 +17,49 @@
 #import "EC2BlockDeviceMapping.h"
 #import "EC2InstanceLicenseSpecification.h"
 #import "EC2InstanceNetworkInterfaceSpecification.h"
+#import "EC2IamInstanceProfileSpecification.h"
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Run Instances Request
- *
- * \ingroup EC2
  */
 
 @interface EC2RunInstancesRequest:AmazonServiceRequestConfig
 
 {
-    NSString                        *imageId;
-    NSNumber                        *minCount;
-    NSNumber                        *maxCount;
-    NSString                        *keyName;
-    NSMutableArray                  *securityGroups;
-    NSMutableArray                  *securityGroupIds;
-    NSString                        *userData;
-    NSString                        *addressingType;
-    NSString                        *instanceType;
-    EC2Placement                    *placement;
-    NSString                        *kernelId;
-    NSString                        *ramdiskId;
-    NSMutableArray                  *blockDeviceMappings;
-    bool                            monitoring;
-    bool                            monitoringIsSet;
-    NSString                        *subnetId;
-    bool                            disableApiTermination;
-    bool                            disableApiTerminationIsSet;
-    NSString                        *instanceInitiatedShutdownBehavior;
-    EC2InstanceLicenseSpecification *license;
-    NSString                        *privateIpAddress;
-    NSString                        *clientToken;
-    NSString                        *additionalInfo;
-    NSMutableArray                  *networkInterfaces;
+    NSString                           *imageId;
+    NSNumber                           *minCount;
+    NSNumber                           *maxCount;
+    NSString                           *keyName;
+    NSMutableArray                     *securityGroups;
+    NSMutableArray                     *securityGroupIds;
+    NSString                           *userData;
+    NSString                           *instanceType;
+    EC2Placement                       *placement;
+    NSString                           *kernelId;
+    NSString                           *ramdiskId;
+    NSMutableArray                     *blockDeviceMappings;
+    bool                               monitoring;
+    bool                               monitoringIsSet;
+    NSString                           *subnetId;
+    bool                               disableApiTermination;
+    bool                               disableApiTerminationIsSet;
+    NSString                           *instanceInitiatedShutdownBehavior;
+    EC2InstanceLicenseSpecification    *license;
+    NSString                           *privateIpAddress;
+    NSString                           *clientToken;
+    NSString                           *additionalInfo;
+    NSMutableArray                     *networkInterfaces;
+    EC2IamInstanceProfileSpecification *iamInstanceProfile;
+    bool                               ebsOptimized;
+    bool                               ebsOptimizedIsSet;
 }
 
 
@@ -100,15 +105,10 @@
 @property (nonatomic, retain) NSString *userData;
 
 /**
- * The value of the AddressingType property for this object.
- */
-@property (nonatomic, retain) NSString *addressingType;
-
-/**
  * Specifies the instance type for the launched instances.
  * <p>
  * <b>Constraints:</b><br/>
- * <b>Allowed Values: </b>t1.micro, m1.small, m1.large, m1.xlarge, m2.xlarge, m2.2xlarge, m2.4xlarge, c1.medium, c1.xlarge, cc1.4xlarge, cc2.8xlarge, cg1.4xlarge
+ * <b>Allowed Values: </b>t1.micro, m1.small, m1.medium, m1.large, m1.xlarge, m2.xlarge, m2.2xlarge, m2.4xlarge, m3.xlarge, m3.2xlarge, c1.medium, c1.xlarge, hi1.4xlarge, hs1.8xlarge, cc1.4xlarge, cc2.8xlarge, cg1.4xlarge
  */
 @property (nonatomic, retain) NSString *instanceType;
 
@@ -195,6 +195,18 @@
  * The value of the NetworkInterfaces property for this object.
  */
 @property (nonatomic, retain) NSMutableArray *networkInterfaces;
+
+/**
+ * The value of the IamInstanceProfile property for this object.
+ */
+@property (nonatomic, retain) EC2IamInstanceProfileSpecification *iamInstanceProfile;
+
+/**
+ * The value of the EbsOptimized property for this object.
+ */
+@property (nonatomic) bool           ebsOptimized;
+
+@property (nonatomic, readonly) bool ebsOptimizedIsSet;
 
 
 /**

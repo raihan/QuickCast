@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -17,12 +17,11 @@
 
 /** a container for elements related to a particular part of a multipart upload.
  *
- * \ingroup s3
  */
 @interface S3Part:NSObject {
     NSString  *etag;
     NSDate    *lastModified;
-    int       partNumber;
+    NSInteger partNumber;
     long long size;
 }
 
@@ -33,7 +32,7 @@
 @property (nonatomic, retain) NSDate *lastModified;
 
 /** The unique part number identifying the part. */
-@property (nonatomic) int partNumber;
+@property (nonatomic) NSInteger partNumber;
 
 /** The size of the uploaded part data. */
 @property (nonatomic) long long size;

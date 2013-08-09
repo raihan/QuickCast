@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,18 +13,21 @@
  * permissions and limitations under the License.
  */
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceException.h>
+#else
 #import "../AmazonServiceException.h"
+#endif
 
 
 
 
 /**
  * <p>
- * This exception is thrown when the resource which is being attempted
- * to be changed is in use
+ * The operation tried to access a nonexistent table or index. The
+ * resource may not be specified correctly, or its status may not be
+ * <code>ACTIVE</code> .
  * </p>
- *
- * \ingroup DynamoDB
  */
 @interface DynamoDBResourceNotFoundException:AmazonServiceException
 {

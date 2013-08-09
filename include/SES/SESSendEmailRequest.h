@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -16,14 +16,16 @@
 #import "SESDestination.h"
 #import "SESMessage.h"
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Send Email Request
- *
- * \ingroup SES
  */
 
 @interface SESSendEmailRequest:AmazonServiceRequestConfig
@@ -46,13 +48,12 @@
 -(id)init;
 
 /**
- * The sender's email address.
+ * The identity's email address.
  */
 @property (nonatomic, retain) NSString *source;
 
 /**
- * The destination for this email, composed of To:, From:, and CC:
- * fields.
+ * The destination for this email, composed of To:, CC:, and BCC: fields.
  */
 @property (nonatomic, retain) SESDestination *destination;
 

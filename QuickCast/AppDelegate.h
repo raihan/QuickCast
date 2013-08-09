@@ -11,6 +11,7 @@
 #import <Growl/Growl.h>
 #import <CoreMedia/CMBufferQueue.h>
 #import "Exporter.h"
+#import "S3TransferManager.h"
 
 extern NSString *kGlobalHotKey;
 
@@ -53,12 +54,13 @@ extern NSString *kGlobalHotKey;
     
     Exporter *exporter;
 
-    
+    S3TransferManager *transferManager;
     
     
 }
 
 @property (strong) Exporter *exporter;
+@property (strong) S3TransferManager *transferManager;
 
 #pragma mark - AVVideoDataOutput
 

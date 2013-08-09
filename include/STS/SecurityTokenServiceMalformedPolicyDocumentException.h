@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,7 +13,11 @@
  * permissions and limitations under the License.
  */
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceException.h>
+#else
 #import "../AmazonServiceException.h"
+#endif
 
 
 
@@ -23,8 +27,6 @@
  * The request was rejected because the policy document was malformed.
  * The error message describes the specific error.
  * </p>
- *
- * \ingroup SecurityTokenService
  */
 @interface SecurityTokenServiceMalformedPolicyDocumentException:AmazonServiceException
 {

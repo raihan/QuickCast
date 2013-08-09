@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,17 +14,20 @@
  */
 
 #import "EC2SpotInstanceStateFault.h"
+#import "EC2SpotInstanceStatus.h"
 #import "EC2LaunchSpecification.h"
 #import "EC2Tag.h"
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Spot Instance Request
- *
- * \ingroup EC2
  */
 
 @interface EC2SpotInstanceRequest:AmazonServiceRequestConfig
@@ -35,6 +38,7 @@
     NSString                  *type;
     NSString                  *state;
     EC2SpotInstanceStateFault *fault;
+    EC2SpotInstanceStatus     *status;
     NSDate                    *validFrom;
     NSDate                    *validUntil;
     NSString                  *launchGroup;
@@ -83,6 +87,11 @@
  * The value of the Fault property for this object.
  */
 @property (nonatomic, retain) EC2SpotInstanceStateFault *fault;
+
+/**
+ * The value of the Status property for this object.
+ */
+@property (nonatomic, retain) EC2SpotInstanceStatus *status;
 
 /**
  * The value of the ValidFrom property for this object.

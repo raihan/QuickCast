@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@
 /** Contains the summary of a version stored in an Amazon S3 bucket.
  * This object doesn't contain the version's full metadata or any of its contents.
  *
- * \ingroup S3
  */
 @interface S3VersionSummary:S3ObjectSummary {
     NSString *versionId;

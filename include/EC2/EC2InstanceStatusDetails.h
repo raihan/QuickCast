@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@
 
 /**
  * Instance Status Details
- *
- * \ingroup EC2
  */
 
 @interface EC2InstanceStatusDetails:NSObject
@@ -27,6 +25,7 @@
 {
     NSString *name;
     NSString *status;
+    NSDate   *impairedSince;
 }
 
 
@@ -47,6 +46,11 @@
  * The value of the Status property for this object.
  */
 @property (nonatomic, retain) NSString *status;
+
+/**
+ * The value of the ImpairedSince property for this object.
+ */
+@property (nonatomic, retain) NSDate *impairedSince;
 
 /**
  * Returns a string representation of this object; useful for testing and

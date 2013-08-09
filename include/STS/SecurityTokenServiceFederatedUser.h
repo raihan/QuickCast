@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@
 
 /**
  * Federated User
- *
- * \ingroup SecurityTokenService
  */
 
 @interface SecurityTokenServiceFederatedUser:NSObject
@@ -37,7 +35,7 @@
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Length: </b>2 - 96<br/>
- * <b>Pattern: </b>[\w+=,.@-\:]*<br/>
+ * <b>Pattern: </b>[\w+=,.@\:-]*<br/>
  */
 @property (nonatomic, retain) NSString *federatedUserId;
 
@@ -45,9 +43,8 @@
  * The ARN specifying the federated user associated with the credentials.
  * For more information about ARNs and how to use them in policies, see
  * <a
- * ocs.amazonwebservices.com/IAM/latest/UserGuide/Using_Identifiers.html"
- * target="_blank">Identifiers for IAM Entities</a> in <i>Using AWS
- * Identity and Access Management</i>.
+ * ttp://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html"
+ * target="_blank">Identifiers for IAM Entities</a> in <i>Using IAM</i>.
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Length: </b>20 - 2048<br/>
@@ -70,9 +67,8 @@
  * @param theArn The ARN specifying the federated user associated with
  * the credentials. For more information about ARNs and how to use them
  * in policies, see <a
- * ocs.amazonwebservices.com/IAM/latest/UserGuide/Using_Identifiers.html"
- * target="_blank">Identifiers for IAM Entities</a> in <i>Using AWS
- * Identity and Access Management</i>.
+ * ttp://docs.aws.amazon.com/IAM/latest/UserGuide/Using_Identifiers.html"
+ * target="_blank">Identifiers for IAM Entities</a> in <i>Using IAM</i>.
  */
 -(id)initWithFederatedUserId:(NSString *)theFederatedUserId andArn:(NSString *)theArn;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,24 +15,19 @@
 
 #import <Foundation/Foundation.h>
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonClientException.h>
+#else
 #import "../AmazonClientException.h"
+#endif
 
 #import "S3AbstractPutRequest.h"
 #import "S3Constants.h"
 
 /** Contains the parameters used for the CopyObject operation.
  *
- * \ingroup S3
  */
 @interface S3CopyObjectRequest:S3AbstractPutRequest {
-    NSString *sourceKey;
-    NSString *sourceBucket;
-
-    NSString *metadataDirective;
-    NSDate   *ifModifiedSince;
-    NSDate   *ifUnmodifiedSince;
-    NSString *ifMatch;
-    NSString *ifNoneMatch;
 }
 
 /** The name of the source object. */
@@ -57,6 +52,8 @@
 
 /** Copies the object if it hasn't been modified since the specified time */
 @property (nonatomic, retain) NSDate *ifUnmodifiedSince;
+
+@property (nonatomic, retain) NSString *redirectLocation;
 
 /** intializes the request with source and destination.
  *

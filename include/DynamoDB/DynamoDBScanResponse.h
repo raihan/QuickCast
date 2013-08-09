@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,30 +13,28 @@
  * permissions and limitations under the License.
  */
 
-#import "DynamoDBKey.h"
+#import "DynamoDBAttributeValue.h"
+#import "DynamoDBConsumedCapacity.h"
 
 #import "DynamoDBResponse.h"
-#import "../AmazonServiceExceptionUnmarshaller.h"
 
+#import "DynamoDBResourceNotFoundException.h"
 #import "DynamoDBProvisionedThroughputExceededException.h"
 #import "DynamoDBInternalServerErrorException.h"
-#import "DynamoDBResourceNotFoundException.h"
 
 
 /**
  * Scan Result
- *
- * \ingroup DynamoDB
  */
 
 @interface DynamoDBScanResponse:DynamoDBResponse
 
 {
-    NSMutableArray *items;
-    NSNumber       *count;
-    NSNumber       *scannedCount;
-    DynamoDBKey    *lastEvaluatedKey;
-    NSNumber       *consumedCapacityUnits;
+    NSMutableArray           *items;
+    NSNumber                 *count;
+    NSNumber                 *scannedCount;
+    NSMutableDictionary      *lastEvaluatedKey;
+    DynamoDBConsumedCapacity *consumedCapacity;
 }
 
 
@@ -51,37 +49,48 @@
 -(id)init;
 
 /**
- * The value of the Items property for this object.
+ * An array of item attributes that match the scan criteria. Each element
+ * in this array consists of an attribute name and the value for that
+ * attribute.
  */
 @property (nonatomic, retain) NSMutableArray *items;
 
 /**
- * Number of items in the response.
+ * The number of items in the response.
  */
 @property (nonatomic, retain) NSNumber *count;
 
 /**
- * Number of items in the complete scan before any filters are applied. A
- * high ScannedCount value with few, or no, Count results indicates an
- * inefficient Scan operation.
+ * The number of items in the complete scan, before any filters are
+ * applied. A high <i>ScannedCount</i> value with few, or no,
+ * <i>Count</i> results indicates an inefficient <i>Scan</i> operation.
+ * For more information, see <a
+ * om/amazondynamodb/latest/developerguide/QueryAndScan.html#Count">Count
+ * and ScannedCount</a> in the <i>Amazon DynamoDB Developer Guide</i>.
  */
 @property (nonatomic, retain) NSNumber *scannedCount;
 
 /**
- * Primary key of the item where the scan operation stopped. Provide this
- * value in a subsequent scan operation to continue the operation from
- * that point. The LastEvaluatedKey is null when the entire scan result
- * set is complete (i.e. the operation processed the "last page").
+ * The primary key of the item where the operation stopped, inclusive of
+ * the previous result set. Use this value to start a new operation,
+ * excluding this value in the new request. <p><i>LastEvaluatedKey</i> is
+ * null when the entire result set is complete (in other words, when the
+ * operation processed the "last page" of results). <p>If you are
+ * performing a parallel scan, <i>LastEvaluatedKey</i> is null if the
+ * requested <i>Segment</i> has been completely scanned. It does not
+ * indicate that any other segments have been scanned.
  */
-@property (nonatomic, retain) DynamoDBKey *lastEvaluatedKey;
+@property (nonatomic, retain) NSMutableDictionary *lastEvaluatedKey;
 
 /**
- * The number of Capacity Units of the provisioned throughput of the
- * table consumed during the operation. GetItem, BatchGetItem, Query, and
- * Scan operations consume Read Capacity Units, while PutItem,
- * UpdateItem, and DeleteItem operations consume Write Capacity Units.
+ * The table name that consumed provisioned throughput, and the number of
+ * capacity units consumed by it. <i>ConsumedCapacity</i> is only
+ * returned if it was asked for in the request. For more information, see
+ * <a
+ * odb/latest/developerguide/ProvisionedThroughputIntro.html">Provisioned
+ * Throughput</a> in the <i>Amazon DynamoDB Developer Guide</i>.
  */
-@property (nonatomic, retain) NSNumber *consumedCapacityUnits;
+@property (nonatomic, retain) DynamoDBConsumedCapacity *consumedCapacity;
 
 
 
@@ -89,6 +98,11 @@
  * Returns a value from the items array for the specified index
  */
 -(NSDictionary *)itemsObjectAtIndex:(int)index;
+
+/**
+ * Returns a value from the lastEvaluatedKey dictionary for the specified key.
+ */
+-(DynamoDBAttributeValue *)lastEvaluatedKeyValueForKey:(NSString *)theKey;
 
 /**
  * Returns a string representation of this object; useful for testing and

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,12 +14,16 @@
  */
 
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonSDKUtil.h>
+#else
+#import "../AmazonSDKUtil.h"
+#endif
+
 
 
 /**
  * Attribute Value
- *
- * \ingroup DynamoDB
  */
 
 @interface DynamoDBAttributeValue:NSObject
@@ -27,39 +31,43 @@
 {
     NSString       *s;
     NSString       *n;
+    NSData         *b;
     NSMutableArray *sS;
     NSMutableArray *nS;
+    NSMutableArray *bS;
 }
 
 
 
 /**
- * AttributeValue can be String, Number, StringSet, NumberSet. Strings
- * are Unicode with UTF-8 binary encoding. The maximum size is limited by
- * the size of the primary key (1024 bytes as a range part of a key or
- * 2048 bytes as a single part hash key) or the item size (64k).
+ * Represents a String data type
  */
 @property (nonatomic, retain) NSString *s;
 
 /**
- * AttributeValue can be String, Number, StringSet, NumberSet. Numbers
- * are positive or negative exact-value decimals and integers. A number
- * can have up to 38 digits precision and can be between 10^-128 to
- * 10^+126.
+ * Represents a Number data type
  */
 @property (nonatomic, retain) NSString *n;
 
 /**
- * AttributeValue can be String, Number, StringSet, NumberSet. A Set of
- * Strings.
+ * Represents a Binary data type
+ */
+@property (nonatomic, retain) NSData *b;
+
+/**
+ * Represents a String set data type
  */
 @property (nonatomic, retain) NSMutableArray *sS;
 
 /**
- * AttributeValue can be String, Number, StringSet, NumberSet. A Set of
- * Numbers.
+ * Represents a Number set data type
  */
 @property (nonatomic, retain) NSMutableArray *nS;
+
+/**
+ * Represents a Binary set data type
+ */
+@property (nonatomic, retain) NSMutableArray *bS;
 
 
 /**
@@ -72,11 +80,7 @@
  * Constructs a new AttributeValue object.
  * Callers should use properties to initialize any additional object members.
  *
- * @param theS AttributeValue can be String, Number, StringSet,
- * NumberSet. Strings are Unicode with UTF-8 binary encoding. The maximum
- * size is limited by the size of the primary key (1024 bytes as a range
- * part of a key or 2048 bytes as a single part hash key) or the item
- * size (64k).
+ * @param theS Represents a String data type
  */
 -(id)initWithS:(NSString *)theS;
 
@@ -84,8 +88,7 @@
  * Constructs a new AttributeValue object.
  * Callers should use properties to initialize any additional object members.
  *
- * @param theSS AttributeValue can be String, Number, StringSet,
- * NumberSet. A Set of Strings.
+ * @param theSS Represents a String set data type
  */
 -(id)initWithSS:(NSMutableArray *)theSS;
 
@@ -93,10 +96,7 @@
  * Constructs a new AttributeValue object.
  * Callers should use properties to initialize any additional object members.
  *
- * @param theN AttributeValue can be String, Number, StringSet,
- * NumberSet. Numbers are positive or negative exact-value decimals and
- * integers. A number can have up to 38 digits precision and can be
- * between 10^-128 to 10^+126.
+ * @param theN Represents a Number data type
  */
 -(id)initWithN:(NSString *)theN;
 
@@ -104,10 +104,25 @@
  * Constructs a new AttributeValue object.
  * Callers should use properties to initialize any additional object members.
  *
- * @param theNS AttributeValue can be String, Number, StringSet,
- * NumberSet. A Set of Numbers.
+ * @param theNS Represents a Number set data type
  */
 -(id)initWithNS:(NSMutableArray *)theNS;
+
+/**
+ * Constructs a new AttributeValue object.
+ * Callers should use properties to initialize any additional object members.
+ *
+ * @param theB Represents a Binary data type
+ */
+-(id)initWithB:(NSData *)theB;
+
+/**
+ * Constructs a new AttributeValue object.
+ * Callers should use properties to initialize any additional object members.
+ *
+ * @param theBS Represents a Binary set data type
+ */
+-(id)initWithBS:(NSMutableArray *)theBS;
 
 /**
  * Adds a single object to sS.
@@ -120,6 +135,12 @@
  * This function will alloc and init nS if not already done.
  */
 -(void)addNS:(NSString *)nSObject;
+
+/**
+ * Adds a single object to bS.
+ * This function will alloc and init bS if not already done.
+ */
+-(void)addBS:(NSData *)bSObject;
 
 /**
  * Returns a string representation of this object; useful for testing and

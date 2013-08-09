@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -20,8 +20,6 @@
 
 /**
  * Volume
- *
- * \ingroup EC2
  */
 
 @interface EC2Volume:NSObject
@@ -35,6 +33,8 @@
     NSDate         *createTime;
     NSMutableArray *attachments;
     NSMutableArray *tags;
+    NSString       *volumeType;
+    NSNumber       *iops;
 }
 
 
@@ -88,6 +88,19 @@
  * A list of tags for the Volume.
  */
 @property (nonatomic, retain) NSMutableArray *tags;
+
+/**
+ * The value of the VolumeType property for this object.
+ * <p>
+ * <b>Constraints:</b><br/>
+ * <b>Allowed Values: </b>standard, io1
+ */
+@property (nonatomic, retain) NSString *volumeType;
+
+/**
+ * The value of the Iops property for this object.
+ */
+@property (nonatomic, retain) NSNumber *iops;
 
 /**
  * Adds a single object to attachments.

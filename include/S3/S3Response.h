@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,18 +15,21 @@
 
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
-#import "../AmazonServiceResponse.h"
-#import "S3ErrorResponseHandler.h"
 #import "S3Constants.h"
 #import "S3Request.h"
+
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceResponse.h>
+#else
+#import "../AmazonServiceResponse.h"
+#endif
 
 
 /** response headers that are common to Amazon S3 responses.
  *
- * \ingroup S3
  */
 @interface S3Response:AmazonServiceResponse {
-    int                 contentLength;
+    int64_t             contentLength;
     NSString            *connectionState;
     NSDate              *date;
     NSString            *etag;
@@ -35,8 +38,6 @@
     NSString            *id2;
     NSString            *versionId;
     NSString            *serverSideEncryption;
-
-    NSDateFormatter     *dateFormatter;
 
     NSMutableDictionary *headers;
 }
@@ -73,16 +74,13 @@
 @property (nonatomic) bool deleteMarker;
 
 /** The length in bytes of the body in the response. */
-@property (nonatomic) int contentLength;
+@property (nonatomic) int64_t contentLength;
 
 /** Sets the value in the response corresponding to the HTTP header */
 -(void)setValue:(id)value forHTTPHeaderField:(NSString *)header;
 
 /** Gets the value in the response corresponding to the HTTP header */
 -(id)valueForHTTPHeaderField:(NSString *)header;
-
-/** Parses a date from an S3 response. */
--(NSDate *)parseDateHeader:(NSString *)dateString;
 
 /** Determines the type of a property in a response. */
 -(NSString *)getTypeOfPropertyNamed:(NSString *)propertyName;

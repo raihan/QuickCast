@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,20 +13,19 @@
  * permissions and limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
 #import "S3Request.h"
 #import "S3Constants.h"
 #import "S3CannedACL.h"
+#import "S3AccessControlList.h"
 
 /** Class with code common to Put* requests. Do not instantiate directly
  *
- * \ingroup S3
  */
 @interface S3AbstractPutRequest:S3Request {
     S3CannedACL         *cannedACL;
+    S3AccessControlList *fullACL;
     NSString            *storageClass;
     NSString            *serverSideEncryption;
-
     NSMutableDictionary *metadata;
 }
 
@@ -36,6 +35,10 @@
  * 'bucket-owner-full-control'.
  */
 @property (nonatomic, retain) S3CannedACL *cannedACL;
+
+/** A full access control list to apply to the bucket */
+@property (nonatomic, retain) S3AccessControlList *fullACL;
+
 /** The storage class for the object.
  * Valid values are 'STANDARD', 'REDUCED_REDUNDANCY'
  */
@@ -45,15 +48,14 @@
  */
 @property (nonatomic, retain) NSString *serverSideEncryption;
 
+/** The metadata dictionary of key-value pairs.
+*/
+@property (nonatomic, retain) NSMutableDictionary *metadata;
+
 /** Add a key-value metadata pair to the request.
  *  These will be prefixed with x-amz-meta- and added to the request header.
  */
 -(void)addMetadataWithValue:(NSString *)value forKey:(NSString *)aKey;
 
-/** Get the metadata dictionary of key-value pairs.
- *
- *  @returns the metadata dictionary.
- */
--(NSMutableDictionary *)metadata;
 
 @end

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -16,18 +16,15 @@
 #import "DynamoDBTableDescription.h"
 
 #import "DynamoDBResponse.h"
-#import "../AmazonServiceExceptionUnmarshaller.h"
 
 #import "DynamoDBResourceInUseException.h"
+#import "DynamoDBResourceNotFoundException.h"
 #import "DynamoDBLimitExceededException.h"
 #import "DynamoDBInternalServerErrorException.h"
-#import "DynamoDBResourceNotFoundException.h"
 
 
 /**
  * Update Table Result
- *
- * \ingroup DynamoDB
  */
 
 @interface DynamoDBUpdateTableResponse:DynamoDBResponse
@@ -48,7 +45,7 @@
 -(id)init;
 
 /**
- * The value of the TableDescription property for this object.
+ * Contains the properties of a table.
  */
 @property (nonatomic, retain) DynamoDBTableDescription *tableDescription;
 

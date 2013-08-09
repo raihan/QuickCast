@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@
             NSInteger result = [inputStream read:buffer maxLength:BUFFER_SIZE];
 
             if (result == -1) {
-                @throw [NSException exceptionWithName : @"StreamException" reason : @"Unable to properly read stream." userInfo : nil];
+                return nil;
             }
 
             CC_MD5_Update(&hashObject, (const void *)buffer, (CC_LONG)result);

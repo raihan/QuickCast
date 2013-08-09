@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,14 +14,16 @@
  */
 
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * List Tables Request
- *
- * \ingroup DynamoDB
  */
 
 @interface DynamoDBListTablesRequest:AmazonServiceRequestConfig
@@ -42,8 +44,9 @@
 
 /**
  * The name of the table that starts the list. If you already ran a
- * ListTables operation and recieved a LastEvaluatedTableName value in
- * the response, use that value here to continue the list.
+ * <i>ListTables</i> operation and received a
+ * <i>LastEvaluatedTableName</i> value in the response, use that value
+ * here to continue the list.
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Length: </b>3 - 255<br/>
@@ -52,7 +55,7 @@
 @property (nonatomic, retain) NSString *exclusiveStartTableName;
 
 /**
- * A number of maximum table names to return.
+ * A maximum number of table names to return.
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Range: </b>1 - 100<br/>

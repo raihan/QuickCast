@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,7 +15,11 @@
 
 #import <Foundation/Foundation.h>
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonClientException.h>
+#else
 #import "../AmazonClientException.h"
+#endif
 
 #import "S3Request.h"
 #import "S3Constants.h"
@@ -23,10 +27,9 @@
 
 /** contains the parameters used for the getObject operation.
  *
- * \ingroup S3
  */
 @interface S3GetObjectRequest:S3Request {
-    int                       rangeStart, rangeEnd;
+    int64_t                   rangeStart, rangeEnd;
     bool                      rangeSet;
     NSDate                    *ifModifiedSince;
     NSDate                    *ifUnmodifiedSince;
@@ -38,10 +41,10 @@
 }
 
 /** Specifies the starting index of the byte range to download */
-@property (nonatomic, readonly) int rangeStart;
+@property (nonatomic, readonly) int64_t rangeStart;
 
 /** Specifies the end index of the byte range to download */
-@property (nonatomic, readonly) int rangeEnd;
+@property (nonatomic, readonly) int64_t rangeEnd;
 
 /** Return the object only if it has been modified since the specified time, otherwise return a 304 (not modified). */
 @property (nonatomic, retain) NSDate *ifModifiedSince;
@@ -79,7 +82,7 @@
 -(S3GetObjectRequest *)initWithKey:(NSString *)key withBucket:(NSString *)bucket withVersionId:(NSString *)versionId;
 
 /** sets the start and end of the range. */
--(void)setRangeStart:(int)start rangeEnd:(int)end;
+-(void)setRangeStart:(int64_t)start rangeEnd:(int64_t)end;
 
 /** returns the range in the form 'bytes=start:end' */
 -(NSString *)getRange;

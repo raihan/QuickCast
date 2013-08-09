@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
 
 #import "AmazonS3Client.h"
 
+#import "AmazonEndpoints.h"
+#import "S3LocationConstraintUnmarshaller.h"
+
 
 @implementation AmazonS3Client
 
@@ -22,7 +25,7 @@
 {
     if ((self = [super init]) != nil) {
         [AmazonS3Client initializeResponseObjects];
-        self.endpoint = @"https://s3.amazonaws.com";
+        self.endpoint = AMAZON_S3_US_EAST_1_ENDPOINT_SECURE;;
     }
 
     return self;
@@ -93,9 +96,10 @@
     S3ListBucketsRequest  *req      = [[[S3ListBucketsRequest alloc] init] autorelease];
     S3ListBucketsResponse *response = [self listBuckets:req];
 
-    if (response.listBucketsResult != nil && response.listBucketsResult.buckets != nil) {
+    if (response.error == nil && response.listBucketsResult != nil && response.listBucketsResult.buckets != nil) {
         return [NSArray arrayWithArray:response.listBucketsResult.buckets];
     }
+
     return nil;
 }
 
@@ -162,6 +166,11 @@
 }
 
 -(S3CopyObjectResponse *)copyObject:(S3CopyObjectRequest *)copyObjectRequest
+{
+    return [self objectCopy:copyObjectRequest];
+}
+
+-(S3CopyObjectResponse *)objectCopy:(S3CopyObjectRequest *)copyObjectRequest
 {
     return (S3CopyObjectResponse *)[self invoke:copyObjectRequest];
 }
@@ -243,6 +252,35 @@
     return (S3DeleteBucketLifecycleConfigurationResponse *)[self invoke:deleteBucketLifecycleConfigurationRequest];
 }
 
+-(S3SetBucketTaggingResponse *)setBucketTagging:(S3SetBucketTaggingRequest *)setBucketTaggingRequest
+{
+    return (S3SetBucketTaggingResponse *)[self invoke:setBucketTaggingRequest];
+}
+
+-(S3GetBucketTaggingResponse *)getBucketTagging:(S3GetBucketTaggingRequest *)getBucketTaggingRequest
+{
+    return (S3GetBucketTaggingResponse *)[self invoke:getBucketTaggingRequest];
+}
+
+-(S3DeleteBucketTaggingResponse *)deleteBucketTagging:(S3DeleteBucketTaggingRequest *)deleteBucketTaggingRequest
+{
+    return (S3DeleteBucketTaggingResponse *)[self invoke:deleteBucketTaggingRequest];
+}
+
+-(S3SetBucketCrossOriginResponse *)setBucketCrossOrigin:(S3SetBucketCrossOriginRequest *)setBucketCrossOriginRequest;
+{
+    return (S3SetBucketCrossOriginResponse *)[self invoke:setBucketCrossOriginRequest];
+}
+
+-(S3GetBucketCrossOriginResponse *)getBucketCrossOrigin:(S3GetBucketCrossOriginRequest *)getBucketCrossOriginRequest;
+{
+    return (S3GetBucketCrossOriginResponse *)[self invoke:getBucketCrossOriginRequest];
+}
+
+-(S3DeleteBucketCrossOriginResponse *)deleteBucketCrossOrigin:(S3DeleteBucketCrossOriginRequest *)deleteBucketCrossOriginRequest;
+{
+    return (S3DeleteBucketCrossOriginResponse *)[self invoke:deleteBucketCrossOriginRequest];
+}
 
 -(S3DeleteVersionResponse *)deleteVersion:(S3DeleteVersionRequest *)deleteVersionRequest
 {
@@ -256,9 +294,20 @@
 
 -(NSURL *)getPreSignedURL:(S3GetPreSignedURLRequest *)preSignedURLRequest
 {
+    NSError *error = nil;
+    NSURL *url = [self getPreSignedURL:preSignedURLRequest error:&error];
+    if(error != nil)
+    {
+        NSLog(@"Error: %@", error);
+    }
+    return url;
+}
+
+-(NSURL *)getPreSignedURL:(S3GetPreSignedURLRequest *)preSignedURLRequest error:(NSError **)error
+{
     if (nil == preSignedURLRequest.accessKey) {
         if (nil == preSignedURLRequest.credentials) {
-            preSignedURLRequest.accessKey = credentials.accessKey;
+            preSignedURLRequest.accessKey = [self.provider credentials].accessKey;
         }
         else {
             preSignedURLRequest.accessKey = preSignedURLRequest.credentials.accessKey;
@@ -268,27 +317,31 @@
     if (preSignedURLRequest.endpoint == nil) {
         [preSignedURLRequest setEndpoint:self.endpoint];
     }
-
-    if (preSignedURLRequest.securityToken == nil && credentials != nil && credentials.securityToken != nil) {
-        preSignedURLRequest.securityToken = credentials.securityToken;
+    
+    if (preSignedURLRequest.securityToken == nil && [self.provider credentials] != nil && [self.provider credentials].securityToken != nil) {
+        preSignedURLRequest.securityToken = [self.provider credentials].securityToken;
     }
 
-
     AmazonURLRequest *amazonURLRequest = [preSignedURLRequest configureURLRequest];
-    amazonURLRequest.endpointHost = [preSignedURLRequest endpointHost];
+    amazonURLRequest.endpointHost = [preSignedURLRequest hostName];
     NSURLRequest     *urlRequest  = [self signS3Request:preSignedURLRequest];
     NSString         *auth        = [urlRequest valueForHTTPHeaderField:kHttpHdrAuthorization];
     NSString         *signature   = (NSString *)[[auth componentsSeparatedByString:@":"] objectAtIndex:1];
     NSString         *queryString = [[preSignedURLRequest queryString] stringByAppendingFormat:@"&%@=%@", kS3QueryParamSignature, [AmazonSDKUtil urlEncode:signature]];
 
-    
-    // Dont set the subresource, add to it...
-    NSString* current = preSignedURLRequest.subResource;
-    if (current == nil)
-        current = @"";
-    if ([current length] > 0 && (![current hasSuffix:@"&"] && ![queryString hasPrefix:@"&"]))
-        current = [current stringByAppendingString:@"&"];
-    [preSignedURLRequest setSubResource:[current stringByAppendingString:queryString]];
+    [preSignedURLRequest setSubResource:queryString];
+
+    AmazonClientException *clientException = [preSignedURLRequest validate];
+
+    if(clientException != nil)
+    {
+        if (error != NULL)
+        {
+            *error = [AmazonErrorHandler errorFromExceptionWithThrowsExceptionOption:clientException];
+        }
+
+        return nil;
+    }
 
     return [AmazonSDKUtil URLWithURL:[preSignedURLRequest url] andProtocol:preSignedURLRequest.protocol];
 }
@@ -299,6 +352,11 @@
 }
 
 -(S3CopyPartResponse *)copyPart:(S3CopyPartRequest *)copyPartRequest
+{
+    return [self partCopy:copyPartRequest];
+}
+
+-(S3CopyPartResponse *)partCopy:(S3CopyPartRequest *)copyPartRequest
 {
     return (S3CopyPartResponse *)[self invoke:copyPartRequest];
 }
@@ -340,12 +398,29 @@
     return (S3CompleteMultipartUploadResponse *)[self invoke:completeMultipartUploadRequest];
 }
 
+-(S3RestoreObjectResponse *)restoreObject:(S3RestoreObjectRequest *)restoreObjectRequest
+{
+    return (S3RestoreObjectResponse *)[self invoke:restoreObjectRequest];
+}
+
 #pragma mark Request Utility Code
 
 -(S3Response *)invoke:(S3Request *)request
 {
     if (nil == request) {
-        @throw [AmazonClientException exceptionWithMessage : @"Request cannot be nil."];
+
+        S3Response *response = [[S3Response new] autorelease];
+        response.error = [AmazonErrorHandler errorFromExceptionWithThrowsExceptionOption:
+                          [AmazonClientException exceptionWithMessage:@"Request cannot be nil."]];
+        return response;
+    }
+
+    AmazonClientException *clientException = [request validate];
+    if(clientException != nil)
+    {
+        S3Response *response = [[S3Response new] autorelease];
+        response.error = [AmazonErrorHandler errorFromExceptionWithThrowsExceptionOption:clientException];
+        return response;
     }
 
     [request setUserAgent:self.userAgent];
@@ -353,89 +428,132 @@
         [request setEndpoint:self.endpoint];
     }
 
-
-    //NSLog(@"request is %@",request);
-
-
-    if (request.securityToken == nil && credentials != nil && credentials.securityToken != nil) {
-        request.securityToken = credentials.securityToken;
+    if (request.securityToken == nil)
+    {
+        if(request.credentials == nil && [self.provider credentials].securityToken != nil)
+        {
+            request.securityToken = [self.provider credentials].securityToken;
+        }
+        else if(request.credentials.securityToken != nil)
+        {
+            request.securityToken = request.credentials.securityToken;
+        }
     }
 
-
-    AMZLogDebug(@"Begin Request: %@", NSStringFromClass([request class]));
+    NSLog(@"Begin Request: %@", NSStringFromClass([request class]));
 
     S3Response *response = nil;
-    int        retries   = 0;
+    NSInteger  retries   = 0;
     while (retries < self.maxRetries) {
         if (retries > 0) {
             request.date = [NSDate date];
         }
 
-        NSURLRequest *urlRequest = [self signS3Request:request];
+        NSMutableURLRequest *urlRequest = [self signS3Request:request];
 
-        AMZLogDebug(@"%@ %@", [urlRequest HTTPMethod], [urlRequest URL]);
-        AMZLogDebug(@"Request headers: ");
-        for (id hKey in [[urlRequest allHTTPHeaderFields] allKeys])
-        {
-            AMZLogDebug(@"  %@: %@", [hKey description], [[urlRequest allHTTPHeaderFields] valueForKey:hKey]);
+        if (self.connectionTimeout != 0) {
+            [urlRequest setTimeoutInterval:self.connectionTimeout];
+        }
+        else {
+            [urlRequest setTimeoutInterval:self.timeout];
+        }
+
+        if ([AmazonLogger isVerboseLoggingEnabled]) {
+            NSLog(@"%@ %@", [urlRequest HTTPMethod], [urlRequest URL]);
+            NSLog(@"Request headers: ");
+            for (id hKey in [[urlRequest allHTTPHeaderFields] allKeys])
+            {
+                NSLog(@"  %@: %@", [hKey description], [[urlRequest allHTTPHeaderFields] valueForKey:hKey]);
+            }
+            NSLog(@"Request body: ");
+            NSString *rBody = [[NSString alloc] initWithData:[urlRequest HTTPBody] encoding:NSUTF8StringEncoding];
+            NSLog(@"%@", rBody);
+            [rBody release];
         }
 
         response = [AmazonS3Client constructResponseFromRequest:request];
         [response setRequest:request];
 
-        NSURLConnection *urlConnection = [NSURLConnection connectionWithRequest:urlRequest delegate:response];
-        NSTimer         *timeoutTimer  = [NSTimer scheduledTimerWithTimeInterval:self.timeout target:response selector:@selector(timeout) userInfo:nil repeats:NO];
+        if ([request delegate] != nil) {
+            NSURLConnection *urlConnection = [[NSURLConnection alloc] initWithRequest:urlRequest
+                                                                             delegate:response
+                                                                     startImmediately:NO];
+            request.urlConnection = urlConnection;
+            [urlConnection release];
 
+            NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:self.timeout
+                                                              target:response
+                                                            selector:@selector(timeout)
+                                                            userInfo:nil
+                                                             repeats:NO];
+            request.responseTimer = timer;
+            [urlConnection start];
+
+            return nil;
+        }
+
+        NSURLConnection *urlConnection = [[NSURLConnection alloc] initWithRequest:urlRequest
+                                                                         delegate:response
+                                                                 startImmediately:NO];
+        [urlConnection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:AWSDefaultRunLoopMode];
         request.urlConnection = urlConnection;
+        [urlConnection release];
+        [urlConnection start];
 
-        if ([request delegate] == nil) {
-            while (!response.isFinishedLoading && !response.exception && !response.didTimeout) {
-                [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-            }
+        NSTimer *timeoutTimer = [NSTimer timerWithTimeInterval:self.timeout
+                                                        target:response
+                                                      selector:@selector(timeout)
+                                                      userInfo:nil
+                                                       repeats:NO];
+        [[NSRunLoop currentRunLoop] addTimer:timeoutTimer forMode:AWSDefaultRunLoopMode];
 
-            if (response.didTimeout) {
-                [urlConnection cancel];
-            }
-            else {
-                [timeoutTimer invalidate];      //  invalidate also releases the object.
-            }
+        while (!response.isFinishedLoading && !response.exception && !response.didTimeout) {
+            [[NSRunLoop currentRunLoop] runMode:AWSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+        }
 
-            //AMZLogDebug(@"Response Status Code : %d", response.httpStatusCode);
-            if ( [self shouldRetry:response]) {
-                //AMZLogDebug(@"Retring Request: %d", retries);
-
-                [self pauseExponentially:retries];
-                retries++;
-            }
-            else {
-                if (response.exception) {
-                    //AMZLogDebug(@"Request threw exception: %@", [response.exception description]);
-                    if ([response.exception isMemberOfClass:[AmazonServiceException class]]) {
-                        //AMZLogDebug(@"HTTP: %d, S3 Error Code: %@", ((AmazonServiceException *)response.exception).statusCode, ((AmazonServiceException *)response.exception).errorCode);
-                    }
-                    //AMZLogDebug(@"Reason: ", [response.exception reason]);
-                    //@throw response.exception;
-                }
-
-                break;
-            }
+        if (response.didTimeout) {
+            [urlConnection cancel];
         }
         else {
-            return nil;
+            [timeoutTimer invalidate];      //  invalidate also releases the object.
+        }
+
+        NSLog(@"Response Status Code : %d", response.httpStatusCode);
+        if ( [self shouldRetry:response]) {
+            NSLog(@"Retrying Request: %d", retries);
+
+            [self pauseExponentially:retries];
+            retries++;
+        }
+        else {
+            if (response.exception) {
+                NSLog(@"Request threw exception: %@", [response.exception description]);
+                if ([response.exception isMemberOfClass:[AmazonServiceException class]]) {
+                    NSLog(@"HTTP: %d, S3 Error Code: %@", ((AmazonServiceException *)response.exception).statusCode, ((AmazonServiceException *)response.exception).errorCode);
+                }
+                NSLog(@"Reason: %@", [response.exception reason]);
+
+                response.error = [AmazonErrorHandler errorFromExceptionWithThrowsExceptionOption:response.exception];
+                return response;
+            }
+
+            break;
         }
     }
 
     if (response.exception) {
-        //AMZLogDebug(@"Request threw exception: %@", [response.exception description]);
+        NSLog(@"Request threw exception: %@", [response.exception description]);
         if ([response.exception isMemberOfClass:[AmazonServiceException class]]) {
-            //AMZLogDebug(@"HTTP: %d, S3 Error Code: %@", ((AmazonServiceException *)response.exception).statusCode, ((AmazonServiceException *)response.exception).errorCode);
+            NSLog(@"HTTP: %d, S3 Error Code: %@", ((AmazonServiceException *)response.exception).statusCode, ((AmazonServiceException *)response.exception).errorCode);
         }
-        //AMZLogDebug(@"Reason: ", [response.exception reason]);
-        //@throw response.exception;
+        NSLog(@"Reason: %@", [response.exception reason]);
+
+        response.error = [AmazonErrorHandler errorFromExceptionWithThrowsExceptionOption:response.exception];
+        return response;
     }
 
-    //AMZLogDebug(@"Received response from server. RequestId: %@. HTTP: %d. Id2: %@.", response.requestId, response.httpStatusCode, response.id2);
-    //AMZLogDebug(@"Response [%@]", response);
+    NSLog(@"Received response from server. RequestId: %@. HTTP: %d. Id2: %@.", response.requestId, response.httpStatusCode, response.id2);
+    NSLog(@"Response [%@]", response);
 
     return response;
 }
@@ -460,7 +578,7 @@
     return [response autorelease];
 }
 
--(NSURLRequest *)signS3Request:(S3Request *)request
+-(NSMutableURLRequest *)signS3Request:(S3Request *)request
 {
     AmazonURLRequest *urlRequest = [request configureURLRequest];
 
@@ -525,7 +643,7 @@
 
     NSString *stringToSign = [NSString stringWithFormat:@"%@\n%@\n%@\n%@\n%@%@", [urlRequest HTTPMethod], contentMd5, contentType, timestamp, canonicalizedAmzHeaders, canonicalizedResource];
 
-    AMZLogDebug(@"In SignURLRequest: String to Sign = [%@]", stringToSign);
+    NSLog(@"In SignURLRequest: String to Sign = [%@]", stringToSign);
 
     NSString *signature = nil;
     if (request.credentials != nil) {
@@ -533,8 +651,8 @@
         [urlRequest setValue:[NSString stringWithFormat:@"AWS %@:%@", request.credentials.accessKey, signature] forHTTPHeaderField:@"Authorization"];
     }
     else {
-        signature = [AmazonAuthUtils HMACSign:[stringToSign dataUsingEncoding:NSASCIIStringEncoding] withKey:credentials.secretKey usingAlgorithm:kCCHmacAlgSHA1];
-        [urlRequest setValue:[NSString stringWithFormat:@"AWS %@:%@", credentials.accessKey, signature] forHTTPHeaderField:@"Authorization"];
+        signature = [AmazonAuthUtils HMACSign:[stringToSign dataUsingEncoding:NSASCIIStringEncoding] withKey:[self.provider credentials].secretKey usingAlgorithm:kCCHmacAlgSHA1];
+        [urlRequest setValue:[NSString stringWithFormat:@"AWS %@:%@", [self.provider credentials].accessKey, signature] forHTTPHeaderField:@"Authorization"];
     }
 
     return urlRequest;
@@ -584,6 +702,9 @@
     [S3GetBucketLifecycleConfigurationResponse class];
     [S3SetBucketLifecycleConfigurationResponse class];
     [S3DeleteBucketLifecycleConfigurationResponse class];
+    [S3GetBucketTaggingResponse class];
+    [S3SetBucketTaggingResponse class];
+    [S3DeleteBucketTaggingResponse class];
 }
 
 

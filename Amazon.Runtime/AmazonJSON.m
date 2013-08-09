@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,12 +14,13 @@
  */
 
 #import "AmazonJSON.h"
+#import "AWS_SBJson.h"
 
 @implementation AmazonJSON
 
 +(NSString *)JSONRepresentation:(NSObject *)object
 {
-    SBJsonWriter *writer = [[[SBJsonWriter alloc] init] autorelease];
+    AWS_SBJsonWriter *writer = [[[AWS_SBJsonWriter alloc] init] autorelease];
     NSString     *json   = [writer stringWithObject:object];
 
     if (!json) {
@@ -30,7 +31,7 @@
 
 +(id)JSONValue:(NSString *)jsonString
 {
-    SBJsonParser *parser = [[[SBJsonParser alloc] init] autorelease];
+    AWS_SBJsonParser *parser = [[[AWS_SBJsonParser alloc] init] autorelease];
     id           repr    = [parser objectWithString:jsonString];
 
     if (!repr) {

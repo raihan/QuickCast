@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,14 +15,16 @@
 
 #import "EC2Filter.h"
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Describe Instance Status Request
- *
- * \ingroup EC2
  */
 
 @interface EC2DescribeInstanceStatusRequest:AmazonServiceRequestConfig
@@ -32,6 +34,8 @@
     NSMutableArray *filters;
     NSString       *nextToken;
     NSNumber       *maxResults;
+    bool           includeAllInstances;
+    bool           includeAllInstancesIsSet;
 }
 
 
@@ -63,6 +67,13 @@
  * The maximum number of paginated instance items per response.
  */
 @property (nonatomic, retain) NSNumber *maxResults;
+
+/**
+ * The value of the IncludeAllInstances property for this object.
+ */
+@property (nonatomic) bool           includeAllInstances;
+
+@property (nonatomic, readonly) bool includeAllInstancesIsSet;
 
 /**
  * Adds a single object to instanceIds.

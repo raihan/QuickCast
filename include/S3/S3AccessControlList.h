@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -38,7 +38,6 @@
  * will be able to access objects the user created unless permission is explicitly granted to
  * the bucket owner.
  *
- * \ingroup S3
  */
 @interface S3AccessControlList:NSObject {
     S3Owner        *owner;
@@ -61,5 +60,8 @@
 
 /** Returns the XML represenation of the ACL */
 -(NSString *)toXml;
+
+/** Returns x-amz header representation of the ACL */
+-(NSDictionary *)toHeaders;
 
 @end

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  */
 
 #import "S3CopyObjectResponse.h"
+#import "S3CopyObjectResultUnmarshaller.h"
 
 @implementation S3CopyObjectResponse
 
@@ -27,8 +28,8 @@
     [parser setDelegate:unmarshaller];
     [parser parse];
 
-    self.etag         = unmarshaller.copyObjectResult.etag;
-    self.lastModified = [NSDate dateWithISO8061Format:unmarshaller.copyObjectResult.lastModified];
+    self.etag         = unmarshaller.objectCopyResult.etag;
+    self.lastModified = [NSDate dateWithISO8061Format:unmarshaller.objectCopyResult.lastModified];
 
     [unmarshaller release];
     [parser release];

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -29,15 +29,25 @@
 
 -(NSMutableURLRequest *)configureURLRequest
 {
-    if (nil == self.bucket) {
-        @throw [AmazonClientException exceptionWithMessage : @"Bucket Name should not be nil."];
-    }
-
     [super configureURLRequest];
 
     [self.urlRequest setHTTPMethod:kHttpMethodDelete];
 
     return self.urlRequest;
+}
+
+- (AmazonClientException *)validate
+{
+    AmazonClientException *clientException = [super validate];
+    
+    if(clientException == nil)
+    {
+        if (nil == self.bucket) {
+            clientException = [AmazonClientException exceptionWithMessage : @"Bucket Name should not be nil."];
+        }
+    }
+    
+    return clientException;
 }
 
 -(void)dealloc

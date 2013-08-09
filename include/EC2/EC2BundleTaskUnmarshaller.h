@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -16,11 +16,21 @@
 #import <Foundation/Foundation.h>
 #import "EC2BundleTask.h"
 #import "EC2ResponseUnmarshaller.h"
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonValueUnmarshaller.h>
+#import <AWSRuntime/AmazonBoolValueUnmarshaller.h>
+#else
 #import "../AmazonValueUnmarshaller.h"
 #import "../AmazonBoolValueUnmarshaller.h"
+#endif
 #import "EC2StorageUnmarshaller.h"
 #import "EC2BundleTaskErrorUnmarshaller.h"
+
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonSDKUtil.h>
+#else
 #import "../AmazonSDKUtil.h"
+#endif
 
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,27 +14,28 @@
  */
 
 #import "DynamoDBAttributeValue.h"
+#import "DynamoDBConsumedCapacity.h"
+#import "DynamoDBItemCollectionMetrics.h"
 
 #import "DynamoDBResponse.h"
-#import "../AmazonServiceExceptionUnmarshaller.h"
 
-#import "DynamoDBProvisionedThroughputExceededException.h"
-#import "DynamoDBConditionalCheckFailedException.h"
-#import "DynamoDBInternalServerErrorException.h"
+#import "DynamoDBItemCollectionSizeLimitExceededException.h"
 #import "DynamoDBResourceNotFoundException.h"
+#import "DynamoDBConditionalCheckFailedException.h"
+#import "DynamoDBProvisionedThroughputExceededException.h"
+#import "DynamoDBInternalServerErrorException.h"
 
 
 /**
  * Put Item Result
- *
- * \ingroup DynamoDB
  */
 
 @interface DynamoDBPutItemResponse:DynamoDBResponse
 
 {
-    NSMutableDictionary *attributes;
-    NSNumber            *consumedCapacityUnits;
+    NSMutableDictionary           *attributes;
+    DynamoDBConsumedCapacity      *consumedCapacity;
+    DynamoDBItemCollectionMetrics *itemCollectionMetrics;
 }
 
 
@@ -49,18 +50,41 @@
 -(id)init;
 
 /**
- * Attribute values before the put operation, but only if the
- * ReturnValues parameter is specified as ALL_OLD in the request.
+ * The attribute values as they appeared before the <i>PutItem</i>
+ * operation, but only if <i>ReturnValues</i> is specified as
+ * <code>ALL_OLD</code> in the request. Each element consists of an
+ * attribute name and an attribute value.
  */
 @property (nonatomic, retain) NSMutableDictionary *attributes;
 
 /**
- * The number of Capacity Units of the provisioned throughput of the
- * table consumed during the operation. GetItem, BatchGetItem, Query, and
- * Scan operations consume Read Capacity Units, while PutItem,
- * UpdateItem, and DeleteItem operations consume Write Capacity Units.
+ * The table name that consumed provisioned throughput, and the number of
+ * capacity units consumed by it. <i>ConsumedCapacity</i> is only
+ * returned if it was asked for in the request. For more information, see
+ * <a
+ * odb/latest/developerguide/ProvisionedThroughputIntro.html">Provisioned
+ * Throughput</a> in the <i>Amazon DynamoDB Developer Guide</i>.
  */
-@property (nonatomic, retain) NSNumber *consumedCapacityUnits;
+@property (nonatomic, retain) DynamoDBConsumedCapacity *consumedCapacity;
+
+/**
+ * Information about item collections, if any, that were affected by the
+ * operation. <i>ItemCollectionMetrics</i> is only returned if it was
+ * asked for in the request. If the table does not have any secondary
+ * indexes, this information is not returned in the response. <p>Each
+ * <i>ItemCollectionMetrics</i> element consists of: <ul>
+ * <li><p><i>ItemCollectionKey</i> - The hash key value of the item
+ * collection. This is the same as the hash key of the item.</li>
+ * <li><p><i>SizeEstimateRange</i> - An estimate of item collection size,
+ * measured in gigabytes. This is a two-element array containing a lower
+ * bound and an upper bound for the estimate. The estimate includes the
+ * size of all the items in the table, plus the size of all attributes
+ * projected into all of the secondary indexes on that table. Use this
+ * estimate to measure whether a secondary index is approaching its size
+ * limit. <p>The estimate is subject to change over time; therefore, do
+ * not rely on the precision or accuracy of the estimate. </li> </ul>
+ */
+@property (nonatomic, retain) DynamoDBItemCollectionMetrics *itemCollectionMetrics;
 
 /**
  * Returns a value from the attributes dictionary for the specified key.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@
 
 /**
  * Address
- *
- * \ingroup EC2
  */
 
 @interface EC2Address:NSObject
@@ -32,6 +30,7 @@
     NSString *domain;
     NSString *networkInterfaceId;
     NSString *networkInterfaceOwnerId;
+    NSString *privateIpAddress;
 }
 
 
@@ -80,6 +79,11 @@
  * The value of the NetworkInterfaceOwnerId property for this object.
  */
 @property (nonatomic, retain) NSString *networkInterfaceOwnerId;
+
+/**
+ * The value of the PrivateIpAddress property for this object.
+ */
+@property (nonatomic, retain) NSString *privateIpAddress;
 
 /**
  * Returns a string representation of this object; useful for testing and

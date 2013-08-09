@@ -25,6 +25,7 @@
 #import <Reachability.h>
 #import "FFMPEGEngine.h"
 
+
 @interface AVCaptureInput (ConvenienceMethodsCategory)
 
 - (AVCaptureInputPort *)portWithMediaType:(NSString *)mediaType;
@@ -124,6 +125,7 @@ NSString *const MoviePath = @"Movies/QuickCast";
 @synthesize reachable;
 @synthesize countdownNumberString;
 @synthesize audioDataOutput;
+@synthesize transferManager;
 
 
 @synthesize videoFrameRate, videoDimensions, videoType, recording;

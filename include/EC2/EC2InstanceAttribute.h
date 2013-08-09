@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,13 +14,12 @@
  */
 
 #import "EC2InstanceBlockDeviceMapping.h"
+#import "EC2ProductCode.h"
 
 
 
 /**
  * Instance Attribute
- *
- * \ingroup EC2
  */
 
 @interface EC2InstanceAttribute:NSObject
@@ -36,6 +35,9 @@
     NSString       *instanceInitiatedShutdownBehavior;
     NSString       *rootDeviceName;
     NSMutableArray *blockDeviceMappings;
+    NSMutableArray *productCodes;
+    bool           ebsOptimized;
+    bool           ebsOptimizedIsSet;
 }
 
 
@@ -99,10 +101,28 @@
 @property (nonatomic, retain) NSMutableArray *blockDeviceMappings;
 
 /**
+ * The value of the ProductCodes property for this object.
+ */
+@property (nonatomic, retain) NSMutableArray *productCodes;
+
+/**
+ * Boolean value
+ */
+@property (nonatomic) bool           ebsOptimized;
+
+@property (nonatomic, readonly) bool ebsOptimizedIsSet;
+
+/**
  * Adds a single object to blockDeviceMappings.
  * This function will alloc and init blockDeviceMappings if not already done.
  */
 -(void)addBlockDeviceMapping:(EC2InstanceBlockDeviceMapping *)blockDeviceMappingObject;
+
+/**
+ * Adds a single object to productCodes.
+ * This function will alloc and init productCodes if not already done.
+ */
+-(void)addProductCode:(EC2ProductCode *)productCodeObject;
 
 /**
  * Returns a string representation of this object; useful for testing and

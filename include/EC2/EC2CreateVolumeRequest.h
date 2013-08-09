@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,14 +14,16 @@
  */
 
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Create Volume Request
- *
- * \ingroup EC2
  */
 
 @interface EC2CreateVolumeRequest:AmazonServiceRequestConfig
@@ -30,6 +32,8 @@
     NSNumber *size;
     NSString *snapshotId;
     NSString *availabilityZone;
+    NSString *volumeType;
+    NSNumber *iops;
 }
 
 
@@ -49,6 +53,19 @@
  * The Availability Zone in which to create the new volume.
  */
 @property (nonatomic, retain) NSString *availabilityZone;
+
+/**
+ * The value of the VolumeType property for this object.
+ * <p>
+ * <b>Constraints:</b><br/>
+ * <b>Allowed Values: </b>standard, io1
+ */
+@property (nonatomic, retain) NSString *volumeType;
+
+/**
+ * The value of the Iops property for this object.
+ */
+@property (nonatomic, retain) NSNumber *iops;
 
 
 /**

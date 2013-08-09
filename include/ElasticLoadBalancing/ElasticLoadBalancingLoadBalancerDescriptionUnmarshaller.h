@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -16,20 +16,55 @@
 #import <Foundation/Foundation.h>
 #import "ElasticLoadBalancingLoadBalancerDescription.h"
 #import "ElasticLoadBalancingResponseUnmarshaller.h"
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonValueUnmarshaller.h>
+#import <AWSRuntime/AmazonBoolValueUnmarshaller.h>
+#else
 #import "../AmazonValueUnmarshaller.h"
 #import "../AmazonBoolValueUnmarshaller.h"
+#endif
+
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonListUnmarshaller.h>
+#else
 #import "../AmazonListUnmarshaller.h"
+#endif
 #import "ElasticLoadBalancingListenerDescriptionUnmarshaller.h"
 #import "ElasticLoadBalancingPoliciesUnmarshaller.h"
+
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonListUnmarshaller.h>
+#else
 #import "../AmazonListUnmarshaller.h"
+#endif
 #import "ElasticLoadBalancingBackendServerDescriptionUnmarshaller.h"
+
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonListUnmarshaller.h>
+#else
 #import "../AmazonListUnmarshaller.h"
+#endif
+
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonListUnmarshaller.h>
+#else
 #import "../AmazonListUnmarshaller.h"
+#endif
+
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonListUnmarshaller.h>
+#else
 #import "../AmazonListUnmarshaller.h"
+#endif
 #import "ElasticLoadBalancingInstanceUnmarshaller.h"
 #import "ElasticLoadBalancingHealthCheckUnmarshaller.h"
 #import "ElasticLoadBalancingSourceSecurityGroupUnmarshaller.h"
+
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonListUnmarshaller.h>
+#else
 #import "../AmazonListUnmarshaller.h"
+#endif
 
 
 /**

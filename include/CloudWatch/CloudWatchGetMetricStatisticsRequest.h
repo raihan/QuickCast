@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,14 +15,16 @@
 
 #import "CloudWatchDimension.h"
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Get Metric Statistics Request
- *
- * \ingroup CloudWatch
  */
 
 @interface CloudWatchGetMetricStatisticsRequest:AmazonServiceRequestConfig
@@ -48,7 +50,7 @@
 -(id)init;
 
 /**
- * The namespace of the metric.
+ * The namespace of the metric, with or without spaces.
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Length: </b>1 - 255<br/>
@@ -57,7 +59,7 @@
 @property (nonatomic, retain) NSString *namespace;
 
 /**
- * The name of the metric.
+ * The name of the metric, with or without spaces.
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Length: </b>1 - 255<br/>
@@ -79,7 +81,9 @@
  * to the nearest value. Datapoints are returned for start times up to
  * two weeks in the past. Specified start times that are more than two
  * weeks in the past will not return datapoints for metrics that are
- * older than two weeks. </note>
+ * older than two weeks. <p>Data that is timestamped 24 hours or more in
+ * the past may take in excess of 48 hours to become available from
+ * submission time using <code>GetMetricStatistics</code>. </note>
  */
 @property (nonatomic, retain) NSDate *startTime;
 
@@ -101,7 +105,11 @@
 @property (nonatomic, retain) NSNumber *period;
 
 /**
- * The metric statistics to return.
+ * The metric statistics to return. For information about specific
+ * statistics returned by GetMetricStatistics, go to <a
+ * dex.html?CHAP_TerminologyandKeyConcepts.html#Statistic">Statistics</a>
+ * in the <i>Amazon CloudWatch Developer Guide</i>. <p> Valid Values:
+ * <code>Average | Sum | SampleCount | Maximum | Minimum</code>
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Length: </b>1 - 5<br/>

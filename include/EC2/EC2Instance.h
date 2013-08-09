@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -23,54 +23,56 @@
 #import "EC2Tag.h"
 #import "EC2GroupIdentifier.h"
 #import "EC2InstanceNetworkInterface.h"
+#import "EC2IamInstanceProfile.h"
 
 
 
 /**
  * Instance
- *
- * \ingroup EC2
  */
 
 @interface EC2Instance:NSObject
 
 {
-    NSString           *instanceId;
-    NSString           *imageId;
-    EC2InstanceState   *state;
-    NSString           *privateDnsName;
-    NSString           *publicDnsName;
-    NSString           *stateTransitionReason;
-    NSString           *keyName;
-    NSNumber           *amiLaunchIndex;
-    NSMutableArray     *productCodes;
-    NSString           *instanceType;
-    NSDate             *launchTime;
-    EC2Placement       *placement;
-    NSString           *kernelId;
-    NSString           *ramdiskId;
-    NSString           *platform;
-    EC2Monitoring      *monitoring;
-    NSString           *subnetId;
-    NSString           *vpcId;
-    NSString           *privateIpAddress;
-    NSString           *publicIpAddress;
-    EC2StateReason     *stateReason;
-    NSString           *architecture;
-    NSString           *rootDeviceType;
-    NSString           *rootDeviceName;
-    NSMutableArray     *blockDeviceMappings;
-    NSString           *virtualizationType;
-    NSString           *instanceLifecycle;
-    NSString           *spotInstanceRequestId;
-    EC2InstanceLicense *license;
-    NSString           *clientToken;
-    NSMutableArray     *tags;
-    NSMutableArray     *securityGroups;
-    bool               sourceDestCheck;
-    bool               sourceDestCheckIsSet;
-    NSString           *hypervisor;
-    NSMutableArray     *networkInterfaces;
+    NSString              *instanceId;
+    NSString              *imageId;
+    EC2InstanceState      *state;
+    NSString              *privateDnsName;
+    NSString              *publicDnsName;
+    NSString              *stateTransitionReason;
+    NSString              *keyName;
+    NSNumber              *amiLaunchIndex;
+    NSMutableArray        *productCodes;
+    NSString              *instanceType;
+    NSDate                *launchTime;
+    EC2Placement          *placement;
+    NSString              *kernelId;
+    NSString              *ramdiskId;
+    NSString              *platform;
+    EC2Monitoring         *monitoring;
+    NSString              *subnetId;
+    NSString              *vpcId;
+    NSString              *privateIpAddress;
+    NSString              *publicIpAddress;
+    EC2StateReason        *stateReason;
+    NSString              *architecture;
+    NSString              *rootDeviceType;
+    NSString              *rootDeviceName;
+    NSMutableArray        *blockDeviceMappings;
+    NSString              *virtualizationType;
+    NSString              *instanceLifecycle;
+    NSString              *spotInstanceRequestId;
+    EC2InstanceLicense    *license;
+    NSString              *clientToken;
+    NSMutableArray        *tags;
+    NSMutableArray        *securityGroups;
+    bool                  sourceDestCheck;
+    bool                  sourceDestCheckIsSet;
+    NSString              *hypervisor;
+    NSMutableArray        *networkInterfaces;
+    EC2IamInstanceProfile *iamInstanceProfile;
+    bool                  ebsOptimized;
+    bool                  ebsOptimizedIsSet;
 }
 
 
@@ -141,7 +143,7 @@
  * Amazon Elastic Compute Cloud Developer Guide</a>.
  * <p>
  * <b>Constraints:</b><br/>
- * <b>Allowed Values: </b>t1.micro, m1.small, m1.large, m1.xlarge, m2.xlarge, m2.2xlarge, m2.4xlarge, c1.medium, c1.xlarge, cc1.4xlarge, cc2.8xlarge, cg1.4xlarge
+ * <b>Allowed Values: </b>t1.micro, m1.small, m1.medium, m1.large, m1.xlarge, m2.xlarge, m2.2xlarge, m2.4xlarge, m3.xlarge, m3.2xlarge, c1.medium, c1.xlarge, hi1.4xlarge, hs1.8xlarge, cc1.4xlarge, cc2.8xlarge, cg1.4xlarge
  */
 @property (nonatomic, retain) NSString *instanceType;
 
@@ -280,6 +282,18 @@
  * The value of the NetworkInterfaces property for this object.
  */
 @property (nonatomic, retain) NSMutableArray *networkInterfaces;
+
+/**
+ * The value of the IamInstanceProfile property for this object.
+ */
+@property (nonatomic, retain) EC2IamInstanceProfile *iamInstanceProfile;
+
+/**
+ * The value of the EbsOptimized property for this object.
+ */
+@property (nonatomic) bool           ebsOptimized;
+
+@property (nonatomic, readonly) bool ebsOptimizedIsSet;
 
 /**
  * Adds a single object to productCodes.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,18 +13,27 @@
  * permissions and limitations under the License.
  */
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceException.h>
+#else
 #import "../AmazonServiceException.h"
+#endif
 
 
 
 
 /**
  * <p>
- * This exception is thrown when the level of provisioned throughput
- * defined for the table is exceeded
+ * The request rate is too high, or the request is too large, for the
+ * available throughput to accommodate. The AWS SDKs automatically retry
+ * requests that receive this exception; therefore, your request will
+ * eventually succeed, unless the request is too large or your retry
+ * queue is too large to finish. Reduce the frequency of requests by
+ * using the strategies listed in <a
+ * m/amazondynamodb/latest/developerguide/ErrorHandling.html#APIRetries">
+ * Error Retries and Exponential Backoff </a> in the <i>Amazon DynamoDB
+ * Developer Guide</i> .
  * </p>
- *
- * \ingroup DynamoDB
  */
 @interface DynamoDBProvisionedThroughputExceededException:AmazonServiceException
 {

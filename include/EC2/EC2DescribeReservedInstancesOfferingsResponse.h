@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -16,20 +16,18 @@
 #import "EC2ReservedInstancesOffering.h"
 
 #import "EC2Response.h"
-#import "../AmazonServiceExceptionUnmarshaller.h"
 
 
 
 /**
  * Describe Reserved Instances Offerings Response
- *
- * \ingroup EC2
  */
 
 @interface EC2DescribeReservedInstancesOfferingsResponse:EC2Response
 
 {
     NSMutableArray *reservedInstancesOfferings;
+    NSString       *nextToken;
 }
 
 
@@ -47,6 +45,11 @@
  * The list of described Reserved Instance offerings.
  */
 @property (nonatomic, retain) NSMutableArray *reservedInstancesOfferings;
+
+/**
+ * The value of the NextToken property for this object.
+ */
+@property (nonatomic, retain) NSString *nextToken;
 
 
 

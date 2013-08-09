@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@
 
 /**
  * Scaling Policy
- *
- * \ingroup AutoScaling
  */
 
 @interface AutoScalingScalingPolicy:NSObject
@@ -33,6 +31,7 @@
     NSNumber       *cooldown;
     NSString       *policyARN;
     NSMutableArray *alarms;
+    NSNumber       *minAdjustmentStep;
 }
 
 
@@ -74,7 +73,7 @@
  * Specifies whether the <code>ScalingAdjustment</code> is an absolute
  * number or a percentage of the current capacity. Valid values are
  * <code>ChangeInCapacity</code>, <code>ExactCapacity</code>, and
- * <code>PercentOfCapacity</code>.
+ * <code>PercentChangeInCapacity</code>.
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Length: </b>1 - 255<br/>
@@ -101,6 +100,12 @@
  * A list of CloudWatch Alarms related to the policy.
  */
 @property (nonatomic, retain) NSMutableArray *alarms;
+
+/**
+ * Changes the <code>DesiredCapacity</code> of the Auto Scaling group by
+ * at least the specified number of instances.
+ */
+@property (nonatomic, retain) NSNumber *minAdjustmentStep;
 
 /**
  * Adds a single object to alarms.

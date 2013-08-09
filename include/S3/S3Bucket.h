@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@
  * Contains a Bucket Name which is the name of the S3 Bucket.
  * And a Creation Date which is the date that the S3 Bucket was created.
  *
- * \ingroup S3
  */
 @interface S3Bucket:NSObject {
     NSString *name;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,14 +15,16 @@
 
 #import "CloudWatchMetricDatum.h"
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Put Metric Data Request
- *
- * \ingroup CloudWatch
  */
 
 @interface CloudWatchPutMetricDataRequest:AmazonServiceRequestConfig
@@ -42,7 +44,10 @@
 -(id)init;
 
 /**
- * The namespace for the metric data.
+ * The namespace for the metric data. <note> You cannot specify a
+ * namespace that begins with "AWS/". Namespaces that begin with "AWS/"
+ * are reserved for other Amazon Web Services products that send metrics
+ * to Amazon CloudWatch. </note>
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Length: </b>1 - 255<br/>

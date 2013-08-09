@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -16,14 +16,11 @@
 #import "SESSendDataPoint.h"
 
 #import "SESResponse.h"
-#import "../AmazonServiceExceptionUnmarshaller.h"
 
 
 
 /**
  * Get Send Statistics Result
- *
- * \ingroup SES
  */
 
 @interface SESGetSendStatisticsResponse:SESResponse
@@ -44,7 +41,8 @@
 -(id)init;
 
 /**
- * The value of the SendDataPoints property for this object.
+ * A list of data points, each of which represents 15 minutes of
+ * activity.
  */
 @property (nonatomic, retain) NSMutableArray *sendDataPoints;
 

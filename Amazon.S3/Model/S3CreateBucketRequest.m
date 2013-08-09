@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -20,11 +20,11 @@
 
 @synthesize region;
 @synthesize cannedACL;
+@synthesize fullACL;
 
 -(NSMutableURLRequest *)configureURLRequest
 {
     [super configureURLRequest];
-    [S3BucketNameUtilities validateBucketName:self.bucket];
 
     [self.urlRequest setHTTPMethod:kHttpMethodPut];
 
@@ -33,6 +33,12 @@
     }
     if (nil != self.cannedACL) {
         [self.urlRequest setValue:[self.cannedACL description] forHTTPHeaderField:kHttpHdrAmzAcl];
+    }
+    if (nil != self.fullACL) {
+        NSDictionary *aclHeaders = [self.fullACL toHeaders];
+        for (NSString *headerName in [aclHeaders allKeys]) {
+            [self.urlRequest setValue:[aclHeaders valueForKey:headerName] forHTTPHeaderField:headerName];
+        }
     }
 
     return self.urlRequest;
@@ -68,10 +74,23 @@
     return [config dataUsingEncoding:NSUTF8StringEncoding];
 }
 
+- (AmazonClientException *)validate
+{
+    AmazonClientException *clientException = [super validate];
+    
+    if(clientException == nil)
+    {
+        clientException = [S3BucketNameUtilities validateBucketName:self.bucket];
+    }
+    
+    return clientException;
+}
+
 -(void)dealloc
 {
     [region release];
     [cannedACL release];
+    [fullACL release];
 
     [super dealloc];
 }

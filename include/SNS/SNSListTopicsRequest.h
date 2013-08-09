@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,14 +14,16 @@
  */
 
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * List Topics Request
- *
- * \ingroup SNS
  */
 
 @interface SNSListTopicsRequest:AmazonServiceRequestConfig
@@ -33,7 +35,7 @@
 
 
 /**
- * Token returned by the previous ListTopics request.
+ * Token returned by the previous <code>ListTopics</code> request.
  */
 @property (nonatomic, retain) NSString *nextToken;
 
@@ -48,7 +50,8 @@
  * Constructs a new ListTopicsRequest object.
  * Callers should use properties to initialize any additional object members.
  *
- * @param theNextToken Token returned by the previous ListTopics request.
+ * @param theNextToken Token returned by the previous
+ * <code>ListTopics</code> request.
  */
 -(id)initWithNextToken:(NSString *)theNextToken;
 

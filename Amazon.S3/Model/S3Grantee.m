@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -50,7 +50,11 @@
     static S3Grantee *allUsers = nil;
 
     if (allUsers == nil) {
-        allUsers = [S3Grantee granteeWithURI:kS3GroupURIAllUsers];
+        @synchronized([self class]) {
+            if (allUsers == nil) {
+                allUsers = [[S3Grantee granteeWithURI:kS3GroupURIAllUsers] retain];
+            }
+        }
     }
     return allUsers;
 }
@@ -60,7 +64,11 @@
     static S3Grantee *authUsers = nil;
 
     if (authUsers == nil) {
-        authUsers = [S3Grantee granteeWithURI:kS3GroupURIAuthUsers];
+        @synchronized([self class]) {
+            if (authUsers == nil) {
+                authUsers = [[S3Grantee granteeWithURI:kS3GroupURIAuthUsers] retain];
+            }
+        }
     }
     return authUsers;
 }

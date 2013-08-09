@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,15 +15,12 @@
 
 
 #import "DynamoDBResponse.h"
-#import "../AmazonServiceExceptionUnmarshaller.h"
 
 #import "DynamoDBInternalServerErrorException.h"
 
 
 /**
  * List Tables Result
- *
- * \ingroup DynamoDB
  */
 
 @interface DynamoDBListTablesResponse:DynamoDBResponse
@@ -45,15 +42,17 @@
 -(id)init;
 
 /**
- * The value of the TableNames property for this object.
+ * The names of the tables associated with the current account at the
+ * current endpoint.
  */
 @property (nonatomic, retain) NSMutableArray *tableNames;
 
 /**
- * The name of the last table in the current list. Use this value as the
- * ExclusiveStartTableName in a new request to continue the list until
- * all the table names are returned. If this value is null, all table
- * names have been returned.
+ * The name of the last table in the current list, only if some tables
+ * for the account and endpoint have not been returned. This value does
+ * not exist in a response if all table names are already returned. Use
+ * this value as the <i>ExclusiveStartTableName</i> in a new request to
+ * continue the list until all the table names are returned.
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Length: </b>3 - 255<br/>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  */
 
 #import "S3ObjectSummaryUnmarshaller.h"
+#import "S3OwnerUnmarshaller.h"
 
 @implementation S3ObjectSummaryUnmarshaller
 
@@ -51,7 +52,7 @@ qualifiedName:(NSString *)qName
     }
 
     if ([elementName isEqualToString:@"Size"]) {
-        self.summary.size = [self.currentText intValue];
+        self.summary.size = [self.currentText integerValue];
         return;
     }
 

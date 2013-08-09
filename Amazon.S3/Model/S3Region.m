@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,9 +14,12 @@
  */
 
 #import "S3Region.h"
+#import "AmazonLogger.h"
 
 
 @implementation S3Region
+
+@synthesize stringValue;
 
 
 -(id)initWithStringValue:(NSString *)value
@@ -31,7 +34,7 @@
 +(S3Region *)USStandard
 {
     static S3Region *std = nil;
-
+    
     if (std == nil) {
         std = [[S3Region alloc] initWithStringValue:@""];
     }
@@ -41,7 +44,7 @@
 +(S3Region *)USWest
 {
     static S3Region *west = nil;
-
+    
     if (west == nil) {
         west = [[S3Region alloc] initWithStringValue:kS3RegionUSWest1];
     }
@@ -51,7 +54,7 @@
 +(S3Region *)USWest2
 {
     static S3Region *west2 = nil;
-
+    
     if (west2 == nil) {
         west2 = [[S3Region alloc] initWithStringValue:kS3RegionUSWest2];
     }
@@ -61,19 +64,39 @@
 +(S3Region *)EUIreland
 {
     static S3Region *eu = nil;
-
+    
     if (eu == nil) {
         eu = [[S3Region alloc] initWithStringValue:kS3RegionEU];
     }
     return eu;
 }
 
++(S3Region *)EUWest1
+{
+    static S3Region *euwest1 = nil;
+    
+    if (euwest1 == nil) {
+        euwest1 = [[S3Region alloc] initWithStringValue:kS3RegionEUWest1];
+    }
+    return euwest1;
+}
+
 +(S3Region *)APSingapore
 {
     static S3Region *ap = nil;
-
+    
     if (ap == nil) {
         ap = [[S3Region alloc] initWithStringValue:kS3RegionAPSoutheast1];
+    }
+    return ap;
+}
+
++(S3Region *)APSydney
+{
+    static S3Region *ap = nil;
+    
+    if (ap == nil) {
+        ap = [[S3Region alloc] initWithStringValue:kS3RegionAPSoutheast2];
     }
     return ap;
 }
@@ -81,7 +104,7 @@
 +(S3Region *)APJapan
 {
     static S3Region *ap = nil;
-
+    
     if (ap == nil) {
         ap = [[S3Region alloc] initWithStringValue:kS3RegionAPNortheast1];
     }
@@ -91,7 +114,7 @@
 +(S3Region *)SASaoPaulo
 {
     static S3Region *ap = nil;
-
+    
     if (ap == nil) {
         ap = [[S3Region alloc] initWithStringValue:kS3RegionSAEast1];
     }
@@ -103,27 +126,43 @@
     if ([regionName isEqual:@""]) {
         return [S3Region USStandard];
     }
-    if ([regionName isEqual:kS3RegionUSWest1]) {
+    else if ([regionName isEqual:kS3RegionUSWest1]) {
         return [S3Region USWest];
     }
-    if ([regionName isEqual:kS3RegionUSWest2]) {
+    else if ([regionName isEqual:kS3RegionUSWest2]) {
         return [S3Region USWest2];
     }
-    if ([regionName isEqual:kS3RegionEU]) {
-        return [S3Region EUIreland];
+    else if ([regionName isEqual:kS3RegionEUWest1]) {
+        return [S3Region EUWest1];
     }
-    if ([regionName isEqual:kS3RegionAPSoutheast1]) {
+    else if ([regionName isEqual:kS3RegionEU]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        return [S3Region EUIreland];
+#pragma clang diagnostic pop
+    }
+    else if ([regionName isEqual:kS3RegionAPSoutheast1]) {
         return [S3Region APSingapore];
     }
-    if ([regionName isEqual:kS3RegionAPNortheast1]) {
+    else if ([regionName isEqual:kS3RegionAPNortheast1]) {
         return [S3Region APJapan];
     }
-    if ([regionName isEqual:kS3RegionSAEast1]) {
+    else if ([regionName isEqual:kS3RegionSAEast1]) {
         return [S3Region SASaoPaulo];
     }
-    return nil;
+    
+    NSLog(@"Unknown S3 region name: '%@'.", regionName);
+    return [[[S3Region alloc] initWithStringValue:regionName] autorelease];
+}
 
-    //@throw [AmazonClientException exceptionWithMessage : @"Invalid S3 region string."];
+-(BOOL)isEqual:(id)object
+{
+    if (![object respondsToSelector:@selector(stringValue)]) {
+        return NO;
+    }
+    return ([self.stringValue isEqual:[object stringValue]] ||
+            ([self.stringValue isEqual:kS3RegionEU] && [[object stringValue] isEqual:kS3RegionEUWest1]) ||
+            ([self.stringValue isEqual:kS3RegionEUWest1] && [[object stringValue] isEqual:kS3RegionEU]));
 }
 
 -(NSString *)description

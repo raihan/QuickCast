@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,16 +13,17 @@
  * permissions and limitations under the License.
  */
 
-#import "EC2ReasonCode.h"
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Report Instance Status Request
- *
- * \ingroup EC2
  */
 
 @interface EC2ReportInstanceStatusRequest:AmazonServiceRequestConfig
@@ -85,7 +86,7 @@
  * Adds a single object to reasonCodes.
  * This function will alloc and init reasonCodes if not already done.
  */
--(void)addReasonCode:(EC2ReasonCode *)reasonCodeObject;
+-(void)addReasonCode:(NSString *)reasonCodeObject;
 
 /**
  * Returns a string representation of this object; useful for testing and

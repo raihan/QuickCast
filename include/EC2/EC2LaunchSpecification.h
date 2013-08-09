@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -17,33 +17,35 @@
 #import "EC2SpotPlacement.h"
 #import "EC2BlockDeviceMapping.h"
 #import "EC2InstanceNetworkInterfaceSpecification.h"
+#import "EC2IamInstanceProfileSpecification.h"
 
 
 
 /**
  * Launch Specification
- *
- * \ingroup EC2
  */
 
 @interface EC2LaunchSpecification:NSObject
 
 {
-    NSString         *imageId;
-    NSString         *keyName;
-    NSMutableArray   *allSecurityGroups;
-    NSMutableArray   *securityGroups;
-    NSString         *userData;
-    NSString         *addressingType;
-    NSString         *instanceType;
-    EC2SpotPlacement *placement;
-    NSString         *kernelId;
-    NSString         *ramdiskId;
-    NSMutableArray   *blockDeviceMappings;
-    bool             monitoringEnabled;
-    bool             monitoringEnabledIsSet;
-    NSString         *subnetId;
-    NSMutableArray   *networkInterfaces;
+    NSString                           *imageId;
+    NSString                           *keyName;
+    NSMutableArray                     *allSecurityGroups;
+    NSMutableArray                     *securityGroups;
+    NSString                           *userData;
+    NSString                           *addressingType;
+    NSString                           *instanceType;
+    EC2SpotPlacement                   *placement;
+    NSString                           *kernelId;
+    NSString                           *ramdiskId;
+    NSMutableArray                     *blockDeviceMappings;
+    bool                               monitoringEnabled;
+    bool                               monitoringEnabledIsSet;
+    NSString                           *subnetId;
+    NSMutableArray                     *networkInterfaces;
+    EC2IamInstanceProfileSpecification *iamInstanceProfile;
+    bool                               ebsOptimized;
+    bool                               ebsOptimizedIsSet;
 }
 
 
@@ -92,7 +94,7 @@
  * Specifies the instance type.
  * <p>
  * <b>Constraints:</b><br/>
- * <b>Allowed Values: </b>t1.micro, m1.small, m1.large, m1.xlarge, m2.xlarge, m2.2xlarge, m2.4xlarge, c1.medium, c1.xlarge, cc1.4xlarge, cc2.8xlarge, cg1.4xlarge
+ * <b>Allowed Values: </b>t1.micro, m1.small, m1.medium, m1.large, m1.xlarge, m2.xlarge, m2.2xlarge, m2.4xlarge, m3.xlarge, m3.2xlarge, c1.medium, c1.xlarge, hi1.4xlarge, hs1.8xlarge, cc1.4xlarge, cc2.8xlarge, cg1.4xlarge
  */
 @property (nonatomic, retain) NSString *instanceType;
 
@@ -137,6 +139,18 @@
  * The value of the NetworkInterfaces property for this object.
  */
 @property (nonatomic, retain) NSMutableArray *networkInterfaces;
+
+/**
+ * The value of the IamInstanceProfile property for this object.
+ */
+@property (nonatomic, retain) EC2IamInstanceProfileSpecification *iamInstanceProfile;
+
+/**
+ * The value of the EbsOptimized property for this object.
+ */
+@property (nonatomic) bool           ebsOptimized;
+
+@property (nonatomic, readonly) bool ebsOptimizedIsSet;
 
 /**
  * Adds a single object to allSecurityGroups.

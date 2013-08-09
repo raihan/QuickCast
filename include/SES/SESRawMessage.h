@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,14 +13,17 @@
  * permissions and limitations under the License.
  */
 
+
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonSDKUtil.h>
+#else
 #import "../AmazonSDKUtil.h"
+#endif
 
 
 
 /**
  * Raw Message
- *
- * \ingroup SES
  */
 
 @interface SESRawMessage:NSObject
@@ -42,7 +45,7 @@
  * The raw data of the message. The client must ensure that the message
  * format complies with Internet email standards regarding email header
  * fields, MIME types, MIME encoding, and base64 encoding (if necessary).
- * <p>For more information, go to the <a
+ * <p>For more information, go to the<a
  * f="http://docs.amazonwebservices.com/ses/latest/DeveloperGuide">Amazon
  * SES Developer Guide</a>.
  */

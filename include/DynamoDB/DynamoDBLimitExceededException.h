@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,18 +13,30 @@
  * permissions and limitations under the License.
  */
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceException.h>
+#else
 #import "../AmazonServiceException.h"
+#endif
 
 
 
 
 /**
  * <p>
- * This exception is thrown when the subscriber exceeded the limits on
- * the number of objects or operations
+ * The number of concurrent table requests (cumulative number of tables
+ * in the <code>CREATING</code> ,
+ * <code>DELETING</code> or <code>UPDATING</code>
+ * state) exceeds the maximum allowed of 10.
  * </p>
- *
- * \ingroup DynamoDB
+ * <p>
+ * Also, for tables with a local secondary indexes, only one of those
+ * tables can be in the <code>CREATING</code> state at any point in time.
+ * Do not attempt to create more than one such table simultaneously.
+ * </p>
+ * <p>
+ * The total limit of tables in the <code>ACTIVE</code> state is 250.
+ * </p>
  */
 @interface DynamoDBLimitExceededException:AmazonServiceException
 {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,29 +13,27 @@
  * permissions and limitations under the License.
  */
 
-#import "DynamoDBKey.h"
+#import "DynamoDBAttributeValue.h"
+#import "DynamoDBConsumedCapacity.h"
 
 #import "DynamoDBResponse.h"
-#import "../AmazonServiceExceptionUnmarshaller.h"
 
+#import "DynamoDBResourceNotFoundException.h"
 #import "DynamoDBProvisionedThroughputExceededException.h"
 #import "DynamoDBInternalServerErrorException.h"
-#import "DynamoDBResourceNotFoundException.h"
 
 
 /**
  * Query Result
- *
- * \ingroup DynamoDB
  */
 
 @interface DynamoDBQueryResponse:DynamoDBResponse
 
 {
-    NSMutableArray *items;
-    NSNumber       *count;
-    DynamoDBKey    *lastEvaluatedKey;
-    NSNumber       *consumedCapacityUnits;
+    NSMutableArray           *items;
+    NSNumber                 *count;
+    NSMutableDictionary      *lastEvaluatedKey;
+    DynamoDBConsumedCapacity *consumedCapacity;
 }
 
 
@@ -50,31 +48,35 @@
 -(id)init;
 
 /**
- * The value of the Items property for this object.
+ * An array of item attributes that match the query criteria. Each
+ * element in this array consists of an attribute name and the value for
+ * that attribute.
  */
 @property (nonatomic, retain) NSMutableArray *items;
 
 /**
- * Number of items in the response.
+ * The number of items in the response.
  */
 @property (nonatomic, retain) NSNumber *count;
 
 /**
- * Primary key of the item where the query operation stopped, inclusive
- * of the previous result set. Use this value to start a new operation
- * excluding this value in the new request. The LastEvaluatedKey is null
- * when the entire query result set is complete (i.e. the operation
- * processed the "last page").
+ * The primary key of the item where the operation stopped, inclusive of
+ * the previous result set. Use this value to start a new operation,
+ * excluding this value in the new request. <p><i>LastEvaluatedKey</i> is
+ * null when the entire result set is complete (in other words, when the
+ * operation processed the "last page" of results).
  */
-@property (nonatomic, retain) DynamoDBKey *lastEvaluatedKey;
+@property (nonatomic, retain) NSMutableDictionary *lastEvaluatedKey;
 
 /**
- * The number of Capacity Units of the provisioned throughput of the
- * table consumed during the operation. GetItem, BatchGetItem, Query, and
- * Scan operations consume Read Capacity Units, while PutItem,
- * UpdateItem, and DeleteItem operations consume Write Capacity Units.
+ * The table name that consumed provisioned throughput, and the number of
+ * capacity units consumed by it. <i>ConsumedCapacity</i> is only
+ * returned if it was asked for in the request. For more information, see
+ * <a
+ * odb/latest/developerguide/ProvisionedThroughputIntro.html">Provisioned
+ * Throughput</a> in the <i>Amazon DynamoDB Developer Guide</i>.
  */
-@property (nonatomic, retain) NSNumber *consumedCapacityUnits;
+@property (nonatomic, retain) DynamoDBConsumedCapacity *consumedCapacity;
 
 
 
@@ -82,6 +84,11 @@
  * Returns a value from the items array for the specified index
  */
 -(NSDictionary *)itemsObjectAtIndex:(int)index;
+
+/**
+ * Returns a value from the lastEvaluatedKey dictionary for the specified key.
+ */
+-(DynamoDBAttributeValue *)lastEvaluatedKeyValueForKey:(NSString *)theKey;
 
 /**
  * Returns a string representation of this object; useful for testing and

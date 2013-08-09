@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -22,13 +22,17 @@
 @synthesize uploadId;
 @synthesize partNumber;
 @synthesize data;
+@synthesize stream;
+
 
 -(id)initWithMultipartUpload:(S3MultipartUpload *)multipartUpload
 {
-    [self init];
-    self.bucket   = multipartUpload.bucket;
-    self.key      = multipartUpload.key;
-    self.uploadId = multipartUpload.uploadId;
+    if(self = [super init])
+    {
+        self.bucket   = multipartUpload.bucket;
+        self.key      = multipartUpload.key;
+        self.uploadId = multipartUpload.uploadId;
+    }
 
     return self;
 }
@@ -42,7 +46,12 @@
     }
     [super configureURLRequest];
 
-    [self.urlRequest setHTTPBody:self.data];
+    if (self.stream != nil) {
+        [self.urlRequest setHTTPBodyStream:self.stream];
+    }
+    else {
+        [self.urlRequest setHTTPBody:self.data];
+    }
     if (nil != self.contentMD5) {
         [self.urlRequest setValue:self.contentMD5 forHTTPHeaderField:kHttpHdrContentMD5];
     }
@@ -57,6 +66,7 @@
     [contentMD5 release];
     [uploadId release];
     [data release];
+    [stream release];
 
     [super dealloc];
 }

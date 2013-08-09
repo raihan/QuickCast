@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,13 +13,12 @@
  * permissions and limitations under the License.
  */
 
+#import "EC2PrivateIpAddressSpecification.h"
 
 
 
 /**
  * Instance Network Interface Specification
- *
- * \ingroup EC2
  */
 
 @interface EC2InstanceNetworkInterfaceSpecification:NSObject
@@ -33,6 +32,8 @@
     NSMutableArray *groups;
     bool           deleteOnTermination;
     bool           deleteOnTerminationIsSet;
+    NSMutableArray *privateIpAddresses;
+    NSNumber       *secondaryPrivateIpAddressCount;
 }
 
 
@@ -82,10 +83,26 @@
 @property (nonatomic, readonly) bool deleteOnTerminationIsSet;
 
 /**
+ * The value of the PrivateIpAddresses property for this object.
+ */
+@property (nonatomic, retain) NSMutableArray *privateIpAddresses;
+
+/**
+ * The value of the SecondaryPrivateIpAddressCount property for this object.
+ */
+@property (nonatomic, retain) NSNumber *secondaryPrivateIpAddressCount;
+
+/**
  * Adds a single object to groups.
  * This function will alloc and init groups if not already done.
  */
 -(void)addGroup:(NSString *)groupObject;
+
+/**
+ * Adds a single object to privateIpAddresses.
+ * This function will alloc and init privateIpAddresses if not already done.
+ */
+-(void)addPrivateIpAddresse:(EC2PrivateIpAddressSpecification *)privateIpAddresseObject;
 
 /**
  * Returns a string representation of this object; useful for testing and

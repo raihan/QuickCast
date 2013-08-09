@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,14 +14,16 @@
  */
 
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Associate Address Request
- *
- * \ingroup EC2
  */
 
 @interface EC2AssociateAddressRequest:AmazonServiceRequestConfig
@@ -31,6 +33,9 @@
     NSString *publicIp;
     NSString *allocationId;
     NSString *networkInterfaceId;
+    NSString *privateIpAddress;
+    bool     allowReassociation;
+    bool     allowReassociationIsSet;
 }
 
 
@@ -55,6 +60,18 @@
  * The value of the NetworkInterfaceId property for this object.
  */
 @property (nonatomic, retain) NSString *networkInterfaceId;
+
+/**
+ * The value of the PrivateIpAddress property for this object.
+ */
+@property (nonatomic, retain) NSString *privateIpAddress;
+
+/**
+ * The value of the AllowReassociation property for this object.
+ */
+@property (nonatomic) bool           allowReassociation;
+
+@property (nonatomic, readonly) bool allowReassociationIsSet;
 
 
 /**

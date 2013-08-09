@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -21,9 +21,12 @@
     NSString            *keyXpathElement;
     NSString            *valueXpathElement;
     NSString            *entryEndElement;
+    NSString            *dictionaryEndElement;
 
     NSString            *key;
     NSString            *value;
+    
+    id                  delegateClass;
 
     NSMutableDictionary *dictionary;
 }
@@ -33,9 +36,12 @@
 
 @property (nonatomic, retain) NSMutableDictionary *dictionary;
 
+@property (nonatomic, retain) id                  delegateClass;
+
 @property (nonatomic, retain) NSString            *keyXpathElement;
 @property (nonatomic, retain) NSString            *valueXpathElement;
 @property (nonatomic, retain) NSString            *entryEndElement;
+@property (nonatomic, retain) NSString            *dictionaryEndElement;
 
 
 -(void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict;

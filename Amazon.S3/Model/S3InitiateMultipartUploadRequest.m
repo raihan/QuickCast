@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -20,25 +20,40 @@
 @synthesize cacheControl;
 @synthesize contentDisposition;
 @synthesize contentEncoding;
+@synthesize redirectLocation;
+@synthesize expires;
 
 -(id)init
 {
     if (self = [super init])
     {
+        cacheControl = nil;
+        contentDisposition = nil;
+        contentEncoding = nil;
+        redirectLocation = nil;
+        expires = 0;
+        
         expiresSet = NO;
     }
+    
     return self;
 }
 
--(void)setExpires:(int)exp
+-(id)initWithKey:(NSString *)aKey inBucket:(NSString *)aBucket
+{
+    if(self = [self init])
+    {
+        self.key    = aKey;
+        self.bucket = aBucket;
+    }
+
+    return self;
+}
+
+-(void)setExpires:(NSInteger)exp
 {
     expires    = exp;
     expiresSet = YES;
-}
-
--(int)expires
-{
-    return expires;
 }
 
 -(NSMutableURLRequest *)configureURLRequest
@@ -50,29 +65,28 @@
     [urlRequest setHTTPMethod:kHttpMethodPost];
 
     if (nil != self.contentEncoding) {
-        [self.urlRequest setValue:self.contentEncoding forHTTPHeaderField:kHttpHdrContentEncoding];
+        [self.urlRequest setValue:self.contentEncoding
+               forHTTPHeaderField:kHttpHdrContentEncoding];
     }
     if (nil != self.contentDisposition) {
-        [self.urlRequest setValue:self.contentDisposition forHTTPHeaderField:kHttpHdrContentDisposition];
+        [self.urlRequest setValue:self.contentDisposition
+               forHTTPHeaderField:kHttpHdrContentDisposition];
     }
     if (nil != self.cacheControl) {
-        [self.urlRequest setValue:self.cacheControl forHTTPHeaderField:kHttpHdrCacheControl];
+        [self.urlRequest setValue:self.cacheControl
+               forHTTPHeaderField:kHttpHdrCacheControl];
+    }
+    if (nil != self.redirectLocation) {
+        [self.urlRequest setValue:self.redirectLocation
+               forHTTPHeaderField:kHttpHdrAmzWebsiteRedirectLocation];
     }
 
     if (expiresSet) {
-        [self.urlRequest setValue:[NSString stringWithFormat:@"%d", self.expires] forHTTPHeaderField:kHttpHdrExpires];
+        [self.urlRequest setValue:[NSString stringWithFormat:@"%d", self.expires]
+               forHTTPHeaderField:kHttpHdrExpires];
     }
 
     return urlRequest;
-}
-
--(id)initWithKey:(NSString *)aKey inBucket:(NSString *)aBucket
-{
-    [self init];
-    self.key    = aKey;
-    self.bucket = aBucket;
-
-    return self;
 }
 
 -(void)dealloc
@@ -80,6 +94,7 @@
     [cacheControl release];
     [contentEncoding release];
     [contentDisposition release];
+    [redirectLocation release];
 
     [super dealloc];
 }

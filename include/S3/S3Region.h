@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,14 +15,21 @@
 
 #import <Foundation/Foundation.h>
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonClientException.h>
+#else
 #import "../AmazonClientException.h"
+#endif
 
 #define kS3RegionUSWest1         @"us-west-1"
 #define kS3RegionUSWest2         @"us-west-2"
+#define kS3RegionEUWest1         @"eu-west-1"
 #define kS3RegionEU              @"EU"
 #define kS3RegionAPSoutheast1    @"ap-southeast-1"
+#define kS3RegionAPSoutheast2    @"ap-southeast-2"
 #define kS3RegionAPNortheast1    @"ap-northeast-1"
 #define kS3RegionSAEast1         @"sa-east-1"
+
 
 /**
  * Specifies constants that define Amazon S3 Regions.
@@ -36,11 +43,12 @@
  * transfered to another region.
  * </p>
  *
- * \ingroup S3
  */
 @interface S3Region:NSObject {
     NSString *stringValue;
 }
+
+@property (readonly, atomic) NSString *stringValue;
 
 /** Returns an S3Region initialized with the supplied string value. */
 -(id)initWithStringValue:(NSString *)value;
@@ -92,6 +100,17 @@
 
 /**
  * The EU (Ireland) Amazon S3 Region. This region uses Amazon S3 servers located
+ * in Ireland.  Deprecated in favor of <code>EUWest1</code>.
+ * <p>
+ * In Amazon S3, the EU (Ireland) Region provides read-after-write
+ * consistency for PUTS of new objects in Amazon S3 buckets and eventual
+ * consistency for overwrite PUTS and DELETES.
+ * </p>
+ */
++(S3Region *)EUIreland __attribute__((deprecated));
+
+/**
+ * The EU (Ireland) Amazon S3 Region. This region uses Amazon S3 servers located
  * in Ireland.
  * <p>
  * In Amazon S3, the EU (Ireland) Region provides read-after-write
@@ -99,7 +118,7 @@
  * consistency for overwrite PUTS and DELETES.
  * </p>
  */
-+(S3Region *)EUIreland;
++(S3Region *)EUWest1;
 
 /**
  * The Asia Pacific (Singapore) Region. This region uses Amazon S3 servers located
@@ -112,6 +131,18 @@
  * </p>
  */
 +(S3Region *)APSingapore;
+
+/**
+ * The AP-Southeast-2 (Sydney) Region. This region uses Amazon S3 servers located
+ * in Sydney.
+ * <p>
+ * When using buckets in this region, optionally set the client
+ * endpoint to <code>s3-ap-southeast-2.amazonaws.com</code> on all requests to these buckets
+ * to reduce any latency experienced after the first hour of
+ * creating a bucket in this region.
+ * </p>
+ */
++(S3Region *)APSydney;
 
 /**
  * The Asia Pacific (Japan) Region. This region uses Amazon S3 servers located

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,25 +13,29 @@
  * permissions and limitations under the License.
  */
 
+#import "EC2BlockDeviceMapping.h"
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Create Image Request
- *
- * \ingroup EC2
  */
 
 @interface EC2CreateImageRequest:AmazonServiceRequestConfig
 
 {
-    NSString *instanceId;
-    NSString *name;
-    NSString *descriptionValue;
-    bool     noReboot;
-    bool     noRebootIsSet;
+    NSString       *instanceId;
+    NSString       *name;
+    NSString       *descriptionValue;
+    bool           noReboot;
+    bool           noRebootIsSet;
+    NSMutableArray *blockDeviceMappings;
 }
 
 
@@ -63,6 +67,11 @@
 
 @property (nonatomic, readonly) bool noRebootIsSet;
 
+/**
+ * The value of the BlockDeviceMappings property for this object.
+ */
+@property (nonatomic, retain) NSMutableArray *blockDeviceMappings;
+
 
 /**
  * Default constructor for a new CreateImageRequest object.  Callers should use the
@@ -79,6 +88,12 @@
  * @param theName The name for the new AMI being created.
  */
 -(id)initWithInstanceId:(NSString *)theInstanceId andName:(NSString *)theName;
+
+/**
+ * Adds a single object to blockDeviceMappings.
+ * This function will alloc and init blockDeviceMappings if not already done.
+ */
+-(void)addBlockDeviceMapping:(EC2BlockDeviceMapping *)blockDeviceMappingObject;
 
 /**
  * Returns a string representation of this object; useful for testing and

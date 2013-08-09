@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -16,16 +16,42 @@
 #import <Foundation/Foundation.h>
 #import "EC2LaunchSpecification.h"
 #import "EC2ResponseUnmarshaller.h"
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonValueUnmarshaller.h>
+#import <AWSRuntime/AmazonBoolValueUnmarshaller.h>
+#else
 #import "../AmazonValueUnmarshaller.h"
 #import "../AmazonBoolValueUnmarshaller.h"
+#endif
+
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonListUnmarshaller.h>
+#else
 #import "../AmazonListUnmarshaller.h"
+#endif
 #import "EC2GroupIdentifierUnmarshaller.h"
+
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonListUnmarshaller.h>
+#else
 #import "../AmazonListUnmarshaller.h"
+#endif
 #import "EC2SpotPlacementUnmarshaller.h"
+
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonListUnmarshaller.h>
+#else
 #import "../AmazonListUnmarshaller.h"
+#endif
 #import "EC2BlockDeviceMappingUnmarshaller.h"
+
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonListUnmarshaller.h>
+#else
 #import "../AmazonListUnmarshaller.h"
+#endif
 #import "EC2InstanceNetworkInterfaceSpecificationUnmarshaller.h"
+#import "EC2IamInstanceProfileSpecificationUnmarshaller.h"
 
 
 /**

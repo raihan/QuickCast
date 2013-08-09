@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,7 +14,10 @@
  */
 
 #import "S3Response.h"
+#import "S3GetObjectResponse.h"
 #import "AmazonLogger.h"
+#import "S3ErrorResponseHandler.h"
+#import "AmazonErrorHandler.h"
 
 @implementation S3Response
 
@@ -52,7 +55,7 @@
     NSArray  *parts = [tmp componentsSeparatedByString:@"-"];
 
     NSString *keyName = [(NSString *)[parts objectAtIndex:0] lowercaseString];
-    for (int i = 1; i < [parts count]; i++) {
+    for (NSInteger i = 1; i < [parts count]; i++) {
         keyName = [keyName stringByAppendingString:[[(NSString *)[parts objectAtIndex:i] lowercaseString] capitalizedString]];
     }
 
@@ -64,28 +67,21 @@
         [self setValue:value forKey:keyName];
     }
     else if ([typeName isEqualToString:@"T@\"NSDate\""]) {
-        [self setValue:[self parseDateHeader:value] forKey:keyName];
+        [self setValue:[NSDate dateWithRFC822Format:value] forKey:keyName];
     }
     else if ([typeName isEqualToString:@"Ti"]) {
-        int v = [(NSString *) value intValue];
-        [self setValue:[NSNumber numberWithInt:v] forKey:keyName];
+        NSInteger v = [(NSString *) value integerValue];
+        [self setValue:[NSNumber numberWithInteger:v] forKey:keyName];
+    }
+    else if ([typeName isEqualToString:@"Tq"]) {
+        int64_t foo = [value longLongValue];
+        [self setValue:[NSNumber numberWithLongLong:foo] forKey:keyName];
     }
 }
 
 -(id)valueForHTTPHeaderField:(NSString *)header
 {
     return [headers valueForKey:header];
-}
-
--(NSDate *)parseDateHeader:(NSString *)dateString
-{
-    if (nil == dateFormatter) {
-        dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setLocale:[AmazonSDKUtil timestampLocale]];
-        [dateFormatter setDateFormat:kS3DateFormat];
-    }
-
-    return [dateFormatter dateFromString:dateString];
 }
 
 
@@ -112,17 +108,6 @@
     return [NSData dataWithData:body];
 }
 
-// TODO: Make the body property readonly when all operations are converted to the delegate technique.
--(void)setBody:(NSData *)data
-{
-    if (nil != body) {
-        [body setLength:0];
-    }
-    body = [[NSMutableData dataWithData:data] retain];
-
-    [self processBody];
-}
-
 // Override this to perform processing on the body.
 -(void)processBody
 {
@@ -140,8 +125,8 @@
     NSMutableString *buffer = [[NSMutableString alloc] initWithCapacity:256];
 
     [buffer appendString:@"{"];
-    [buffer appendString:[[[NSString alloc] initWithFormat:@"Headers: %d,", headers] autorelease]];
-    [buffer appendString:[[[NSString alloc] initWithFormat:@"Content-Length: %d,", contentLength] autorelease]];
+    [buffer appendString:[[[NSString alloc] initWithFormat:@"Headers: %@,", headers] autorelease]];
+    [buffer appendString:[[[NSString alloc] initWithFormat:@"Content-Length: %lld,", contentLength] autorelease]];
     [buffer appendString:[[[NSString alloc] initWithFormat:@"Connection-State: %@,", connectionState] autorelease]];
     [buffer appendString:[[[NSString alloc] initWithFormat:@"Date:: %@,", date] autorelease]];
     [buffer appendString:[[[NSString alloc] initWithFormat:@"ETag: %@,", etag] autorelease]];
@@ -192,22 +177,37 @@
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
+    [self.request.responseTimer invalidate];
+
     NSDate   *startDate = [NSDate date];
-    NSString *tmp       = [[NSString alloc] initWithData:self.body encoding:NSUTF8StringEncoding];
+    
+    if (![self isMemberOfClass:[S3GetObjectResponse class]]) {
+        NSString *tmp       = [[NSString alloc] initWithData:self.body encoding:NSUTF8StringEncoding];
+        
+        NSLog(@"Response:\n%@", tmp);
+        [tmp release];
+    }
 
-    AMZLogDebug(@"Response:\n%@", tmp);
-    [tmp release];
-
-    if (self.httpStatusCode >= 400) {
+    // S3 treats 301's as an error and passes back an Error Response, so parse it
+    if ((self.httpStatusCode == 301) || (self.httpStatusCode >= 400)) {
         NSXMLParser            *parser       = [[NSXMLParser alloc] initWithData:self.body];
         S3ErrorResponseHandler *errorHandler = [[S3ErrorResponseHandler alloc] initWithStatusCode:self.httpStatusCode];
         [parser setDelegate:errorHandler];
         [parser parse];
 
         exception = [[errorHandler exception] copy];
+        BOOL throwsExceptions = [AmazonErrorHandler throwsExceptions];
 
-        if ([(NSObject *)self.request.delegate respondsToSelector:@selector(request:didFailWithServiceException:)]) {
+        if (throwsExceptions == YES
+            && [(NSObject *)self.request.delegate respondsToSelector:@selector(request:didFailWithServiceException:)]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [self.request.delegate request:self.request didFailWithServiceException:(AmazonServiceException *)exception];
+#pragma clang diagnostic pop
+        }
+        else if (throwsExceptions == NO
+                 && [(NSObject *)self.request.delegate respondsToSelector:@selector(request:didFailWithError:)]) {
+            [self.request.delegate request:self.request didFailWithError:[AmazonErrorHandler errorFromException:exception]];
         }
 
         [parser release];
@@ -226,18 +226,20 @@
 
 }
 
--(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+-(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)theError
 {
-    NSDictionary *info = [error userInfo];
+    [self.request.responseTimer invalidate];
+    
+    NSDictionary *info = [theError userInfo];
     for (id key in info)
     {
-        AMZLog(@"UserInfo.%@ = %@", [key description], [[info valueForKey:key] description]);
+        NSLog(@"UserInfo.%@ = %@", [key description], [[info valueForKey:key] description]);
     }
-    exception = [[AmazonClientException exceptionWithMessage:[error description]] retain];
-    AMZLog(@"An error occured in the request: %@", [error description]);
+    exception = [[AmazonServiceException exceptionWithMessage:[theError description] andError:theError] retain];
+    NSLog(@"An error occured in the request: %@", [theError description]);
 
     if ([(NSObject *)self.request.delegate respondsToSelector:@selector(request:didFailWithError:)]) {
-        [self.request.delegate request:self.request didFailWithError:error];
+        [self.request.delegate request:self.request didFailWithError:theError];
     }
 }
 
@@ -257,9 +259,9 @@
 -(NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)proposedRequest redirectResponse:(NSURLResponse *)redirectResponse
 {
     if (![[proposedRequest URL] isEqual:self.request.urlRequest.URL]) {
-        AMZLog(@"Redirect:");
-        AMZLog(@"  New  URL: %@", [[proposedRequest URL] description]);
-        AMZLog(@"  Orig URL: %@", self.request.urlRequest.URL);
+        NSLog(@"Redirect:");
+        NSLog(@"  New  URL: %@", [[proposedRequest URL] description]);
+        NSLog(@"  Orig URL: %@", self.request.urlRequest.URL);
 
         NSMutableURLRequest *newRequest = [self.request.urlRequest mutableCopy];
         [newRequest setURL:[proposedRequest URL]];
@@ -286,8 +288,6 @@
     [versionId release];
     [serverSideEncryption release];
     [headers release];
-
-    [dateFormatter release];
 
     [super dealloc];
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -49,22 +49,10 @@
         self.httpVerb = kHttpMethodGet;
     }
 
-    // HTTP Verb
-    if (!([self.httpVerb isEqualToString:kHttpMethodGet] ||
-          [self.httpVerb isEqualToString:kHttpMethodHead] ||
-          [self.httpVerb isEqualToString:kHttpMethodPut])) {
-        @throw [AmazonClientException exceptionWithMessage : @"httpVerb must be GET, HEAD, or PUT."];
-    }
-
     [self setHttpMethod:self.httpVerb];
     [self.urlRequest setHTTPMethod:self.httpVerb];
 
-    // Expires
-    if (self.expires == nil) {
-        @throw [AmazonClientException exceptionWithMessage : @"expires must not be nil."];
-    }
-
-    int epoch = (int)[self.expires timeIntervalSince1970];
+    NSInteger epoch = (int)[self.expires timeIntervalSince1970];
     [self.urlRequest setValue:[NSString stringWithFormat:@"%d", epoch] forHTTPHeaderField:@"Date"];
 
     return self.urlRequest;
@@ -80,19 +68,14 @@
         [queryString appendFormat:@"%@=%@&", kHttpHdrAmzSecurityToken, [AmazonSDKUtil urlEncode:self.securityToken]];        
     }
 
-    [queryString appendFormat:@"%@=%@", kS3QueryParamAccessKey, self.accessKey];
+    [queryString appendFormat:@"%@=%@", kS3QueryParamAccessKey, [AmazonSDKUtil urlEncode:self.accessKey]];
 
     // HEAD special case
     if ([self.httpVerb isEqualToString:kHttpMethodHead]) {
         [queryString appendFormat:@"&%@=0", kS3QueryParamMaxKeys];
     }
 
-    // Expires
-    if (self.expires == nil) {
-        @throw [AmazonClientException exceptionWithMessage : @"expires must not be nil."];
-    }
-
-    int epoch = (int)[self.expires timeIntervalSince1970];
+    NSInteger epoch = (int)[self.expires timeIntervalSince1970];
     [queryString appendFormat:@"&%@=%d", kS3QueryParamExpires, epoch];
 
 
@@ -106,6 +89,27 @@
     }
 
     return queryString;
+}
+
+- (AmazonClientException *)validate
+{
+    AmazonClientException *clientException = [super validate];
+    
+    if(clientException == nil)
+    {
+        // HTTP Verb
+        if (!([self.httpVerb isEqualToString:kHttpMethodGet] ||
+              [self.httpVerb isEqualToString:kHttpMethodHead] ||
+              [self.httpVerb isEqualToString:kHttpMethodPut])) {
+            clientException = [AmazonClientException exceptionWithMessage:@"httpVerb must be GET, HEAD, or PUT."];
+        }
+        // Expires
+        else if (self.expires == nil) {
+            clientException = [AmazonClientException exceptionWithMessage:@"expires must not be nil."];
+        }
+    }
+    
+    return clientException;
 }
 
 -(void)dealloc

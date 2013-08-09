@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -16,14 +16,16 @@
 #import "AutoScalingBlockDeviceMapping.h"
 #import "AutoScalingInstanceMonitoring.h"
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Create Launch Configuration Request
- *
- * \ingroup AutoScaling
  */
 
 @interface AutoScalingCreateLaunchConfigurationRequest:AmazonServiceRequestConfig
@@ -39,6 +41,10 @@
     NSString                      *ramdiskId;
     NSMutableArray                *blockDeviceMappings;
     AutoScalingInstanceMonitoring *instanceMonitoring;
+    NSString                      *spotPrice;
+    NSString                      *iamInstanceProfile;
+    bool                          ebsOptimized;
+    bool                          ebsOptimizedIsSet;
 }
 
 
@@ -158,6 +164,41 @@
  * CloudWatch</a> product page.
  */
 @property (nonatomic, retain) AutoScalingInstanceMonitoring *instanceMonitoring;
+
+/**
+ * The maximum hourly price to be paid for any Spot Instance launched to
+ * fulfill the request. Spot Instances are launched when the price you
+ * specify exceeds the current Spot market price. For more information on
+ * launching Spot Instances, go to <a
+ * services.com/AutoScaling/latest/DeveloperGuide/US-SpotInstances.html">
+ * Using Auto Scaling to Launch Spot Instances</a> in the <i>Auto Scaling
+ * Developer Guide</i>.
+ * <p>
+ * <b>Constraints:</b><br/>
+ * <b>Length: </b>1 - 255<br/>
+ */
+@property (nonatomic, retain) NSString *spotPrice;
+
+/**
+ * The name or the Amazon Resource Name (ARN) of the instance profile
+ * associated with the IAM role for the instance. For information on
+ * launching EC2 instances with an IAM role, go to <a
+ * ices.com/AutoScaling/latest/DeveloperGuide/us-iam-role.html">Launching
+ * Auto Scaling Instances With an IAM Role</a> in the <i>Auto Scaling
+ * Developer Guide</i>.
+ * <p>
+ * <b>Constraints:</b><br/>
+ * <b>Length: </b>1 - 1600<br/>
+ * <b>Pattern: </b>[\u0020-\uD7FF\uE000-\uFFFD\uD800\uDC00-\uDBFF\uDFFF\r\n\t]*<br/>
+ */
+@property (nonatomic, retain) NSString *iamInstanceProfile;
+
+/**
+ * The value of the EbsOptimized property for this object.
+ */
+@property (nonatomic) bool           ebsOptimized;
+
+@property (nonatomic, readonly) bool ebsOptimizedIsSet;
 
 /**
  * Adds a single object to securityGroups.

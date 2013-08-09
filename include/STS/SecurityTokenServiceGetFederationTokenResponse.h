@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 #import "SecurityTokenServiceFederatedUser.h"
 
 #import "SecurityTokenServiceResponse.h"
-#import "../AmazonServiceExceptionUnmarshaller.h"
 
 #import "SecurityTokenServicePackedPolicyTooLargeException.h"
 #import "SecurityTokenServiceMalformedPolicyDocumentException.h"
@@ -25,8 +24,6 @@
 
 /**
  * Get Federation Token Result
- *
- * \ingroup SecurityTokenService
  */
 
 @interface SecurityTokenServiceGetFederationTokenResponse:SecurityTokenServiceResponse
@@ -54,15 +51,17 @@
 @property (nonatomic, retain) SecurityTokenServiceCredentials *credentials;
 
 /**
- * Identifiers for the federated user associated with the credentials.
- * You can use the federated user's ARN in your resource policies.
+ * Identifiers for the federated user associated with the credentials
+ * (such as <code>arn:aws:sts::123456789012:federated-user/Bob</code> or
+ * <code>123456789012:Bob</code>). You can use the federated user's ARN
+ * in your resource policies like in an Amazon S3 bucket policy.
  */
 @property (nonatomic, retain) SecurityTokenServiceFederatedUser *federatedUser;
 
 /**
  * A percentage value indicating the size of the policy in packed form.
- * Policies for which the packed size is greater than 100% of the allowed
- * value are rejected by the service.
+ * The service rejects policies for which the packed size is greater than
+ * 100 percent of the allowed value.
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Range: </b>0 - <br/>

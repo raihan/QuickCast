@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,14 +18,9 @@
 
 /** Contains the parameters used for the initiateMultipartUpload operation.
  *
- * \ingroup S3
  */
 @interface S3InitiateMultipartUploadRequest:S3AbstractPutRequest {
-    NSString *cacheControl;
-    NSString *contentDisposition;
-    NSString *contentEncoding;
-    int      expires;
-    bool     expiresSet;
+    BOOL      expiresSet;
 }
 
 -(id)initWithKey:(NSString *)aKey inBucket:(NSString *)aBucket;
@@ -47,7 +42,9 @@
  */
 @property (nonatomic, retain) NSString *contentEncoding;
 
+@property (nonatomic, retain) NSString *redirectLocation;
+
 /** Number of milliseconds before expiration. */
-@property (nonatomic) int expires;
+@property (nonatomic, assign, readonly) NSInteger expires;
 
 @end

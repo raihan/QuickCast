@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,14 +14,16 @@
  */
 
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Create Topic Request
- *
- * \ingroup SNS
  */
 
 @interface SNSCreateTopicRequest:AmazonServiceRequestConfig
@@ -35,7 +37,8 @@
 /**
  * The name of the topic you want to create. <p>Constraints: Topic names
  * must be made up of only uppercase and lowercase ASCII letters,
- * numbers, and hyphens, and must be between 1 and 256 characters long.
+ * numbers, underscores, and hyphens, and must be between 1 and 256
+ * characters long.
  */
 @property (nonatomic, retain) NSString *name;
 
@@ -52,8 +55,8 @@
  *
  * @param theName The name of the topic you want to create.
  * <p>Constraints: Topic names must be made up of only uppercase and
- * lowercase ASCII letters, numbers, and hyphens, and must be between 1
- * and 256 characters long.
+ * lowercase ASCII letters, numbers, underscores, and hyphens, and must
+ * be between 1 and 256 characters long.
  */
 -(id)initWithName:(NSString *)theName;
 

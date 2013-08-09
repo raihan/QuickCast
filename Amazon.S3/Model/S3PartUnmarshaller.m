@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ qualifiedName:(NSString *)qName
         self.part.etag = self.currentText;
     }
     if ([elementName isEqualToString:@"PartNumber"]) {
-        self.part.partNumber = [self.currentText intValue];
+        self.part.partNumber = [self.currentText integerValue];
     }
     if ([elementName isEqualToString:@"Size"]) {
         self.part.size = [self.currentText longLongValue];

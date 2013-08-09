@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@
 
 /**
  * Filter
- *
- * \ingroup AutoScaling
  */
 
 @interface AutoScalingFilter:NSObject
@@ -40,8 +38,8 @@
 
 /**
  * The name of the filter. Valid Name values are:
- * <code>auto-scaling-group</code>, <code>key</code>, <code>value</code>,
- * and <code>propagate-at-launch</code>.
+ * <code>"auto-scaling-group"</code>, <code>"key"</code>,
+ * <code>"value"</code>, and <code>"propagate-at-launch"</code>.
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Pattern: </b>[\u0020-\uD7FF\uE000-\uFFFD\uD800\uDC00-\uDBFF\uDFFF\r\n\t]*<br/>

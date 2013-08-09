@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 
 
 #import "AmazonServiceRequest.h"
+#import "AmazonServiceResponse.h"
 #import "AmazonAuthUtils.h"
 
 @implementation AmazonServiceRequest
@@ -24,9 +25,36 @@
 @synthesize endpoint;
 @synthesize userAgent;
 @synthesize credentials;
+@synthesize urlRequest;
 @synthesize urlConnection;
+@synthesize responseTimer;
 @synthesize requestTag;
+@synthesize serviceName;
+@synthesize regionName;
+@synthesize hostName;
+@synthesize delegate;
 
+- (id)init
+{
+    if(self = [super init])
+    {
+        httpMethod = nil;
+        parameters = nil;
+        endpoint = nil;
+        userAgent = nil;
+        credentials = nil;
+        urlRequest = [AmazonURLRequest new];
+        urlConnection = nil;
+        responseTimer = nil;
+        requestTag = nil;
+        serviceName = nil;
+        regionName = nil;
+        hostName = nil;
+        delegate = nil;
+    }
+
+    return self;
+}
 
 -(void)sign
 {
@@ -65,7 +93,7 @@
 
     NSArray         *keys       = [[self parameters] allKeys];
     NSArray         *sortedKeys = [keys sortedArrayUsingSelector:@selector(compare:)];
-    for (int index = 0; index < [sortedKeys count]; index++) {
+    for (NSInteger index = 0; index < [sortedKeys count]; index++) {
         NSString *key   = [sortedKeys objectAtIndex:index];
         NSString *value = (NSString *)[[self parameters] valueForKey:key];
 
@@ -81,23 +109,93 @@
     return [buffer autorelease];
 }
 
--(AmazonURLRequest *)urlRequest
+-(NSString *)hostName
 {
-    if (nil == urlRequest) {
-        urlRequest = [[AmazonURLRequest alloc] init];
+    // hostName was explicitly set
+    if (hostName != nil) {
+        return hostName;
+    }
+    
+    NSRange startOfHost = [self.endpoint rangeOfString:@"://"];
+    
+    NSString *trimmed = [self.endpoint substringFromIndex:(startOfHost.location + 3)];
+    NSRange endOfHost = [trimmed rangeOfString:@"/"];
+    if (endOfHost.location == NSNotFound) {
+        return trimmed;
     }
 
-    return urlRequest;
+    return [trimmed substringToIndex:(endOfHost.location)];
 }
 
--(void)setUrlRequest:(AmazonURLRequest *)request
+-(NSString *)regionName
 {
-    if (nil != urlRequest)
-    {
-        [urlRequest release];
-        urlRequest = nil;
+    // regionName was explicitly set
+    if (regionName != nil) {
+        return regionName;
     }
-    urlRequest = [request retain];
+    // If we don't recognize the domain, just return the default
+    if ([self.hostName hasSuffix:@".queue.amazonaws.com"]){
+        NSRange  range             = [self.hostName rangeOfString:@".queue.amazonaws.com"];
+        return [self.hostName substringToIndex:range.location];
+    }
+    else if ([self.hostName hasSuffix:@".amazonaws.com"]) {
+        NSRange  range             = [self.hostName rangeOfString:@".amazonaws.com"];
+        NSString *serviceAndRegion = [self.hostName substringToIndex:range.location];
+        
+        NSString *separator = @".";
+        if ( [serviceAndRegion hasPrefix:@"s3"]) {
+            separator = @"-";
+        }
+        
+        if ( [serviceAndRegion rangeOfString:separator].location == NSNotFound) {
+            return @"us-east-1";
+        }
+        
+        NSRange  index   = [serviceAndRegion rangeOfString:separator];
+        NSString *region = [serviceAndRegion substringFromIndex:(index.location + 1)];
+        if ( [region isEqualToString:@"us-gov"]) {
+            return @"us-gov-west-1";
+        }
+        else {
+            return region;
+        }
+    }
+    else {
+        return @"us-east-1";
+    }
+    
+}
+
+-(NSString *)serviceName
+{
+    // serviceName was explicitly set
+    if (serviceName != nil) {
+        return serviceName;
+    }
+    
+    // If we don't recognize the domain, just return nil
+    if ([self.hostName hasSuffix:@"queue.amazonaws.com"]){
+        return @"sqs";
+    }
+    else if ([self.hostName hasSuffix:@".amazonaws.com"]) {
+        NSRange  range             = [self.hostName rangeOfString:@".amazonaws.com"];
+        NSString *serviceAndRegion = [self.hostName substringToIndex:range.location];
+        
+        NSString *separator = @".";
+        if ( [serviceAndRegion hasPrefix:@"s3"]) {
+            return @"s3";
+        }
+        
+        if ( [serviceAndRegion rangeOfString:separator].location == NSNotFound) {
+            return serviceAndRegion;
+        }
+        
+        NSRange index = [serviceAndRegion rangeOfString:separator];
+        return [serviceAndRegion substringToIndex:index.location];
+    }
+    else {
+        return nil;
+    }
 }
 
 -(void)setParameterValue:(NSString *)theValue forKey:(NSString *)theKey
@@ -113,14 +211,20 @@
     return nil;
 }
 
--(void)setDelegate:(id<AmazonServiceRequestDelegate> )aDelegate
+- (AmazonClientException *)validate
 {
-    delegate = aDelegate;
+    return nil;
 }
 
--(id<AmazonServiceRequestDelegate> )delegate
+- (void)cancel
 {
-    return delegate;
+    [self.urlConnection cancel];
+    [self.responseTimer invalidate];
+}
+
+-(AmazonServiceResponse*)constructResponse
+{
+    return [[AmazonServiceResponse new] autorelease];
 }
 
 -(void)dealloc
@@ -132,7 +236,11 @@
     [parameters release];
     [userAgent release];
     [urlConnection release];
+    [responseTimer release];
     [requestTag release];
+    [serviceName release];
+    [regionName release];
+    [hostName release];
 
     [super dealloc];
 }

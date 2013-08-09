@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 #import "AmazonServiceResponse.h"
 #import "AmazonServiceResponseUnmarshaller.h"
 #import "AmazonLogger.h"
+#import "AmazonErrorHandler.h"
+
 
 @implementation AmazonServiceResponse
 
@@ -27,6 +29,8 @@
 @synthesize didTimeout;
 @synthesize unmarshallerDelegate;
 @synthesize processingTime;
+@synthesize error;
+@synthesize exception;
 
 -(id)init
 {
@@ -35,6 +39,7 @@
         isFinishedLoading = NO;
         didTimeout        = NO;
         exception         = nil;
+        error = nil;
     }
 
     return self;
@@ -43,16 +48,6 @@
 -(NSData *)body
 {
     return [NSData dataWithData:body];
-}
-
-// TODO: Make the body property readonly when all operations are converted to the delegate technique.
--(void)setBody:(NSData *)data
-{
-    if (nil != body) {
-        [body setLength:0];
-    }
-    body = [[NSMutableData dataWithData:data] retain];
-    [self processBody];
 }
 
 // Override this to perform processing on the body.
@@ -69,31 +64,41 @@
 -(void)timeout
 {
     if (!isFinishedLoading && !exception) {
+        
         didTimeout = YES;
-        exception  = [[AmazonClientException exceptionWithMessage:@"Request timed out."] retain];
+        [self.request.urlConnection cancel];
+        self.request.responseTimer = nil;
 
-        if ([(NSObject *)request.delegate respondsToSelector:@selector(request:didFailWithServiceException:)]) {
+        exception  = [[AmazonClientException exceptionWithMessage:@"Request timed out."] retain];
+        
+        BOOL throwsExceptions = [AmazonErrorHandler throwsExceptions];
+        
+        if (throwsExceptions == YES
+            && [(NSObject *)request.delegate respondsToSelector:@selector(request:didFailWithServiceException:)]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [request.delegate request:request didFailWithServiceException:exception];
+#pragma clang diagnostic pop
+        }
+        else if (throwsExceptions == NO
+                 && [(NSObject *)request.delegate respondsToSelector:@selector(request:didFailWithError:)]) {
+            
+            self.error = [AmazonErrorHandler errorFromException:exception];
+            [request.delegate request:request didFailWithError:self.error];
         }
     }
 }
 
--(NSException *)exception
-{
-    return exception;
-}
-
-#pragma mark NSURLConnection delegate methods
+#pragma mark - NSURLProtocolClient delegate methods
 
 -(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
 
-    AMZLogDebug(@"Response Headers:");
+    NSLog(@"Response Headers:");
     for (NSString *header in [[httpResponse allHeaderFields] allKeys]) {
-        AMZLogDebug(@"%@ = [%@]", header, [[httpResponse allHeaderFields] valueForKey:header]);
+        NSLog(@"%@ = [%@]", header, [[httpResponse allHeaderFields] valueForKey:header]);
     }
-
 
     self.httpStatusCode = [httpResponse statusCode];
 
@@ -119,62 +124,83 @@
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
+    [self.request.responseTimer invalidate];
+    
     NSDate *startDate = [NSDate date];
 
     isFinishedLoading = YES;
 
     NSString *tmpStr = [[NSString alloc] initWithData:body encoding:NSUTF8StringEncoding];
 
-    AMZLogDebug(@"Response Body:\n%@", tmpStr);
+    NSLog(@"Response Body:\n%@", tmpStr);
     [tmpStr release];
     NSXMLParser                       *parser         = [[NSXMLParser alloc] initWithData:body];
     AmazonServiceResponseUnmarshaller *parserDelegate = [[unmarshallerDelegate alloc] init];
     [parser setDelegate:parserDelegate];
     [parser parse];
 
-    AmazonServiceResponse *tmpReq   = [parserDelegate response];
-    AmazonServiceResponse *response = [tmpReq retain];
+    AmazonServiceResponse *response = [[parserDelegate response] retain];
 
     [parser release];
     [parserDelegate release];
 
-    if (response.exception) {
+    if(response.error)
+    {
+        NSError *errorFound = [[response.error copy] autorelease];
+        [response release];
+        
+        if ([(NSObject *)request.delegate respondsToSelector:@selector(request:didFailWithError:)]) {
+            [request.delegate request:request didFailWithError:errorFound];
+        }
+    }
+    else if (response.exception) {
         NSException *exceptionFound = [[response.exception copy] autorelease];
         [response release];
-        if ([(NSObject *)request.delegate respondsToSelector:@selector(request:didFailWithServiceException:)]) {
+        
+        BOOL throwsExceptions = [AmazonErrorHandler throwsExceptions];
+        
+        if(throwsExceptions == YES
+           && [(NSObject *)request.delegate respondsToSelector:@selector(request:didFailWithServiceException:)]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [request.delegate request:request didFailWithServiceException:(AmazonServiceException *)exceptionFound];
-            return;
+#pragma clang diagnostic pop
         }
-        else {
-            @throw exceptionFound;
+        else if(throwsExceptions == NO
+                && [(NSObject *)request.delegate respondsToSelector:@selector(request:didFailWithError:)]) {
+            [request.delegate request:request 
+                     didFailWithError:[AmazonErrorHandler errorFromException:exceptionFound]];
         }
     }
+    else {
+        [response postProcess];
+        processingTime          = fabs([startDate timeIntervalSinceNow]);
+        response.processingTime = processingTime;
+        
 
-    [response postProcess];
-    processingTime          = fabs([startDate timeIntervalSinceNow]);
-    response.processingTime = processingTime;
-
-
-
-    if ([(NSObject *)request.delegate respondsToSelector:@selector(request:didCompleteWithResponse:)]) {
-        [request.delegate request:request didCompleteWithResponse:response];
+        
+        if ([(NSObject *)request.delegate respondsToSelector:@selector(request:didCompleteWithResponse:)]) {
+            [request.delegate request:request didCompleteWithResponse:response];
+        }
+        
+        [response release];
     }
-
-    [response release];
 }
 
--(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+-(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)theError
 {
-    NSDictionary *info = [error userInfo];
+    [self.request.responseTimer invalidate];
+
+    NSDictionary *info = [theError userInfo];
     for (id key in info)
     {
-        AMZLogDebug(@"UserInfo.%@ = %@", [key description], [[info valueForKey:key] description]);
+        NSLog(@"UserInfo.%@ = %@", [key description], [[info valueForKey:key] description]);
     }
-    exception = [[AmazonClientException exceptionWithMessage:[error description] andError:error] retain];
-    AMZLogDebug(@"An error occured in the request: %@", [error description]);
-
+    exception = [[AmazonServiceException exceptionWithMessage:[theError description] andError:theError] retain];
+    NSLog(@"An error occured in the request: %@", [theError description]);
+    
     if ([(NSObject *)self.request.delegate respondsToSelector:@selector(request:didFailWithError:)]) {
-        [self.request.delegate request:self.request didFailWithError:error];
+        [self.request.delegate request:self.request didFailWithError:theError];
     }
 }
 
@@ -201,6 +227,17 @@
     return nil;
 }
 
+// FOR TESTING ONLY - disables SSL cert checks
+//- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace {
+//    return [protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust];
+//}
+
+//- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+//    [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
+//    
+//    [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+//}
+
 #pragma mark memory management
 
 -(void)dealloc
@@ -209,6 +246,7 @@
     [body release];
     [exception release];
     [request release];
+    [error release];
 
     [super dealloc];
 }

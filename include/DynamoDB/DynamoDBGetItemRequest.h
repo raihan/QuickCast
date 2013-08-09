@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,32 +13,35 @@
  * permissions and limitations under the License.
  */
 
-#import "DynamoDBKey.h"
+#import "DynamoDBAttributeValue.h"
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Get Item Request
- *
- * \ingroup DynamoDB
  */
 
 @interface DynamoDBGetItemRequest:AmazonServiceRequestConfig
 
 {
-    NSString       *tableName;
-    DynamoDBKey    *key;
-    NSMutableArray *attributesToGet;
-    bool           consistentRead;
-    bool           consistentReadIsSet;
+    NSString            *tableName;
+    NSMutableDictionary *key;
+    NSMutableArray      *attributesToGet;
+    bool                consistentRead;
+    bool                consistentReadIsSet;
+    NSString            *returnConsumedCapacity;
 }
 
 
 
 /**
- * The value of the TableName property for this object.
+ * The name of the table containing the requested item.
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Length: </b>3 - 255<br/>
@@ -47,16 +50,16 @@
 @property (nonatomic, retain) NSString *tableName;
 
 /**
- * The primary key that uniquely identifies each item in a table. A
- * primary key can be a one attribute (hash) primary key or a two
- * attribute (hash-and-range) primary key.
+ * A map of attribute names to <i>AttributeValue</i> objects,
+ * representing the primary key of the item to retrieve.
  */
-@property (nonatomic, retain) DynamoDBKey *key;
+@property (nonatomic, retain) NSMutableDictionary *key;
 
 /**
- * Array of Attribute names. If attribute names are not specified then
- * all attributes will be returned. If some attributes are not found,
- * they will not appear in the result.
+ * The names of one or more attributes to retrieve. If no attribute names
+ * are specified, then all attributes will be returned. If any of the
+ * requested attributes are not found, they will not appear in the
+ * result.
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Length: </b>1 - <br/>
@@ -64,12 +67,22 @@
 @property (nonatomic, retain) NSMutableArray *attributesToGet;
 
 /**
- * If set to true, then a consistent read is issued, otherwise eventually
- * consistent is used.
+ * If set to <code>true</code>, then the operation uses strongly
+ * consistent reads; otherwise, eventually consistent reads are used.
  */
 @property (nonatomic) bool           consistentRead;
 
 @property (nonatomic, readonly) bool consistentReadIsSet;
+
+/**
+ * If set to <code>TOTAL</code>, <i>ConsumedCapacity</i> is included in
+ * the response; if set to <code>NONE</code> (the default),
+ * <i>ConsumedCapacity</i> is not included.
+ * <p>
+ * <b>Constraints:</b><br/>
+ * <b>Allowed Values: </b>TOTAL, NONE
+ */
+@property (nonatomic, retain) NSString *returnConsumedCapacity;
 
 
 /**
@@ -82,12 +95,19 @@
  * Constructs a new GetItemRequest object.
  * Callers should use properties to initialize any additional object members.
  *
- * @param theTableName
- * @param theKey The primary key that uniquely identifies each item in a
- * table. A primary key can be a one attribute (hash) primary key or a
- * two attribute (hash-and-range) primary key.
+ * @param theTableName The name of the table containing the requested
+ * item.
+ * @param theKey A map of attribute names to <i>AttributeValue</i>
+ * objects, representing the primary key of the item to retrieve.
  */
--(id)initWithTableName:(NSString *)theTableName andKey:(DynamoDBKey *)theKey;
+-(id)initWithTableName:(NSString *)theTableName andKey:(NSMutableDictionary *)theKey;
+
+
+/**
+ * Set a value in the dictionary key for the specified key.
+ * This function will alloc and init key if not already done.
+ */
+-(void)setKeyValue:(DynamoDBAttributeValue *)theValue forKey:(NSString *)theKey;
 
 /**
  * Adds a single object to attributesToGet.

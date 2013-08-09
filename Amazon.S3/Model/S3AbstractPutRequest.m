@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,10 +18,12 @@
 @implementation S3AbstractPutRequest
 
 @synthesize cannedACL;
+@synthesize fullACL;
 @synthesize storageClass;
 @synthesize serverSideEncryption;
+@synthesize metadata;
 
--(NSMutableURLRequest *)configureURLRequest
+- (NSMutableURLRequest *)configureURLRequest
 {
     [super configureURLRequest];
 
@@ -37,11 +39,17 @@
     for (id k in [self metadata]) {
         [self.urlRequest setValue:[[self metadata] objectForKey:k] forHTTPHeaderField:[NSString stringWithFormat:kHttpHdrAmzMetaFormat, [k description]]];
     }
+    if (nil != self.fullACL) {
+        NSDictionary *aclHeaders = [self.fullACL toHeaders];
+        for (NSString *headerName in [aclHeaders allKeys]) {
+            [self.urlRequest setValue:[aclHeaders valueForKey:headerName] forHTTPHeaderField:headerName];
+        }
+    }
 
     return urlRequest;
 }
 
--(NSMutableDictionary *)metadata
+- (NSMutableDictionary *)metadata
 {
     if (nil == metadata) {
         metadata = [[NSMutableDictionary alloc] init];
@@ -49,17 +57,18 @@
     return metadata;
 }
 
--(void) addMetadataWithValue:(NSString *)value forKey:(NSString *)aKey
+- (void) addMetadataWithValue:(NSString *)value forKey:(NSString *)aKey
 {
     [[self metadata] setValue:value forKey:aKey];
 }
 
--(void)dealloc
+- (void)dealloc
 {
     [cannedACL release];
+    [fullACL release];
     [storageClass release];
-    [metadata release];
     [serverSideEncryption release];
+    [metadata release];
 
     [super dealloc];
 }

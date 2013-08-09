@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -24,16 +24,19 @@
 @class AmazonServiceException;
 
 @interface AmazonServiceRequest:NSObject {
-    AmazonURLRequest                 *urlRequest;
-    NSMutableDictionary              *parameters;
-    id<AmazonServiceRequestDelegate> delegate;
     NSString                         *httpMethod;
+    NSMutableDictionary              *parameters;
     NSString                         *endpoint;
     NSString                         *userAgent;
     AmazonCredentials                *credentials;
+    AmazonURLRequest                 *urlRequest;
     NSURLConnection                  *urlConnection;
-
+    NSTimer                          *responseTimer;
     NSString                         *requestTag;
+    NSString                         *serviceName;
+    NSString                         *regionName;
+    NSString                         *hostName;
+    id<AmazonServiceRequestDelegate> delegate;
 }
 
 /** Request specific credentials. */
@@ -48,6 +51,8 @@
  */
 @property (nonatomic, retain) NSURLConnection *urlConnection;
 
+@property (nonatomic, retain) NSTimer *responseTimer;
+
 /** The HTTP Method (GET, PUT, POST, DELETE) used for the request. */
 @property (nonatomic, retain) NSString *httpMethod;
 
@@ -58,7 +63,12 @@
 
 @property (nonatomic, retain) NSMutableDictionary *parameters;
 @property (nonatomic, retain) NSString            *endpoint;
+@property (nonatomic, retain) NSString            *serviceName;
+@property (nonatomic, retain) NSString            *regionName;
+@property (nonatomic, retain) NSString            *hostName;
 @property (nonatomic, retain) NSString            *userAgent;
+
+@property (nonatomic, assign) id<AmazonServiceRequestDelegate> delegate;
 
 /**
  * Open property that enables user to distinquish various requests.
@@ -72,9 +82,6 @@
 -(void)sign;
 
 -(void)setParameterValue:(NSString *)theValue forKey:(NSString *)theKey;
-
-/** Returns the delegate object for the request */
--(id<AmazonServiceRequestDelegate> )delegate;
 
 /** Sets the delegate object for the request.
  *
@@ -90,6 +97,22 @@
  */
 -(void)setDelegate:(id<AmazonServiceRequestDelegate> )delegate;
 
+/** This method returns nil if the request object passed the validation.
+ * If not, it will return an exception.
+ * All methods inheriting this method must call [super validate] first to check if it returns any exceptions.
+ */
+- (AmazonClientException *)validate;
+
+/** Cancel asynchronous operations. The thread invoked this request needs to call this method to cancel the operation. Once cancelled, it cannot be resumed. Create another request object and invoke it again.
+ * It has no effect on synchronous operations.
+ */
+- (void)cancel;
+
+/**
+ * Internal helper method to create the appropriate response object for the request.
+ */
+-(AmazonServiceResponse*)constructResponse;
+
 @end
 
 
@@ -98,7 +121,7 @@
  * Delegate classes should implement one or more of these methods.
  *
  */
-@protocol AmazonServiceRequestDelegate
+@protocol AmazonServiceRequestDelegate <NSObject>
 
 @optional
 
@@ -162,7 +185,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
  * @param request   The AmazonServiceRequest sending the message.
  * @param exception The AmazonClientException that would have been thrown in the absence of a delegate.
  */
--(void)request:(AmazonServiceRequest *)request didFailWithServiceException:(NSException *)exception;
+-(void)request:(AmazonServiceRequest *)request didFailWithServiceException:(NSException *)exception __attribute__((deprecated));
 
 @end
 

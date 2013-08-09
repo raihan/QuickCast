@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -20,8 +20,6 @@
 
 /**
  * Launch Configuration
- *
- * \ingroup AutoScaling
  */
 
 @interface AutoScalingLaunchConfiguration:NSObject
@@ -38,7 +36,11 @@
     NSString                      *ramdiskId;
     NSMutableArray                *blockDeviceMappings;
     AutoScalingInstanceMonitoring *instanceMonitoring;
+    NSString                      *spotPrice;
+    NSString                      *iamInstanceProfile;
     NSDate                        *createdTime;
+    bool                          ebsOptimized;
+    bool                          ebsOptimizedIsSet;
 }
 
 
@@ -142,9 +144,35 @@
 @property (nonatomic, retain) AutoScalingInstanceMonitoring *instanceMonitoring;
 
 /**
+ * Specifies the price to bid when launching Spot Instances.
+ * <p>
+ * <b>Constraints:</b><br/>
+ * <b>Length: </b>1 - 255<br/>
+ */
+@property (nonatomic, retain) NSString *spotPrice;
+
+/**
+ * Provides the name or the Amazon Resource Name (ARN) of the instance
+ * profile associated with the IAM role for the instance. The instance
+ * profile contains the IAM role.
+ * <p>
+ * <b>Constraints:</b><br/>
+ * <b>Length: </b>1 - 1600<br/>
+ * <b>Pattern: </b>[\u0020-\uD7FF\uE000-\uFFFD\uD800\uDC00-\uDBFF\uDFFF\r\n\t]*<br/>
+ */
+@property (nonatomic, retain) NSString *iamInstanceProfile;
+
+/**
  * Provides the creation date and time for this launch configuration.
  */
 @property (nonatomic, retain) NSDate *createdTime;
+
+/**
+ * The value of the EbsOptimized property for this object.
+ */
+@property (nonatomic) bool           ebsOptimized;
+
+@property (nonatomic, readonly) bool ebsOptimizedIsSet;
 
 /**
  * Adds a single object to securityGroups.

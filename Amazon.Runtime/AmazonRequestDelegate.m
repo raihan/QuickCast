@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -41,12 +41,12 @@
 
 -(void)request:(AmazonServiceRequest *)request didReceiveResponse:(NSURLResponse *)aResponse
 {
-    AMZLogDebug(@"didReceiveResponse");
+    NSLog(@"didReceiveResponse");
 }
 
 -(void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)aResponse
 {
-    AMZLogDebug(@"didCompleteWithResponse");
+    NSLog(@"didCompleteWithResponse");
     [response release];
     response         = [aResponse retain];
     response.request = request;
@@ -54,24 +54,24 @@
 
 -(void)request:(AmazonServiceRequest *)request didReceiveData:(NSData *)data
 {
-    AMZLogDebug(@"didReceiveData");
+    NSLog(@"didReceiveData");
 }
 
 -(void)request:(AmazonServiceRequest *)request didSendData:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
 {
-    AMZLogDebug(@"didSendData");
+    NSLog(@"didSendData");
 }
 
 -(void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)theError
 {
-    AMZLogDebug(@"didFailWithError: %@", theError);
+    NSLog(@"didFailWithError: %@", theError);
     [error release];
     error = [theError retain];
 }
 
 -(void)request:(AmazonServiceRequest *)request didFailWithServiceException:(NSException *)theException
 {
-    AMZLogDebug(@"didFailWithServiceException");
+    NSLog(@"didFailWithServiceException");
     [exception release];
     exception = [theException retain];
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -22,30 +22,39 @@
 @synthesize contentDisposition;
 @synthesize contentEncoding;
 @synthesize contentMD5;
+@synthesize filename;
 @synthesize data;
 @synthesize stream;
 @synthesize expect;
 @synthesize generateMD5;
+@synthesize expires;
+@synthesize redirectLocation;
 
 -(id)init
 {
     if (self = [super init])
     {
+        cacheControl = nil;
+        contentDisposition = nil;
+        contentEncoding = nil;
+        contentMD5 = nil;
+        expect = nil;
+        data = nil;
+        stream = nil;
+        filename = nil;
+        redirectLocation = nil;
+
+        expires = 0;
         expiresSet  = NO;
         generateMD5 = NO;
     }
     return self;
 }
 
--(void)setExpires:(int)exp
+-(void)setExpires:(NSInteger)exp
 {
     expires    = exp;
     expiresSet = YES;
-}
-
--(int)expires
-{
-    return expires;
 }
 
 -(NSMutableURLRequest *)configureURLRequest
@@ -72,23 +81,33 @@
     [urlRequest setHTTPMethod:kHttpMethodPut];
 
     if (nil != self.expect) {
-        [self.urlRequest setValue:self.expect forHTTPHeaderField:kHttpHdrExpect];
+        [self.urlRequest setValue:self.expect
+               forHTTPHeaderField:kHttpHdrExpect];
     }
     if (nil != self.contentMD5) {
-        [self.urlRequest setValue:self.contentMD5 forHTTPHeaderField:kHttpHdrContentMD5];
+        [self.urlRequest setValue:self.contentMD5
+               forHTTPHeaderField:kHttpHdrContentMD5];
     }
     if (nil != self.contentEncoding) {
-        [self.urlRequest setValue:self.contentEncoding forHTTPHeaderField:kHttpHdrContentEncoding];
+        [self.urlRequest setValue:self.contentEncoding
+               forHTTPHeaderField:kHttpHdrContentEncoding];
     }
     if (nil != self.contentDisposition) {
-        [self.urlRequest setValue:self.contentDisposition forHTTPHeaderField:kHttpHdrContentDisposition];
+        [self.urlRequest setValue:self.contentDisposition
+               forHTTPHeaderField:kHttpHdrContentDisposition];
     }
     if (nil != self.cacheControl) {
-        [self.urlRequest setValue:self.cacheControl forHTTPHeaderField:kHttpHdrCacheControl];
+        [self.urlRequest setValue:self.cacheControl
+               forHTTPHeaderField:kHttpHdrCacheControl];
+    }
+    if (nil != self.redirectLocation) {
+        [self.urlRequest setValue:self.redirectLocation
+               forHTTPHeaderField:kHttpHdrAmzWebsiteRedirectLocation];
     }
 
     if (expiresSet) {
-        [self.urlRequest setValue:[NSString stringWithFormat:@"%d", self.expires] forHTTPHeaderField:kHttpHdrExpires];
+        [self.urlRequest setValue:[NSString stringWithFormat:@"%d", self.expires]
+               forHTTPHeaderField:kHttpHdrExpires];
     }
 
     if (self.stream != nil) {
@@ -97,7 +116,8 @@
     else {
         [self.urlRequest setHTTPBody:data];
         if (self.contentLength < 1) {
-            [self.urlRequest setValue:[NSString stringWithFormat:@"%d", [data length]] forHTTPHeaderField:kHttpHdrContentLength];
+            [self.urlRequest setValue:[NSString stringWithFormat:@"%d", [data length]]
+                   forHTTPHeaderField:kHttpHdrContentLength];
         }
     }
 
@@ -106,50 +126,54 @@
 
 -(id)initWithKey:(NSString *)aKey inBucket:(NSString *)aBucket
 {
-    [self init];
-    self.key    = aKey;
-    self.bucket = aBucket;
+    if(self = [self init])
+    {
+        self.key    = aKey;
+        self.bucket = aBucket;
+    }
 
     return self;
 }
 
--(void)setFilename:(NSString *)theFilename
+- (AmazonClientException *)validate
 {
-    if (filename != nil) {
-        [filename release];
-        filename = nil;
-    }
+    AmazonClientException *clientException = [super validate];
 
-    filename = [theFilename retain];
+    if(clientException == nil)
+    {
+        if(self.filename != nil)
+        {
+            if (![[NSFileManager defaultManager] isReadableFileAtPath:self.filename]) {
 
-    if (![[NSFileManager defaultManager] isReadableFileAtPath:self.filename]) {
-        @throw [AmazonClientException exceptionWithMessage : @"The specified file cannot be read."];
-    }
+                clientException = [AmazonClientException exceptionWithMessage:@"The specified file cannot be read."];
+            }
+            else {
+                self.contentLength = [[[[NSFileManager defaultManager] attributesOfItemAtPath:self.filename
+                                                                                        error:nil]
+                                       valueForKey:NSFileSize] intValue];
+                self.contentType   = [AmazonSDKUtil MIMETypeForExtension:[self.filename pathExtension]];
 
-    self.contentLength = [[[[NSFileManager defaultManager] attributesOfItemAtPath:self.filename error:nil] valueForKey:NSFileSize] intValue];
-    self.contentType   = [AmazonSDKUtil MIMETypeForExtension:[self.filename pathExtension]];
+                @try {
+                    NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath:self.filename];
+                    self.stream = inputStream;
+                    [inputStream release];
+                }
+                @catch (NSException *e) {
 
-    @try {
-        if (stream != nil) {
-            [stream release];
-            stream = nil;
+                    clientException = [AmazonClientException exceptionWithMessage:
+                                       [NSString stringWithFormat:@"Could not open file for streaming: %@", e.reason]];
+                }
+            }
         }
-        stream = [[NSInputStream alloc] initWithFileAtPath:filename];
     }
-    @catch (NSException *e) {
-        @throw [AmazonClientException exceptionWithMessage :[NSString stringWithFormat:@"Could not open file for streaming: ", e.reason]];
-    }
-}
 
--(NSString *)filename
-{
-    return filename;
+    return clientException;
 }
 
 #ifdef DEBUG
 -(void)connection:(NSURLConnection *)connection didSendBodyData:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
 {
-    AMZLog(@"Wrote %d bytes to the connection", bytesWritten);
+    NSLog(@"Wrote %d bytes to the connection", bytesWritten);
 }
 #endif
 
@@ -163,7 +187,7 @@
     [filename release];
     [stream release];
     [data release];
-
+    
     [super dealloc];
 }
 

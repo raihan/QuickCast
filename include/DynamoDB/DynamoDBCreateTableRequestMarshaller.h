@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,16 +13,41 @@
  * permissions and limitations under the License.
  */
 
-
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequest.h>
+#else
 #import "../AmazonServiceRequest.h"
+#endif
 
 #import "DynamoDBRequest.h"
 #import "DynamoDBCreateTableRequest.h"
-#import "DynamoDBKeySchema.h"
-#import "DynamoDBKeySchemaElement.h"
-#import "DynamoDBKeySchemaElement.h"
 #import "DynamoDBProvisionedThroughput.h"
+#import "DynamoDBAttributeDefinition.h"
+#import "DynamoDBProjection.h"
 #import "DynamoDBKeySchemaElement.h"
+#import "DynamoDBKeySchemaElement.h"
+#import "DynamoDBProjection.h"
+#import "DynamoDBKeySchemaElement.h"
+#import "DynamoDBLocalSecondaryIndex.h"
+#import "DynamoDBProjection.h"
+#import "DynamoDBKeySchemaElement.h"
+#import "DynamoDBAttributeDefinition.h"
+#import "DynamoDBProjection.h"
+#import "DynamoDBKeySchemaElement.h"
+#import "DynamoDBKeySchemaElement.h"
+#import "DynamoDBProjection.h"
+#import "DynamoDBKeySchemaElement.h"
+#import "DynamoDBLocalSecondaryIndex.h"
+#import "DynamoDBProjection.h"
+#import "DynamoDBKeySchemaElement.h"
+#import "DynamoDBAttributeDefinition.h"
+#import "DynamoDBProjection.h"
+#import "DynamoDBKeySchemaElement.h"
+#import "DynamoDBKeySchemaElement.h"
+#import "DynamoDBProjection.h"
+#import "DynamoDBKeySchemaElement.h"
+#import "DynamoDBLocalSecondaryIndex.h"
+#import "DynamoDBProjection.h"
 #import "DynamoDBKeySchemaElement.h"
 
 

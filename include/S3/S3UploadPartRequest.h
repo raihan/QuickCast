@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -19,17 +19,17 @@
 
 /** Contains the parameters used for the uploadPart operation.
  *
- * \ingroup S3
  */
 @interface S3UploadPartRequest:S3Request {
-    int      partNumber;
-    NSString *uploadId;
-    NSString *contentMD5;
-    NSData   *data;
+    NSInteger partNumber;
+    NSString  *uploadId;
+    NSString  *contentMD5;
+    NSData    *data;
+    NSInputStream *stream;
 }
 
 /** Identifies which part this is. */
-@property (nonatomic) int partNumber;
+@property (nonatomic) NSInteger partNumber;
 
 /** The base64-encoded 128-bit MD5 digest of the part data.
  * This header can be used as a message integrity check to verify
@@ -40,8 +40,20 @@
 /** The uploadId of the multipart upload that this part is for. */
 @property (nonatomic, retain) NSString *uploadId;
 
-/** The data for the part. */
+/** The data for the part.
+ * <p>
+ * Use one of <code>data</code>, <code>stream</code>.
+ * </p>
+ */
 @property (nonatomic, retain) NSData *data;
+
+/** The stream from which to read the data for the part.
+ * <b>To use the stream you must explicitly set the content length.<b/>
+ * <p>
+ * Use one of <code>data</code> or <code>stream</code>.
+ * </p>
+ */
+@property (nonatomic, retain) NSInputStream *stream;
 
 /** Initializes the instance with the bucket, key, and uploadId from an S3MultipartUpload instance returned in an S3MultipartUploadResponse. */
 -(id)initWithMultipartUpload:(S3MultipartUpload *)multipartUpload;

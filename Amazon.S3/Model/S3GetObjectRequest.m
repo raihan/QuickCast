@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -66,12 +66,13 @@
     [super configureURLRequest];
 
     [urlRequest setHTTPMethod:kHttpMethodGet];
+    [self.urlRequest setHTTPBody:nil];
 
     if (nil != self.ifModifiedSince) {
-        [urlRequest setValue:[self.ifModifiedSince requestFormat] forHTTPHeaderField:kHttpHdrIfModified];
+        [urlRequest setValue:[self.ifModifiedSince stringWithRFC822Format] forHTTPHeaderField:kHttpHdrIfModified];
     }
     if (nil != self.ifUnmodifiedSince) {
-        [urlRequest setValue:[self.ifUnmodifiedSince requestFormat] forHTTPHeaderField:kHttpHdrIfUnmodified];
+        [urlRequest setValue:[self.ifUnmodifiedSince stringWithRFC822Format] forHTTPHeaderField:kHttpHdrIfUnmodified];
     }
     if (nil != self.ifMatch) {
         [urlRequest setValue:self.ifMatch forHTTPHeaderField:kHttpHdrIfMatch];
@@ -90,21 +91,37 @@
 -(NSString *)getRange
 {
     if (rangeSet) {
-        return [NSString stringWithFormat:@"bytes=%d-%d", rangeStart, rangeEnd];
+        return [NSString stringWithFormat:@"bytes=%lld-%lld", rangeStart, rangeEnd];
     }
 
     return nil;
 }
 
--(void)setRangeStart:(int)start rangeEnd:(int)end
+-(void)setRangeStart:(int64_t)start rangeEnd:(int64_t)end
 {
-    if (end <= start) {
-        @throw [AmazonClientException exceptionWithName : @"Invalid range" reason : @"rangeEnd must be larger than rangeStart" userInfo : nil];
-    }
-
     rangeStart = start;
     rangeEnd   = end;
     rangeSet   = YES;
+}
+
+- (AmazonClientException *)validate
+{
+    AmazonClientException *clientException = [super validate];
+    
+    if(clientException == nil)
+    {
+        if(rangeSet == YES)
+        {
+            if (rangeEnd <= rangeStart) {
+                clientException = (AmazonClientException *)[AmazonClientException exceptionWithName:@"Invalid range" 
+                                                                    reason:@"rangeEnd must be larger than rangeStart" 
+                                                                  userInfo:nil];
+                rangeSet = NO;
+            }
+        }
+    }
+    
+    return clientException;
 }
 
 -(void) dealloc

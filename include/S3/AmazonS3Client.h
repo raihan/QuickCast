@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -16,16 +16,19 @@
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonHMAC.h>
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonWebServiceClient.h>
+#import <AWSRuntime/AmazonSDKUtil.h>
+#else
 #import "../AmazonWebServiceClient.h"
 #import "../AmazonSDKUtil.h"
+#endif
 
 #import "S3Constants.h"
 #import "S3AbstractPutRequest.h"
 #import "S3AccessControlList.h"
-#import "S3AccessControlListUnmarshaller.h"
 #import "S3Bucket.h"
 #import "S3BucketNameUtilities.h"
-#import "S3BucketUnmarshaller.h"
 #import "S3GetBucketPolicyRequest.h"
 #import "S3GetBucketPolicyResponse.h"
 #import "S3SetBucketPolicyRequest.h"
@@ -53,7 +56,6 @@
 #import "S3DeleteObjectsResponse.h"
 #import "DeleteError.h"
 #import "DeletedObject.h"
-#import "S3ErrorResponseHandler.h"
 #import "S3GetACLRequest.h"
 #import "S3GetACLResponse.h"
 #import "S3GetObjectMetadataRequest.h"
@@ -62,29 +64,24 @@
 #import "S3GetObjectResponse.h"
 #import "S3GetPreSignedURLRequest.h"
 #import "S3Grant.h"
-#import "S3GrantUnmarshaller.h"
 #import "S3Grantee.h"
-#import "S3ListBucketResultUnmarshaller.h"
 #import "S3ListBucketsRequest.h"
 #import "S3ListBucketsResponse.h"
 #import "S3ListBucketsResult.h"
-#import "S3ListBucketsResultUnmarshaller.h"
 #import "S3ListObjectsRequest.h"
 #import "S3ListObjectsResponse.h"
 #import "S3ListObjectsResult.h"
-#import "S3LocationConstraintUnmarshaller.h"
 #import "S3ObjectSummary.h"
-#import "S3ObjectSummaryUnmarshaller.h"
 #import "S3Owner.h"
-#import "S3OwnerUnmarshaller.h"
+#import "S3Part.h"
 #import "S3Permission.h"
 #import "S3PutObjectRequest.h"
 #import "S3PutObjectResponse.h"
 #import "S3Region.h"
 #import "S3Request.h"
 #import "S3Response.h"
+#import "S3UploadInputStream.h"
 #import "S3ServiceModel.h"
-#import "S3ServiceTransform.h"
 #import "S3SetACLRequest.h"
 #import "S3SetACLResponse.h"
 #import "S3InitiateMultipartUploadRequest.h"
@@ -116,6 +113,20 @@
 #import "S3GetBucketLifecycleConfigurationResponse.h"
 #import "S3DeleteBucketLifecycleConfigurationRequest.h"
 #import "S3DeleteBucketLifecycleConfigurationResponse.h"
+#import "S3SetBucketTaggingRequest.h"
+#import "S3SetBucketTaggingResponse.h"
+#import "S3GetBucketTaggingRequest.h"
+#import "S3GetBucketTaggingResponse.h"
+#import "S3DeleteBucketTaggingRequest.h"
+#import "S3DeleteBucketTaggingResponse.h"
+#import "S3SetBucketCrossOriginRequest.h"
+#import "S3SetBucketCrossOriginResponse.h"
+#import "S3GetBucketCrossOriginRequest.h"
+#import "S3GetBucketCrossOriginResponse.h"
+#import "S3DeleteBucketCrossOriginRequest.h"
+#import "S3DeleteBucketCrossOriginResponse.h"
+#import "S3RestoreObjectRequest.h"
+#import "S3RestoreObjectResponse.h"
 
 /** \defgroup S3 Amazon S3 */
 
@@ -129,7 +140,8 @@
  * fast, inexpensive data storage infrastructure that Amazon uses to run its own global network of web sites.
  * The service aims to maximize benefits of scale and to pass those benefits on to developers.
  *
- * \ingroup S3
+ * See our blog to learn more about Managing Credentials in Mobile Applications.
+ * @see http://mobile.awsblog.com/post/Tx31X75XISXHRH8/Managing-Credentials-in-Mobile-Applications
  */
 @interface AmazonS3Client:AmazonWebServiceClient {}
 
@@ -144,6 +156,8 @@
  * @param listBucketsRequest An S3ListBucketsRequest object that defines the parameters of the request.
  * @return An S3ListBucketsResponse from S3. The <code>buckets</code> property of the
  * S3ListBucketsResult has the list of buckets.
+ * @see S3ListBucketsResponse
+ * @see S3ListBucketsRequest
  */
 -(S3ListBucketsResponse *)listBuckets:(S3ListBucketsRequest *)listBucketsRequest;
 
@@ -151,6 +165,8 @@
  *
  * @param createBucketRequest An S3CreateBucketRequest that defines the parameters of the request.
  * @return An S3CreateBucketResponse from S3
+ * @see S3CreateBucketResponse
+ * @see S3CreateBucketRequest
  */
 -(S3CreateBucketResponse *)createBucket:(S3CreateBucketRequest *)createBucketRequest;
 
@@ -158,6 +174,7 @@
  *
  * @param bucketName The name for the bucket to be created.
  * @return An S3CreateBucketResponse from S3
+ * @see S3CreateBucketResponse
  */
 -(S3CreateBucketResponse *)createBucketWithName:(NSString *)bucketName;
 
@@ -166,6 +183,8 @@
  *
  * @param deleteBucketRequest An S3DeleteBucketRequest that defines the parameters of the request.
  * @return An S3DeleteBucketResponse from S3
+ * @see S3DeleteBucketResponse
+ * @see S3DeleteBucketRequest
  */
 -(S3DeleteBucketResponse *)deleteBucket:(S3DeleteBucketRequest *)deleteBucketRequest;
 
@@ -174,6 +193,7 @@
  *
  * @param bucketName The name of the bucket to be deleted.
  * @return An S3DeleteBucketResponse from S3
+ * @see S3DeleteBucketResponse
  */
 -(S3DeleteBucketResponse *)deleteBucketWithName:(NSString *)bucketName;
 
@@ -182,6 +202,7 @@
  * To determine the location of a bucket, you must be the bucket owner
  * @param bucketName The name of the bucket.
  * @return The S3Region object that represents the region.
+ * @see S3Region
  */
 -(S3Region *)getBucketLocation:(NSString *)bucketName;
 
@@ -189,6 +210,8 @@
  *
  * @param getObjectMetadataRequest The S3DeleteBucketRequest object that defines the parameters of the request.
  * @returns An S3GetObjectMetadataResponse from S3.
+ * @see S3GetObjectMetadataResponse
+ * @see S3GetObjectMetadataRequest
  */
 -(S3GetObjectMetadataResponse *)getObjectMetadata:(S3GetObjectMetadataRequest *)getObjectMetadataRequest;
 
@@ -196,6 +219,8 @@
  *
  * @param putObjectRequest The S3PutObjectRequest that defines the parameters of the request.
  * @return An S3PutObjectResponse from S3.
+ * @see S3PutObjectResponse
+ * @see S3PutObjectRequest
  */
 -(S3PutObjectResponse *)putObject:(S3PutObjectRequest *)putObjectRequest;
 
@@ -207,6 +232,8 @@
  *
  * @param getObjectRequest The S3GetObjectRequest that defines the parameters of the request.
  * @return An S3GetObjectResponse from S3.
+ * @see S3GetObjectResponse
+ * @see S3GetObjectRequest
  */
 -(S3GetObjectResponse *)getObject:(S3GetObjectRequest *)getObjectRequest;
 
@@ -215,6 +242,8 @@
  *
  * @param deleteObjectRequest The S3DeleteObjectRequest that defines the parameters of the operation.
  * @return An S3DeleteObjectResponse from S3.
+ * @see S3DeleteObjectResponse
+ * @see S3DeleteObjectRequest
  */
 -(S3DeleteObjectResponse *)deleteObject:(S3DeleteObjectRequest *)deleteObjectRequest;
 
@@ -226,6 +255,8 @@
  *
  * @param deleteObjectsRequest The S3DeleteObjectsRequest that defines the parameters of the operation.
  * @return An S3DeleteObjectsResponse from S3.
+ * @see S3DeleteObjectsResponse
+ * @see S3DeleteObjectsRequest
  */
 -(S3DeleteObjectsResponse *)deleteObjects:(S3DeleteObjectsRequest *)deleteObjectsRequest;
 
@@ -235,6 +266,7 @@
  * @param theKey The key of the object to be deleted.
  * @param theBucket The bucket containing the object to be deleted.
  * @return An S3DeleteObjectResponse from S3.
+ * @see S3DeleteObjectResponse
  */
 -(S3DeleteObjectResponse *)deleteObjectWithKey:(NSString *)theKey withBucket:(NSString *)theBucket;
 
@@ -242,6 +274,8 @@
  *
  * @param listObjectsRequest The S3ListObjectsRequest that defines the parameters of the operation.
  * @return An S3ListObjectsResponse from S3.
+ * @see S3ListObjectsResponse
+ * @see S3ListObjectsRequest
  */
 -(S3ListObjectsResponse *)listObjects:(S3ListObjectsRequest *)listObjectsRequest;
 
@@ -257,14 +291,21 @@
  * When copying an object, you can preserve all metadata (default) or specify new metadata.
  * However, the ACL is not preserved and is set to private for the user making the request.
  * To override the default ACL setting, specify a new ACL when generating a copy request.
+ * @see S3CopyObjectResponse
+ * @see S3CopyObjectRequest
  */
--(S3CopyObjectResponse *)copyObject:(S3CopyObjectRequest *)copyObjectRequest;
+-(S3CopyObjectResponse *)objectCopy:(S3CopyObjectRequest *)copyObjectRequest;
+
+-(S3CopyObjectResponse *)copyObject:(S3CopyObjectRequest *)copyObjectRequest __attribute__((deprecated)); // Use objectCopy: instead.
+
 
 /**
  * Gets the access control list for a given bucket or object.
  *
  * @param getACLRequest The S3GetACLRequest that defines the parameters of the operation.
  * @return An S3GetACLResponse from S3.
+ * @see S3GetACLResponse
+ * @see S3GetACLRequest 
  */
 -(S3GetACLResponse *)getACL:(S3GetACLRequest *)getACLRequest;
 
@@ -273,6 +314,8 @@
  *
  * @param setACLRequest The S3SetACLRequest that defines the parameters of the operation.
  * @return An S3SetACLResponse from S3.
+ * @see S3SetACLResponse
+ * @see S3SetACLRequest 
  */
 -(S3SetACLResponse *)setACL:(S3SetACLRequest *)setACLRequest;
 
@@ -284,6 +327,8 @@
  * Bucket policies provide access control management at the bucket level for
  * both the bucket resource and contained object resources. Only one policy
  * can be specified per-bucket.
+ * @see S3GetBucketPolicyResponse
+ * @see S3GetBucketPolicyRequest
  */
 -(S3GetBucketPolicyResponse *)getBucketPolicy:(S3GetBucketPolicyRequest *)getPolicyRequest;
 
@@ -294,6 +339,8 @@
  * Bucket policies provide access control management at the bucket level for
  * both the bucket resource and contained object resources. Only one policy
  * can be specified per-bucket.
+ * @see S3SetBucketPolicyResponse
+ * @see S3SetBucketPolicyRequest
  */
 -(S3SetBucketPolicyResponse *)setBucketPolicy:(S3SetBucketPolicyRequest *)setPolicyRequest;
 
@@ -303,6 +350,8 @@
  * Bucket policies provide access control management at the bucket level for
  * both the bucket resource and contained object resources. Only one policy
  * can be specified per-bucket.
+ * @see S3DeleteBucketPolicyResponse
+ * @see S3DeleteBucketPolicyRequest
  */
 -(S3DeleteBucketPolicyResponse *)deleteBucketPolicy:(S3DeleteBucketPolicyRequest *)deletePolicyRequest;
 
@@ -325,6 +374,8 @@
  * no other object will be overwritten by that request.
  * Refer to the documentation sections for each API for information on how
  * versioning status affects the semantics of that particular API.
+ * @see S3GetBucketVersioningConfigurationResponse
+ * @see S3GetBucketVersioningConfigurationRequest
  */
 -(S3GetBucketVersioningConfigurationResponse *)getBucketVersioningConfiguration:(S3GetBucketVersioningConfigurationRequest *)getBucketVersioningConfigurationRequest;
 
@@ -352,6 +403,8 @@
  * no other object will be overwritten by that request.
  * Refer to the documentation sections for each API for information on how
  * versioning status affects the semantics of that particular API.
+ * @see S3SetBucketVersioningConfigurationResponse
+ * @see S3SetBucketVersioningConfigurationRequest
  */
 -(S3SetBucketVersioningConfigurationResponse *)setBucketVersioningConfiguration:(S3SetBucketVersioningConfigurationRequest *)setBucketVersioningConfigurationRequest;
 
@@ -376,19 +429,17 @@
  * configuration by writing a bucket policy granting them the
  * <code>S3:PutBucketWebsite</code> permission.
  *
- * @param bucketName
- *            The name of the bucket whose website configuration is being
+ * @param bucketName  The name of the bucket whose website configuration is being
  *            set.
- * @param configuration
- *            The configuration describing how the specified bucket will
+ * @param configuration  The configuration describing how the specified bucket will
  *            serve web requests (i.e. default index page, error page).
  *
- * @throws AmazonClientException
- *             If any errors are encountered on the client while making the
- *             request or handling the response.
- * @throws AmazonServiceException
- *             If any errors occurred in Amazon S3 while processing the
- *             request.
+ * @exception AmazonClientException  If any errors are encountered on the client while making the
+ *             request or handling the response. For more information see <AmazonClientException>.
+ * @exception AmazonServiceException  If any errors occurred in Amazon S3 while processing the
+ *             request.  For more information see <AmazonServiceException>.
+ * @see S3SetBucketWebsiteConfigurationResponse
+ * @see S3SetBucketWebsiteConfigurationRequest
  */
 -(S3SetBucketWebsiteConfigurationResponse *)setBucketWebsiteConfiguration:(S3SetBucketWebsiteConfigurationRequest *)setBucketWebsiteConfigurationRequest;
 
@@ -413,20 +464,19 @@
  * website configuration by writing a bucket policy granting them the
  * <code>S3:GetBucketWebsite</code> permission.
  *
- * @param bucketName
- *            The name of the bucket whose website configuration is being
+ * @param bucketName  The name of the bucket whose website configuration is being
  *            retrieved.
  *
  * @return The bucket website configuration for the specified bucket,
  *         otherwise null if there is no website configuration set for the
  *         specified bucket.
  *
- * @throws AmazonClientException
- *             If any errors are encountered on the client while making the
- *             request or handling the response.
- * @throws AmazonServiceException
- *             If any errors occurred in Amazon S3 while processing the
- *             request.
+ * @exception AmazonClientException  If any errors are encountered on the client while making the
+ *             request or handling the response. For more information see <AmazonClientException>.
+ * @exception AmazonServiceException  If any errors occurred in Amazon S3 while processing the
+ *             request.  For more information see <AmazonServiceException>.
+ * @see S3GetBucketWebsiteConfigurationResponse
+ * @see S3GetBucketWebsiteConfigurationRequest
  */
 -(S3GetBucketWebsiteConfigurationResponse *)getBucketWebsiteConfiguration:(S3GetBucketWebsiteConfigurationRequest *)getBucketWebsiteConfigurationRequest;
 
@@ -446,16 +496,15 @@
  * bucket policy granting them the <code>S3:DeleteBucketWebsite</code>
  * permission.
  *
- * @param bucketName
- *            The name of the bucket whose website configuration is being
+ * @param bucketName  The name of the bucket whose website configuration is being
  *            deleted.
  *
- * @throws AmazonClientException
- *             If any errors are encountered on the client while making the
- *             request or handling the response.
- * @throws AmazonServiceException
- *             If any errors occurred in Amazon S3 while processing the
- *             request.
+ * @exception AmazonClientException  If any errors are encountered on the client while making the
+ *             request or handling the response. For more information see <AmazonClientException>.
+ * @exception AmazonServiceException  If any errors occurred in Amazon S3 while processing the
+ *             request.  For more information see <AmazonServiceException>.
+ * @see S3DeleteBucketWebsiteConfigurationResponse
+ * @see S3DeleteBucketWebsiteConfigurationRequest
  */
 -(S3DeleteBucketWebsiteConfigurationResponse *)deleteBucketWebsiteConfiguration:(S3DeleteBucketWebsiteConfigurationRequest *)deleteBucketWebsiteConfigurationRequest;
 
@@ -468,18 +517,14 @@
  * For more informaiton on how to use Bucket Lifecycle/Object Expiration see:
  * <a href="http://docs.amazonwebservices.com/AmazonS3/latest/dev/ObjectExpiration.html">http://docs.amazonwebservices.com/AmazonS3/latest/dev/ObjectExpiration.html</a>.
  *
- * @param bucketName
- *            The name of the bucket whose lifecycle configuration is being
- *            set.
- * @param configuration
- *            The configuration containing the set of rules for this bucket.
- *
- * @throws AmazonClientException
- *             If any errors are encountered on the client while making the
- *             request or handling the response.
- * @throws AmazonServiceException
- *             If any errors occurred in Amazon S3 while processing the
- *             request.
+ * @param setBucketLifecycleConfigurationRequest  The request to process
+ * 
+ * @exception AmazonClientException  If any errors are encountered on the client while making the
+ *             request or handling the response. For more information see <AmazonClientException>.
+ * @exception AmazonServiceException  If any errors occurred in Amazon S3 while processing the
+ *             request.  For more information see <AmazonServiceException>.
+ * @see S3SetBucketLifecycleConfigurationResponse
+ * @see S3SetBucketLifecycleConfigurationRequest
  */
 -(S3SetBucketLifecycleConfigurationResponse *)setBucketLifecycleConfiguration:(S3SetBucketLifecycleConfigurationRequest *)setBucketLifecycleConfigurationRequest;
 
@@ -492,20 +537,18 @@
  * For more informaiton on how to use Bucket Lifecycle/Object Expiration see:
  * <a href="http://docs.amazonwebservices.com/AmazonS3/latest/dev/ObjectExpiration.html">http://docs.amazonwebservices.com/AmazonS3/latest/dev/ObjectExpiration.html</a>.
  *
- * @param bucketName
- *            The name of the bucket whose lifecycle configuration is being
- *            retrieved.
+ * @param getBucketLifecycleConfigurationRequest The request to process
  *
  * @return The bucket lifecycle configuration for the specified bucket,
  *         otherwise null if there is no Lifecycle configuration set for the
  *         specified bucket.
  *
- * @throws AmazonClientException
- *             If any errors are encountered on the client while making the
- *             request or handling the response.
- * @throws AmazonServiceException
- *             If any errors occurred in Amazon S3 while processing the
- *             request.
+ * @exception AmazonClientException  If any errors are encountered on the client while making the
+ *             request or handling the response. For more information see <AmazonClientException>.
+ * @exception AmazonServiceException  If any errors occurred in Amazon S3 while processing the
+ *             request.  For more information see <AmazonServiceException>.
+ * @see S3GetBucketLifecycleConfigurationResponse
+ * @see S3GetBucketLifecycleConfigurationRequest
  */
 -(S3GetBucketLifecycleConfigurationResponse *)getBucketLifecycleConfiguration:(S3GetBucketLifecycleConfigurationRequest *)getBucketLifecycleConfigurationRequest;
 
@@ -518,18 +561,127 @@
  * For more informaiton on how to use Bucket Lifecycle/Object Expiration see:
  * <a href="http://docs.amazonwebservices.com/AmazonS3/latest/dev/ObjectExpiration.html">http://docs.amazonwebservices.com/AmazonS3/latest/dev/ObjectExpiration.html</a>.
  *
- * @param bucketName
- *            The name of the bucket whose lifecycle configuration is being
- *            deleted.
+ * @param deleteBucketLifecycleConfigurationRequest The request to process
  *
- * @throws AmazonClientException
- *             If any errors are encountered on the client while making the
- *             request or handling the response.
- * @throws AmazonServiceException
- *             If any errors occurred in Amazon S3 while processing the
- *             request.
+ * @exception AmazonClientException  If any errors are encountered on the client while making the
+ *             request or handling the response. For more information see <AmazonClientException>.
+ * @exception AmazonServiceException  If any errors occurred in Amazon S3 while processing the
+ *             request.  For more information see <AmazonServiceException>.
+ * @see S3DeleteBucketLifecycleConfigurationResponse
+ * @see S3DeleteBucketLifecycleConfigurationRequest
  */
 -(S3DeleteBucketLifecycleConfigurationResponse *)deleteBucketLifecycleConfiguration:(S3DeleteBucketLifecycleConfigurationRequest *)deleteBucketLifecycleConfigurationRequest;
+
+/**
+ * Sets the tagging configuration for the specified bucket.  A tagging configuration contains a TagSet.
+ * <p>
+ * For more informaiton on how to using Bucket Cost Allocation Tagging see:
+ * <a href="http://docs.amazonwebservices.com/AmazonS3/latest/dev/BucketBilling.html">http://docs.amazonwebservices.com/AmazonS3/latest/dev/BucketBilling.html</a>.
+ *
+ * @param setBucketTaggingRequest request to process
+ *
+ * @exception AmazonClientException  If any errors are encountered on the client while making the
+ *             request or handling the response. For more information see <AmazonClientException>.
+ * @exception AmazonServiceException  If any errors occurred in Amazon S3 while processing the
+ *             request.  For more information see <AmazonServiceException>.
+ * @see S3SetBucketTaggingResponse
+ * @see S3SetBucketTaggingRequest
+ */
+-(S3SetBucketTaggingResponse *)setBucketTagging:(S3SetBucketTaggingRequest *)setBucketTaggingRequest;
+
+/**
+ * Gets the tagging configuration for the specified bucket, or null if no
+ * configuration has been established.
+ * <p>
+ * For more informaiton on how to using Bucket Cost Allocation Tagging see:
+ * <a href="http://docs.amazonwebservices.com/AmazonS3/latest/dev/BucketBilling.html">http://docs.amazonwebservices.com/AmazonS3/latest/dev/BucketBilling.html</a>.
+ *
+ * @param getBucketTaggingRequest  The request to process
+ *
+ * @return The bucket lifecycle configuration for the specified bucket,
+ *         otherwise null if there is no Lifecycle configuration set for the
+ *         specified bucket.
+ *
+ * @exception AmazonClientException  If any errors are encountered on the client while making the
+ *             request or handling the response. For more information see <AmazonClientException>.
+ * @exception AmazonServiceException  If any errors occurred in Amazon S3 while processing the
+ *             request.  For more information see <AmazonServiceException>.
+ * @see S3GetBucketTaggingResponse
+ * @see S3GetBucketTaggingRequest
+ */
+-(S3GetBucketTaggingResponse *)getBucketTagging:(S3GetBucketTaggingRequest *)getBucketTaggingRequest;
+
+/**
+ * Deletes the tagging configuration for the specified bucket
+ * <p> 
+ * For more informaiton on how to using Bucket Cost Allocation Tagging see:
+ * <a href="http://docs.amazonwebservices.com/AmazonS3/latest/dev/BucketBilling.html">http://docs.amazonwebservices.com/AmazonS3/latest/dev/BucketBilling.html</a>.
+ * @param deleteBucketTaggingRequest The request to process
+ *
+ * @exception AmazonClientException  If any errors are encountered on the client while making the
+ *             request or handling the response. For more information see <AmazonClientException>.
+ * @exception AmazonServiceException  If any errors occurred in Amazon S3 while processing the
+ *             request.  For more information see <AmazonServiceException>.
+ * @see S3DeleteBucketTaggingResponse
+ * @see S3DeleteBucketTaggingRequest
+ */
+-(S3DeleteBucketTaggingResponse *)deleteBucketTagging:(S3DeleteBucketTaggingRequest *)deleteBucketTaggingRequest;
+
+
+/**
+ * Sets the CORS configuration for the specified bucket, or null if no
+ * configuration has been established. CORS config is comprised of a set of rules.
+ * <p>
+ * For more informaiton on how to using Bucket CORS see:
+ * <a href="http://docs.amazonwebservices.com/AmazonS3/latest/dev/cors.html">http://docs.amazonwebservices.com/AmazonS3/latest/dev/cors.html</a>.
+ *
+ * @param setBucketCrossOriginRequest request to process
+ *
+ * @exception AmazonClientException  If any errors are encountered on the client while making the
+ *             request or handling the response. For more information see <AmazonClientException>.
+ * @exception AmazonServiceException  If any errors occurred in Amazon S3 while processing the
+ *             request.  For more information see <AmazonServiceException>.
+ * @see S3SetBucketCrossOriginResponse
+ * @see S3SetBucketCrossOriginRequest
+ */
+-(S3SetBucketCrossOriginResponse *)setBucketCrossOrigin:(S3SetBucketCrossOriginRequest *)setBucketCrossOriginRequest;
+
+/**
+ * Gets the CrossOrigin configuration for the specified bucket, or null if no
+ * configuration has been established.
+ * <p>
+ * For more informaiton on how to using Bucket CORS see:
+ * <a href="http://docs.amazonwebservices.com/AmazonS3/latest/dev/cors.html">http://docs.amazonwebservices.com/AmazonS3/latest/dev/cors.html</a>.
+ *
+ * @param getBucketCrossOriginRequest request to process
+ *
+ * @return A response which will contain the CORS config for bucket.
+ *
+ * @exception AmazonClientException  If any errors are encountered on the client while making the
+ *             request or handling the response. For more information see <AmazonClientException>.
+ * @exception AmazonServiceException  If any errors occurred in Amazon S3 while processing the
+ *             request.  For more information see <AmazonServiceException>.
+ * @see S3GetBucketCrossOriginResponse
+ * @see S3GetBucketCrossOriginRequest
+ */
+-(S3GetBucketCrossOriginResponse *)getBucketCrossOrigin:(S3GetBucketCrossOriginRequest *)getBucketCrossOriginRequest;
+
+/**
+ * Deletes the CrossOrigin configuration for the specified bucket
+ * <p>
+ * For more informaiton on how to using Bucket CORS see:
+ * <a href="http://docs.amazonwebservices.com/AmazonS3/latest/dev/cors.html">http://docs.amazonwebservices.com/AmazonS3/latest/dev/cors.html</a>.
+ *
+ * @param deleteBucketCrossOriginRequest  the request to process
+ *
+ * @exception AmazonClientException  If any errors are encountered on the client while making the
+ *             request or handling the response. For more information see <AmazonClientException>.
+ * @exception AmazonServiceException  If any errors occurred in Amazon S3 while processing the
+ *             request.  For more information see <AmazonServiceException>.
+ * @see S3DeleteBucketCrossOriginResponse
+ * @see S3DeleteBucketCrossOriginRequest
+ */
+-(S3DeleteBucketCrossOriginResponse *)deleteBucketCrossOrigin:(S3DeleteBucketCrossOriginRequest *)deleteBucketCrossOriginRequest;
 
 /** Deletes a specific version of an object in the specified bucket. Once
  * deleted, there is no method to restore or undelete an object version.
@@ -539,6 +691,8 @@
  * Deleting an object version is permanent and irreversible.
  * It is a privileged operation that only the owner of the bucket containing the
  * version can perform.
+ * @see S3DeleteVersionResponse
+ * @see S3DeleteVersionRequest
  */
 -(S3DeleteVersionResponse *)deleteVersion:(S3DeleteVersionRequest *)deleteVersionRequest;
 
@@ -548,12 +702,16 @@
  * version. Keys are sorted lexicographically (alphabetically)
  * while versions are sorted from most recent to least recent.
  * Both versions with data and delete markers are included in the results.
+ * @see S3ListVersionsResponse
+ * @see S3ListVersionsRequest
  */
 -(S3ListVersionsResponse *)listVersions:(S3ListVersionsRequest *)lisVersionsRequest;
 
 /** Initiates a multipart upload and returns an InitiateMultipartUploadResponse.
  *
  * @param initiateMultipartUploadRequest The S3InitiateMultipartUploadRequest that defines the paramaters of the operation.
+ * @see S3InitiateMultipartUploadResponse
+ * @see S3InitiateMultipartUploadRequest
  */
 -(S3InitiateMultipartUploadResponse *)initiateMultipartUpload:(S3InitiateMultipartUploadRequest *)initiateMultipartUploadRequest;
 
@@ -567,6 +725,7 @@
  * @param theKey The key the the completed object will have
  * @param theBucket The bucket where the completed object will reside.
  * @return An S3MultipartUpload object which contains the uploadId for the upload.
+ * @see S3MultipartUpload
  */
 -(S3MultipartUpload *)initiateMultipartUploadWithKey:(NSString *)theKey withBucket:(NSString *)theBucket;
 
@@ -579,6 +738,8 @@
  *
  * @param abortMultipartUploadRequest The S3AbortMultipartUploadRequest which defines the parameters of the operation.
  * @returns An S3AbortMultipartUploadResponse from S3.
+ * @see S3AbortMultipartUploadResponse
+ * @see S3AbortMultipartUploadRequest
  */
 -(S3AbortMultipartUploadResponse *)abortMultipartUpload:(S3AbortMultipartUploadRequest *)abortMultipartUploadRequest;
 
@@ -598,6 +759,8 @@
  *
  * @param listMultipartUploadsRequest The ListMultipartUploadsRequest that defines the parameters of the operation.
  * @return Returns a ListMultipartUploadsResponse from S3.</returns>
+ * @see S3ListMultipartUploadsResponse
+ * @see S3ListMultipartUploadsRequest
  */
 -(S3ListMultipartUploadsResponse *)listMultipartUploads:(S3ListMultipartUploadsRequest *)listMultipartUploadsRequest;
 
@@ -622,6 +785,8 @@
  *
  * @param uploadPartRequest The S3UploadPartRequest that defines the parameters of the operation.
  * @return An S3UploadPartResponse from S3.
+ * @see S3UploadPartResponse
+ * @see S3UploadPartRequest
  */
 
 -(S3UploadPartResponse *)uploadPart:(S3UploadPartRequest *)uploadPartRequest;
@@ -643,11 +808,18 @@
  * @param listPartsRequest The S3ListPartsRequest that defines the parameters of the operation.
  *
  * @return An S3ListPartsResponse from S3.
+ * @see S3ListPartsResponse
+ * @see S3ListPartsRequest
  */
 -(S3ListPartsResponse *)listParts:(S3ListPartsRequest *)listPartsRequest;
 
+/**
+ * @see S3CopyPartResponse
+ * @see S3CopyPartRequest
+ */
+-(S3CopyPartResponse *)partCopy:(S3CopyPartRequest *)copyPartRequest;
 
--(S3CopyPartResponse *)copyPart:(S3CopyPartRequest *)copyPartRequest;
+-(S3CopyPartResponse *)copyPart:(S3CopyPartRequest *)copyPartRequest __attribute__((deprecated)); // Use partCopy: instead.
 
 
 /** Completes a multipart upload by assembling previously uploaded parts.
@@ -664,8 +836,18 @@
  * several minutes to complete.
  * @param completeMultipartUploadRequest The CompleteMultipartUploadRequest that defines the parameters of the operation.
  * @return An S3CompleteMultipartUploadResponse from S3.
+ * @see S3CompleteMultipartUploadResponse
+ * @see S3CompleteMultipartUploadRequest 
  */
 -(S3CompleteMultipartUploadResponse *)completeMultipartUpload:(S3CompleteMultipartUploadRequest *)completeMultipartUploadRequest;
+
+/** Request temporary restoration of an object which was transitioned 
+ * to Amazon Glacier from Amazon S3 via life cycle configuration.
+ * @param restoreObjectRequest The RestoreObjectRequest that defines the parameters of the operation.
+ * @return An RestoreObjectResponse from S3.
+ * @see S3RestoreObjectRequest
+ */
+-(S3RestoreObjectResponse *)restoreObject:(S3RestoreObjectRequest *)restoreObjectRequest;
 
 /** Creates a signed http request.
  * Query string authentication is useful for giving HTTP or browser
@@ -679,8 +861,26 @@
  *
  * @param preSignedURLRequest The S3GetPreSignedURLRequest that defines the parameters of the operation.
  * @return An signed NSURL for the resource.
+ * @see S3GetPreSignedURLRequest
  */
 -(NSURL *)getPreSignedURL:(S3GetPreSignedURLRequest *)preSignedURLRequest;
+
+/** Creates a signed http request.
+ * Query string authentication is useful for giving HTTP or browser
+ * access to resources that would normally require authentication.
+ * When using query string authentication, you create a query,
+ * specify an expiration time for the query, sign it with your
+ * signature, place the data in an HTTP request, and distribute
+ * the request to a user or embed the request in a web page.
+ * A PreSigned URL can be generated for GET, PUT and HEAD
+ * operations on your bucket, and keys.
+ *
+ * @param preSignedURLRequest The S3GetPreSignedURLRequest that defines the parameters of the operation.
+ * @param error A reference to an NSError object.
+ * @return An signed NSURL for the resource.
+ * @see S3GetPreSignedURLRequest
+ */
+-(NSURL *)getPreSignedURL:(S3GetPreSignedURLRequest *)preSignedURLRequest error:(NSError **)error;
 
 /** Constructs an empty response object of the appropriate type to match the given request
  * object.
@@ -701,7 +901,7 @@
 /** Return the version of the S3 API */
 +(NSString *)apiVersion;
 
--(NSURLRequest *)signS3Request:(S3Request *)request;
+-(NSMutableURLRequest *)signS3Request:(S3Request *)request;
 
 /** Ensure that all response classes have been loaded by the runtime. */
 +(void)initializeResponseObjects;

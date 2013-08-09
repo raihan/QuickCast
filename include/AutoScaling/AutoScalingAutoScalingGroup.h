@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@
 
 /**
  * Auto Scaling Group
- *
- * \ingroup AutoScaling
  */
 
 @interface AutoScalingAutoScalingGroup:NSObject
@@ -48,6 +46,7 @@
     NSMutableArray *enabledMetrics;
     NSString       *status;
     NSMutableArray *tags;
+    NSMutableArray *terminationPolicies;
 }
 
 
@@ -197,6 +196,12 @@
 @property (nonatomic, retain) NSMutableArray *tags;
 
 /**
+ * A standalone termination policy or a list of termination policies for
+ * this Auto Scaling group.
+ */
+@property (nonatomic, retain) NSMutableArray *terminationPolicies;
+
+/**
  * Adds a single object to availabilityZones.
  * This function will alloc and init availabilityZones if not already done.
  */
@@ -231,6 +236,12 @@
  * This function will alloc and init tags if not already done.
  */
 -(void)addTag:(AutoScalingTagDescription *)tagObject;
+
+/**
+ * Adds a single object to terminationPolicies.
+ * This function will alloc and init terminationPolicies if not already done.
+ */
+-(void)addTerminationPolicy:(NSString *)terminationPolicyObject;
 
 /**
  * Returns a string representation of this object; useful for testing and

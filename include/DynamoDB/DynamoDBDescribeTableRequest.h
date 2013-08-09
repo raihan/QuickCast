@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,14 +14,16 @@
  */
 
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Describe Table Request
- *
- * \ingroup DynamoDB
  */
 
 @interface DynamoDBDescribeTableRequest:AmazonServiceRequestConfig
@@ -33,7 +35,7 @@
 
 
 /**
- * The value of the TableName property for this object.
+ * The name of the table to describe.
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Length: </b>3 - 255<br/>
@@ -52,7 +54,7 @@
  * Constructs a new DescribeTableRequest object.
  * Callers should use properties to initialize any additional object members.
  *
- * @param theTableName
+ * @param theTableName The name of the table to describe.
  */
 -(id)initWithTableName:(NSString *)theTableName;
 

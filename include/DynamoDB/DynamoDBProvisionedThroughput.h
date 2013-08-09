@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@
 
 /**
  * Provisioned Throughput
- *
- * \ingroup DynamoDB
  */
 
 @interface DynamoDBProvisionedThroughput:NSObject
@@ -39,10 +37,12 @@
 -(id)init;
 
 /**
- * ReadCapacityUnits are in terms of strictly consistent reads, assuming
- * items of 1KB. 2KB items require twice the ReadCapacityUnits.
- * Eventually consistent reads only require half the ReadCapacityUnits of
- * stirctly consistent reads.
+ * The maximum number of strongly consistent reads consumed per second
+ * before Amazon DynamoDB returns a <i>ThrottlingException</i>. For more
+ * information, see <a
+ * eloperguide/WorkingWithDDTables.html#ProvisionedThroughput">Specifying
+ * Read and Write Requirements</a> in the <i>Amazon DynamoDB Developer
+ * Guide</i>.
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Range: </b>1 - <br/>
@@ -50,8 +50,12 @@
 @property (nonatomic, retain) NSNumber *readCapacityUnits;
 
 /**
- * WriteCapacityUnits are in terms of strictly consistent reads, assuming
- * items of 1KB. 2KB items require twice the WriteCapacityUnits.
+ * The maximum number of writes consumed per second before Amazon
+ * DynamoDB returns a <i>ThrottlingException</i>. For more information,
+ * see <a
+ * eloperguide/WorkingWithDDTables.html#ProvisionedThroughput">Specifying
+ * Read and Write Requirements</a> in the <i>Amazon DynamoDB Developer
+ * Guide</i>.
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Range: </b>1 - <br/>

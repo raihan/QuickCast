@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -20,21 +20,38 @@
 @synthesize message;
 @synthesize error;
 
-+(AmazonClientException *)exceptionWithMessage:(NSString *)theMessage
++(id)exceptionWithMessage:(NSString *)theMessage
 {
-    AmazonClientException *e = (AmazonClientException *)[AmazonClientException exceptionWithName:@"AmazonClientException" reason:theMessage userInfo:nil];
-
+    AmazonClientException *e = [[[self class] alloc] initWithName:@"AmazonClientException" 
+                                                                    reason:theMessage
+                                                                  userInfo:nil];
+    e.error = nil;
     e.message = theMessage;
-    return e;
+    
+    return [e autorelease];
 }
 
-+(AmazonClientException *)exceptionWithMessage:(NSString *)theMessage andError:(NSError *)theError
++(id)exceptionWithMessage:(NSString *)theMessage andError:(NSError *)theError
 {
-    AmazonClientException *e = (AmazonClientException *)[AmazonClientException exceptionWithName:@"AmazonClientException" reason:theMessage userInfo:nil];
-
+    AmazonClientException *e = [[[self class] alloc] initWithName:@"AmazonClientException"
+                                                                    reason:theMessage
+                                                                  userInfo:nil];
     e.error   = theError;
     e.message = theMessage;
-    return e;
+    
+    return [e autorelease];
+}
+
+- (id)initWithName:(NSString *)name reason:(NSString *)reason userInfo:(NSDictionary *)userInfo
+{
+    self = [super initWithName:name reason:reason userInfo:userInfo];
+    if(self)
+    {
+        message = nil;
+        error = nil;
+    }
+    
+    return self;
 }
 
 -(id)initWithMessage:(NSString *)theMessage
@@ -42,11 +59,11 @@
     self = [super initWithName:@"AmazonClientException" reason:theMessage userInfo:nil];
     if (self != nil) {
         self.message = theMessage;
+        error = nil;
     }
 
     return self;
 }
-
 
 -(void)dealloc
 {
@@ -55,6 +72,5 @@
 
     [super dealloc];
 }
-
 
 @end

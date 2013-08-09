@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,20 +15,23 @@
 
 #import "DynamoDBKeysAndAttributes.h"
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Batch Get Item Request
- *
- * \ingroup DynamoDB
  */
 
 @interface DynamoDBBatchGetItemRequest:AmazonServiceRequestConfig
 
 {
     NSMutableDictionary *requestItems;
+    NSString            *returnConsumedCapacity;
 }
 
 
@@ -41,14 +44,32 @@
 -(id)init;
 
 /**
- * A map of the table name and corresponding items to get by primary key.
- * While requesting items, each table name can be invoked only once per
- * operation.
+ * A map of one or more table names and, for each table, the
+ * corresponding primary keys for the items to retrieve. Each table name
+ * can be invoked only once. <p>Each element in the map consists of the
+ * following: <ul> <li> <p><i>Keys</i> - An array of primary key
+ * attribute values that define specific items in the table. </li> <li>
+ * <p><i>AttributesToGet</i> - One or more attributes to be retrieved
+ * from the table or index. By default, all attributes are returned. If a
+ * specified attribute is not found, it does not appear in the result.
+ * </li> <li> <p><i>ConsistentRead</i> - If <code>true</code>, a strongly
+ * consistent read is used; if <code>false</code> (the default), an
+ * eventually consistent read is used. </li> </ul>
  * <p>
  * <b>Constraints:</b><br/>
  * <b>Length: </b>1 - 100<br/>
  */
 @property (nonatomic, retain) NSMutableDictionary *requestItems;
+
+/**
+ * If set to <code>TOTAL</code>, <i>ConsumedCapacity</i> is included in
+ * the response; if set to <code>NONE</code> (the default),
+ * <i>ConsumedCapacity</i> is not included.
+ * <p>
+ * <b>Constraints:</b><br/>
+ * <b>Allowed Values: </b>TOTAL, NONE
+ */
+@property (nonatomic, retain) NSString *returnConsumedCapacity;
 
 
 /**

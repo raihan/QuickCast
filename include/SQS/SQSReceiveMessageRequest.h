@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,14 +14,16 @@
  */
 
 
+#ifdef AWS_MULTI_FRAMEWORK
+#import <AWSRuntime/AmazonServiceRequestConfig.h>
+#else
 #import "../AmazonServiceRequestConfig.h"
+#endif
 
 
 
 /**
  * Receive Message Request
- *
- * \ingroup SQS
  */
 
 @interface SQSReceiveMessageRequest:AmazonServiceRequestConfig
@@ -31,6 +33,7 @@
     NSMutableArray *attributeNames;
     NSNumber       *maxNumberOfMessages;
     NSNumber       *visibilityTimeout;
+    NSNumber       *waitTimeSeconds;
 }
 
 
@@ -41,7 +44,10 @@
 @property (nonatomic, retain) NSString *queueUrl;
 
 /**
- * A list of attributes to retrieve information for.
+ * A list of attributes that need to be returned along with each message.
+ * The set of valid attributes are [SenderId,
+ * ApproximateFirstReceiveTimestamp, ApproximateReceiveCount,
+ * SentTimestamp].
  */
 @property (nonatomic, retain) NSMutableArray *attributeNames;
 
@@ -58,6 +64,13 @@
  * <code>ReceiveMessage</code> request.
  */
 @property (nonatomic, retain) NSNumber *visibilityTimeout;
+
+/**
+ * The duration (in seconds) for which the call will wait for a message
+ * to arrive in the queue before returning. If a message is available,
+ * the call will return sooner than WaitTimeSeconds.
+ */
+@property (nonatomic, retain) NSNumber *waitTimeSeconds;
 
 
 /**

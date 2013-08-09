@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
  * configuration. These are conditions which need to be corrected in
  * the client. Service exceptions are indicated by throwing AWSServiceException.
  */
-@interface AmazonClientException:NSException {
+@interface AmazonClientException : NSException {
     NSString *message;
     NSError  *error;
 }
@@ -37,18 +37,26 @@
  */
 -(id)initWithMessage:(NSString *)message;
 
+/** Initialize the exception with a name, reason and userInfo.
+ *
+ * @param name The name.
+ * @param reason The reason.
+ * @param userInfo The userInfo.
+ */
+- (id)initWithName:(NSString *)name reason:(NSString *)reason userInfo:(NSDictionary *)userInfo;
+
 /** Return an exception with the given message
  *
  * @param theMessage The user-friendly message
  */
-+(AmazonClientException *)exceptionWithMessage:(NSString *)theMessage;
++(id)exceptionWithMessage:(NSString *)theMessage;
 
 /** Return an exception with the given message and error.
  *
  * @param theMessage The user-friendly message
  * @param theError The error
  */
-+(AmazonClientException *)exceptionWithMessage:(NSString *)theMessage andError:(NSError *)theError;
++(id)exceptionWithMessage:(NSString *)theMessage andError:(NSError *)theError;
 
 
 @end
