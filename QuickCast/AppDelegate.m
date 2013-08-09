@@ -1678,9 +1678,9 @@ NSString *const MoviePath = @"Movies/QuickCast";
             int green = pixel[1];
             int red = pixel[2];
             int alpha = pixel[3];
-            
-            if(blue != 9 || green != 100 || red != 23 || alpha != 255){
-                
+            //NSLog(@"%d %d %d %d",blue,green,red,alpha);
+            //if(blue != 9 || green != 100 || red != 23 || alpha != 255){
+            if(blue != 0 || green != 76 || red != 0 || alpha != 255){
                 break;
                 break;
             }

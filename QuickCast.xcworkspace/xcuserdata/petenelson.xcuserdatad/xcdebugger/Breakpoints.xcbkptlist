@@ -125,11 +125,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "QuickCast/FinishWindowController.m"
-         timestampString = "397594137.582403"
+         timestampString = "397763628.737163"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "221"
-         endingLineNumber = "221"
+         startingLineNumber = "220"
+         endingLineNumber = "220"
          landmarkName = "-startUpload"
          landmarkType = "5">
       </FileBreakpoint>
@@ -157,6 +157,45 @@
          startingLineNumber = "464"
          endingLineNumber = "464"
          landmarkName = "-goToPublish"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "QuickCast/AppDelegate.m"
+         timestampString = "397757629.248244"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "1760"
+         endingLineNumber = "1760"
+         landmarkName = "-captureOutput:didOutputSampleBuffer:fromConnection:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "QuickCast/AppDelegate.m"
+         timestampString = "397757717.363244"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "1677"
+         endingLineNumber = "1677"
+         landmarkName = "-checkForGreen:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "QuickCast/Uploader.m"
+         timestampString = "397759641.582077"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "34"
+         endingLineNumber = "34"
+         landmarkName = "-request:didCompleteWithResponse:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

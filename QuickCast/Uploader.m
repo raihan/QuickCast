@@ -173,7 +173,53 @@
     app.transferManager = [[S3TransferManager alloc] init];
     AmazonS3Client *s3 = [[AmazonS3Client alloc] initWithCredentials:credentials];
     
+    
+    
+    /////////////// Do the thumbnail and gif first as very small and fast
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        // If we have got a gif
+        if([[NSFileManager defaultManager] fileExistsAtPath:[[videoUrl.path stringByDeletingPathExtension] stringByAppendingPathExtension:@"gif"]]){
+            
+            NSString *relativePathGif = [NSString stringWithFormat:@"%@/%@/%@",userId,castId,@"quickcast.gif"];
+            
+            S3PutObjectRequest *porGif = [[S3PutObjectRequest alloc] initWithKey:relativePathGif inBucket:bucket];
+            
+            porGif.data  = [NSData dataWithContentsOfFile:[[videoUrl.path stringByDeletingPathExtension] stringByAppendingPathExtension:@"gif"]];
+            porGif.contentType = @"image/gif";
+            
+            //porGif.expires = 2147483647; //max int value
+            porGif.cannedACL = [S3CannedACL publicRead];
+            
+            //porThumb.delegate = self;
+            //just do syncronously so only video uses the async callbacks
+            [s3 putObject:porGif];
+            //[app.transferManager synchronouslyUpload:porGif];
+            
+        }
+        
+        if(thumbnailUrl != nil){
+            
+            NSString *relativePathThumb = [NSString stringWithFormat:@"%@/%@/%@",userId,castId,@"quickcast.jpg"];
+            
+            S3PutObjectRequest *porThumb = [[S3PutObjectRequest alloc] initWithKey:relativePathThumb inBucket:bucket];
+            
+            porThumb.data  = [NSData dataWithContentsOfFile:[NSTemporaryDirectory() stringByAppendingPathComponent:@"quickcast_thumb.jpg"]];
+            //por.contentType = [Utilities MIMETypeForExtension:[theURL.path pathExtension]];
+            
+            //porThumb.expires = 2147483647; //max int value
+            porThumb.cannedACL = [S3CannedACL publicRead];
+            porThumb.contentType = @"image/jpeg";
+            //porThumb.delegate = self;
+            //just do syncronously so only video uses the async callbacks
+            [s3 putObject:porThumb];
+            //[app.transferManager upload:porThumb];
+        }
+    });
+
+    ///////////////
+    
     [app.transferManager setS3:s3];
+    
     NSString *relativePath = [NSString stringWithFormat:@"%@/%@/%@",userId,castId,@"quickcast.mp4"];
     
     S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:relativePath inBucket:rawBucket];
@@ -184,42 +230,7 @@
     [app.transferManager setDelegate:self];
     [app.transferManager upload:por];
     
-    // If we have got a gif
-    if([[NSFileManager defaultManager] fileExistsAtPath:[[videoUrl.path stringByDeletingPathExtension] stringByAppendingPathExtension:@"gif"]]){
         
-        NSString *relativePathGif = [NSString stringWithFormat:@"%@/%@/%@",userId,castId,@"quickcast.gif"];
-        
-        S3PutObjectRequest *porGif = [[S3PutObjectRequest alloc] initWithKey:relativePathGif inBucket:bucket];
-        
-        porGif.data  = [NSData dataWithContentsOfFile:[[videoUrl.path stringByDeletingPathExtension] stringByAppendingPathExtension:@"gif"]];
-        porGif.contentType = @"image/gif";
-        
-        //porGif.expires = 2147483647; //max int value
-        porGif.cannedACL = [S3CannedACL publicRead];
-        
-        //porThumb.delegate = self;
-        //just do syncronously so only video uses the async callbacks
-        [s3 putObject:porGif];
-
-    }
-    
-    if(thumbnailUrl != nil){
-    
-        NSString *relativePathThumb = [NSString stringWithFormat:@"%@/%@/%@",userId,castId,@"quickcast.jpg"];
-        
-        S3PutObjectRequest *porThumb = [[S3PutObjectRequest alloc] initWithKey:relativePathThumb inBucket:bucket];
-        
-        porThumb.data  = [NSData dataWithContentsOfFile:[NSTemporaryDirectory() stringByAppendingPathComponent:@"quickcast_thumb.jpg"]];
-        //por.contentType = [Utilities MIMETypeForExtension:[theURL.path pathExtension]];
-        
-        //porThumb.expires = 2147483647; //max int value
-        porThumb.cannedACL = [S3CannedACL publicRead];
-        porThumb.contentType = @"image/jpeg";
-        //porThumb.delegate = self;
-        //just do syncronously so only video uses the async callbacks
-        [s3 putObject:porThumb];
-    }
-    
 }
 
 - (void) dealloc{

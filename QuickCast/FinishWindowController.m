@@ -32,11 +32,11 @@
     
     self = [super initWithWindow:window];
     if (self) {
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self
+        //leave this for the moment as upload more resiliant
+        /*[[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(failed:)
                                                      name:@"FailedUploading"
-                                                   object:nil];
+                                                   object:nil];*/
         [self setMicroVideo:NO];
         uploadFailed = NO;
     }
@@ -64,9 +64,8 @@
 
 - (void)failed:(NSNotification *)note{
     
-    // Do nothing for now - S3TransferManager should be able to recover so let's not involve the user
     
-    /*[self.window makeKeyAndOrderFront:nil];
+    [self.window makeKeyAndOrderFront:nil];
     
     NSAlert * alert = [NSAlert alertWithMessageText:@"Upload Failed"
                                       defaultButton:@"OK"
@@ -78,7 +77,7 @@
                       modalDelegate:self
                      didEndSelector:@selector(failedDidEnd:returnCode:contextInfo:)
                         contextInfo:nil];
-     */
+     
     
 }
 
@@ -87,8 +86,8 @@
     if (returnCode == NSAlertDefaultReturn)
     {
         // start the upload again
-        
-        [self.window makeKeyAndOrderFront:nil];
+        [self startUpload];
+        //[self.window makeKeyAndOrderFront:nil];
         
     }
     else{
