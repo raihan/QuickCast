@@ -12,7 +12,7 @@
 - (void)signin:(NSDictionary *)params completionHandler:(void (^)(NSDictionary *, NSError *,NSHTTPURLResponse *))completionBlock;
 - (void)userByToken:(NSDictionary *)params completionHandler:(void (^)(NSDictionary *, NSError *,NSHTTPURLResponse *))completionBlock;
 - (void)castPublish:(NSDictionary *)params completionHandler:(void (^)(NSDictionary *, NSError *,NSHTTPURLResponse *))completionBlock;
-- (void)castUpdate:(NSDictionary *)params completionHandler:(void (^)(NSDictionary *, NSError *,NSHTTPURLResponse *))completionBlock;
+- (void)castUpdate:(NSDictionary *)params completionHandler:(void (^)(NSDictionary *, NSError *))completionBlock;
 - (void)castPublishComplete:(NSDictionary *)params completionHandler:(void (^)(NSDictionary *, NSError *,NSHTTPURLResponse *))completionBlock;
 - (void)castEncode:(NSDictionary *)params completionHandler:(void (^)(NSDictionary *, NSError *,NSHTTPURLResponse *))completionBlock;
 - (void)usercasts:(NSDictionary *)params completionHandler:(void (^)(NSDictionary *, NSError *,NSHTTPURLResponse *))completionBlock;

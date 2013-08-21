@@ -279,20 +279,13 @@
         
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         
-        NSDictionary *params = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[prefs objectForKey:@"token"],castId,description,name,tags,intro,outro, nil] forKeys:[NSArray arrayWithObjects:@"token",@"castId",@"description",@"name",@"tags",@"intro",@"outro", nil]];
+        NSDictionary *params = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[prefs objectForKey:@"token"],castId,description,name,tags,intro,outro, nil] forKeys:[NSArray arrayWithObjects:@"token",@"castid",@"description",@"name",@"tags",@"intro",@"outro", nil]];
         
-        [api castUpdate:params completionHandler:^(NSDictionary *response, NSError *error, NSHTTPURLResponse * httpResponse) {
+        [api castUpdate:params completionHandler:^(NSDictionary *response, NSError *error) {
             
             if (error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
-                    /*CGFloat rFloat = 219/255.0;
-                    CGFloat gFloat = 60/255.0;
-                    CGFloat bFloat = 78/255.0;
-                    
-                    [_statusBlock setFillColor: [NSColor colorWithCalibratedRed:rFloat green:gFloat blue:bFloat alpha:0.04]];
-                    [_statusBlock setBorderColor: [NSColor colorWithCalibratedRed:rFloat green:gFloat blue:bFloat alpha:1.0]];
-                    */
                     [self failed:nil];
                     NSLog(@"Error: %@",error.description);
                     
@@ -301,45 +294,25 @@
             else{
                 
                 //check http status
-                if (httpResponse.statusCode == 200) {
+                //if (httpResponse.statusCode == 200) {
                     
                     //call app delegate on the main thread
                     dispatch_async(dispatch_get_main_queue(), ^{
                         
-                        
-                        /*[_message setHidden:YES];
-                        [_orangeMessage setHidden:YES];
-                        [_greenMessage setHidden:NO];
-                        [_messageImage setImage:[NSImage imageNamed:@"go"]];
-                        
-                        CGFloat rFloat = 61/255.0;
-                        CGFloat gFloat = 173/255.0;
-                        CGFloat bFloat = 114/255.0;
-                        
-                        [_statusBlock setFillColor: [NSColor colorWithCalibratedRed:rFloat green:gFloat blue:bFloat alpha:0.04]];
-                        [_statusBlock setBorderColor: [NSColor colorWithCalibratedRed:rFloat green:gFloat blue:bFloat alpha:1.0]];
-                        */
                         [app metaOk];
                         
                     });
                     
-                }
-                else{
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        
-                        /*CGFloat rFloat = 219/255.0;
-                        CGFloat gFloat = 60/255.0;
-                        CGFloat bFloat = 78/255.0;
-                        
-                        [_statusBlock setFillColor: [NSColor colorWithCalibratedRed:rFloat green:gFloat blue:bFloat alpha:0.04]];
-                        [_statusBlock setBorderColor: [NSColor colorWithCalibratedRed:rFloat green:gFloat blue:bFloat alpha:1.0]];
-                        */
-                        [self failed:nil];
-                        NSLog(@"publish error");
-                        
-                    });
-                    
-                }
+                //}
+//                else{
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        
+//                        [self failed:nil];
+//                        NSLog(@"publish error");
+//                        
+//                    });
+//                    
+                //}
             }
             
         }];

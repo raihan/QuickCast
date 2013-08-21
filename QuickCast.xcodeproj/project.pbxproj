@@ -260,6 +260,7 @@
 		E4DA027817B4E5AC0017D648 /* AWS_SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = E4DA026A17B4E5AC0017D648 /* AWS_SBJsonUTF8Stream.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E4DA027917B4E5AC0017D648 /* AWS_SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = E4DA026C17B4E5AC0017D648 /* AWS_SBJsonWriter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E4DA027A17B4E5AC0017D648 /* LICENSE-2.0.txt in Resources */ = {isa = PBXBuildFile; fileRef = E4DA026E17B4E5AC0017D648 /* LICENSE-2.0.txt */; };
+		E4DA028017C264620017D648 /* QuickCastAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E4DA027F17C264620017D648 /* QuickCastAPIClient.m */; };
 		E4DAFA1017B16C000017D648 /* MaxLengthFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = E4DAFA0F17B16C000017D648 /* MaxLengthFormatter.m */; };
 		E4E4566617A8210100999CA6 /* growl.txt in Resources */ = {isa = PBXBuildFile; fileRef = E4E4566217A8210100999CA6 /* growl.txt */; };
 		E4E4566717A8210100999CA6 /* LaunchAtLogin.txt in Resources */ = {isa = PBXBuildFile; fileRef = E4E4566317A8210100999CA6 /* LaunchAtLogin.txt */; };
@@ -2171,6 +2172,8 @@
 		E4DA026D17B4E5AC0017D648 /* SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson.h; sourceTree = "<group>"; };
 		E4DA026E17B4E5AC0017D648 /* LICENSE-2.0.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "LICENSE-2.0.txt"; sourceTree = "<group>"; };
 		E4DA027B17B4E6A40017D648 /* MMMarkdown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMMarkdown.h; sourceTree = "<group>"; };
+		E4DA027E17C264610017D648 /* QuickCastAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuickCastAPIClient.h; sourceTree = "<group>"; };
+		E4DA027F17C264620017D648 /* QuickCastAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuickCastAPIClient.m; sourceTree = "<group>"; };
 		E4DAFA0E17B16C000017D648 /* MaxLengthFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MaxLengthFormatter.h; sourceTree = "<group>"; };
 		E4DAFA0F17B16C000017D648 /* MaxLengthFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MaxLengthFormatter.m; sourceTree = "<group>"; };
 		E4DAFA3717B4E5760017D648 /* AmazonAbstractJsonWebServiceClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AmazonAbstractJsonWebServiceClient.h; sourceTree = "<group>"; };
@@ -3783,6 +3786,8 @@
 				E4DAFA0E17B16C000017D648 /* MaxLengthFormatter.h */,
 				E4DAFA0F17B16C000017D648 /* MaxLengthFormatter.m */,
 				E4DA027B17B4E6A40017D648 /* MMMarkdown.h */,
+				E4DA027E17C264610017D648 /* QuickCastAPIClient.h */,
+				E4DA027F17C264620017D648 /* QuickCastAPIClient.m */,
 			);
 			path = QuickCast;
 			sourceTree = "<group>";
@@ -7734,6 +7739,7 @@
 				E4DA027717B4E5AC0017D648 /* AWS_SBJsonTokeniser.m in Sources */,
 				E4DA027817B4E5AC0017D648 /* AWS_SBJsonUTF8Stream.m in Sources */,
 				E4DA027917B4E5AC0017D648 /* AWS_SBJsonWriter.m in Sources */,
+				E4DA028017C264620017D648 /* QuickCastAPIClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

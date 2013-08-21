@@ -5,7 +5,9 @@
 //
 
 #import "QuickcastAPI.h"
+#import "QuickCastAPIClient.h"
 #import <JSONKit.h>
+#import <AFNetworking/AFHTTPRequestOperation.h>
 
 @implementation QuickcastAPI
 
@@ -361,71 +363,25 @@
 }
 
 
-- (void)castUpdate:(NSDictionary *)params completionHandler:(void (^)(NSDictionary *, NSError *,NSHTTPURLResponse *))completionBlock{
+- (void)castUpdate:(NSDictionary *)params completionHandler:(void (^)(NSDictionary *, NSError *))completionBlock{
     
-    // Generate the URL
-    NSString *requestUrl = [NSString stringWithFormat:@"http://quick.as/api/v1%@", @"/casts/publish/update"];
+    // Testing out using AFNetworking here to get round encoding hassles
+    QuickCastAPIClient *httpClient = [QuickCastAPIClient sharedClient];
     
-    // Create the connection
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:requestUrl]];
+    [httpClient setDefaultHeader:@"token" value:[params objectForKey:@"token"]];
     
-    NSString *token = [params objectForKey:@"token"];
-    NSString *castId = [params objectForKey:@"castId"];
-    NSString *description = [params objectForKey:@"description"];
-    NSString *name = [params objectForKey:@"name"];
-    NSString *tags = [params objectForKey:@"tags"];
-    NSString *intro = [params objectForKey:@"intro"];
-    NSString *outro = [params objectForKey:@"outro"];
-    
-    [request setHTTPMethod: @"POST"];
-    
-    [request setValue:token forHTTPHeaderField:@"token"];
-    
-    
-    NSString *myRequestString = [NSString stringWithFormat:@"castid=%@&description=%@&name=%@&tags=%@&intro=%@&outro=%@", castId,description,name,tags,intro,outro];
-    
-    //ensure + are kept in
-    myRequestString = [myRequestString stringByReplacingOccurrencesOfString:@"+" withString:@"%2B"];
-    NSData *requestData = [NSData dataWithBytes: [myRequestString UTF8String] length: [myRequestString length]];
-    [request setHTTPBody: requestData];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"content-type"];
-    
-    // Make an NSOperationQueue
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    [queue setName:@"io.quickcast.castPublish"];
-    
-    
-    // Send an asyncronous request on the queue
-    [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+    [httpClient postPath:@"api/v1/casts/publish/update" parameters:params success:^(AFHTTPRequestOperation *operation, id JSON) {
         
-        // If there was an error getting the data
-        if (error) {
-            
-            NSDictionary *errorDict = [data objectFromJSONData];
-            dispatch_async(dispatch_get_main_queue(), ^(void) {
-                completionBlock(errorDict, error,nil);
-            });
-            return;
+        NSDictionary *jsonObject = JSON;
+        if (completionBlock) {
+            completionBlock([NSDictionary dictionaryWithDictionary:jsonObject], nil);
         }
-        
-        // Decode the data
-        NSError *jsonError;
-        NSDictionary *responseDict = [data objectFromJSONData];
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        // If there was an error decoding the JSON
-        if (jsonError) {
-            
-            dispatch_async(dispatch_get_main_queue(), ^(void) {
-                
-            });
-            return;
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (completionBlock) {
+            completionBlock([NSDictionary dictionary], error);
         }
-        
-        // All looks fine, lets call the completion block with the response data
-        dispatch_async(dispatch_get_main_queue(), ^(void) {
-            completionBlock(responseDict, nil,httpResponse);
-        });
     }];
+    
 }
 
 - (void)castPublishComplete:(NSDictionary *)params completionHandler:(void (^)(NSDictionary *, NSError *,NSHTTPURLResponse *))completionBlock{
