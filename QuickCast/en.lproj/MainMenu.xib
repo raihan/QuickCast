@@ -1356,24 +1356,6 @@
 						<reference key="NSOnImage" ref="35465992"/>
 						<reference key="NSMixedImage" ref="502551668"/>
 					</object>
-					<object class="NSMenuItem" id="98918547">
-						<reference key="NSMenu" ref="670184093"/>
-						<bool key="NSIsDisabled">YES</bool>
-						<bool key="NSIsSeparator">YES</bool>
-						<string key="NSTitle"/>
-						<string key="NSKeyEquiv"/>
-						<int key="NSMnemonicLoc">2147483647</int>
-						<reference key="NSOnImage" ref="35465992"/>
-						<reference key="NSMixedImage" ref="502551668"/>
-					</object>
-					<object class="NSMenuItem" id="472391298">
-						<reference key="NSMenu" ref="670184093"/>
-						<string key="NSTitle">Check For Updates</string>
-						<string key="NSKeyEquiv"/>
-						<int key="NSMnemonicLoc">2147483647</int>
-						<reference key="NSOnImage" ref="35465992"/>
-						<reference key="NSMixedImage" ref="502551668"/>
-					</object>
 					<object class="NSMenuItem" id="596673666">
 						<reference key="NSMenu" ref="670184093"/>
 						<bool key="NSIsDisabled">YES</bool>
@@ -1426,7 +1408,6 @@
 											<array class="NSMutableArray" key="NSSubviews"/>
 											<string key="NSFrameSize">{24, 24}</string>
 											<reference key="NSSuperview" ref="113679350"/>
-											<reference key="NSWindow"/>
 											<string key="NSReuseIdentifierKey">_NS:9</string>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSButtonCell" key="NSCell" id="569346544">
@@ -1456,7 +1437,6 @@
 									</array>
 									<string key="NSFrame">{{0, 157}, {25, 25}}</string>
 									<reference key="NSSuperview" ref="793716598"/>
-									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="699234815"/>
 									<string key="NSReuseIdentifierKey">_NS:9</string>
 									<string key="NSClassName">NSView</string>
@@ -1464,7 +1444,6 @@
 							</array>
 							<string key="NSFrameSize">{198, 182}</string>
 							<reference key="NSSuperview" ref="7320273"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="113679350"/>
 							<bool key="NSViewIsLayerTreeHost">YES</bool>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -1488,7 +1467,6 @@
 									</set>
 									<string key="NSFrame">{{16, 0}, {12, 12}}</string>
 									<reference key="NSSuperview" ref="229734955"/>
-									<reference key="NSWindow"/>
 									<bool key="NSViewIsLayerTreeHost">YES</bool>
 									<string key="NSReuseIdentifierKey">_NS:9</string>
 									<bool key="NSEnabled">YES</bool>
@@ -1511,7 +1489,6 @@
 							</array>
 							<string key="NSFrame">{{170, 0}, {28, 28}}</string>
 							<reference key="NSSuperview" ref="7320273"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="622284763"/>
 							<bool key="NSViewIsLayerTreeHost">YES</bool>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -1527,7 +1504,6 @@
 									<array class="NSMutableArray" key="NSSubviews"/>
 									<string key="NSFrameSize">{20, 20}</string>
 									<reference key="NSSuperview" ref="429202890"/>
-									<reference key="NSWindow"/>
 									<bool key="NSViewIsLayerTreeHost">YES</bool>
 									<string key="NSReuseIdentifierKey">_NS:9</string>
 									<bool key="NSEnabled">YES</bool>
@@ -1554,7 +1530,6 @@
 							</array>
 							<string key="NSFrame">{{174, 158}, {21, 20}}</string>
 							<reference key="NSSuperview" ref="7320273"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="405900455"/>
 							<bool key="NSViewIsLayerTreeHost">YES</bool>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -1563,7 +1538,6 @@
 					</array>
 					<string key="NSFrameSize">{198, 182}</string>
 					<reference key="NSSuperview"/>
-					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="793716598"/>
 					<bool key="NSViewIsLayerTreeHost">YES</bool>
 					<string key="NSReuseIdentifierKey">_NS:21</string>
@@ -1581,7 +1555,6 @@
 						<int key="NSvFlags">268</int>
 						<string key="NSFrame">{{-3, 44}, {361, 34}}</string>
 						<reference key="NSSuperview" ref="704732185"/>
-						<reference key="NSWindow"/>
 						<bool key="NSViewIsLayerTreeHost">YES</bool>
 						<double key="NSViewAlphaValue">0.70000000000000007</double>
 						<string key="NSReuseIdentifierKey">_NS:1535</string>
@@ -1611,14 +1584,10 @@
 				</array>
 				<string key="NSFrameSize">{355, 306}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="1071203644"/>
 				<bool key="NSViewIsLayerTreeHost">YES</bool>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<string key="NSClassName">NSView</string>
-			</object>
-			<object class="NSCustomObject" id="903954261">
-				<string key="NSClassName">SUUpdater</string>
 			</object>
 			<object class="NSUserDefaultsController" id="101967996">
 				<bool key="NSSharedInstance">YES</bool>
@@ -2450,14 +2419,6 @@
 					</object>
 					<int key="connectionID">1433</int>
 				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">checkForUpdates:</string>
-						<reference key="source" ref="903954261"/>
-						<reference key="destination" ref="472391298"/>
-					</object>
-					<int key="connectionID">1459</int>
-				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -2506,9 +2467,7 @@
 							<reference ref="777974522"/>
 							<reference ref="13054325"/>
 							<reference ref="891766878"/>
-							<reference ref="472391298"/>
 							<reference ref="596673666"/>
-							<reference ref="98918547"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -3872,11 +3831,6 @@
 						<reference key="parent" ref="229734955"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">1040</int>
-						<reference key="object" ref="903954261"/>
-						<reference key="parent" ref="0"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">1136</int>
 						<reference key="object" ref="429202890"/>
 						<array class="NSMutableArray" key="children">
@@ -4243,18 +4197,8 @@
 						<reference key="parent" ref="704732185"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">1457</int>
-						<reference key="object" ref="472391298"/>
-						<reference key="parent" ref="670184093"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">1458</int>
 						<reference key="object" ref="596673666"/>
-						<reference key="parent" ref="670184093"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">1460</int>
-						<reference key="object" ref="98918547"/>
 						<reference key="parent" ref="670184093"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -4291,7 +4235,6 @@
 				<string key="1031.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1032.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1033.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="1040.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="112.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<array key="1136.IBNSViewMetadataConstraints">
 					<reference ref="199456384"/>
@@ -4353,9 +4296,7 @@
 				<string key="145.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1453.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1454.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="1457.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1458.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="1460.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1463.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1464.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1471.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -4557,179 +4498,7 @@
 			<nil key="sourceID"/>
 			<int key="maxID">1511</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes">
-			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
-				<object class="IBPartialClassDescription">
-					<string key="className">AppDelegate</string>
-					<string key="superclassName">NSObject</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="mirrorButtonClick:">id</string>
-						<string key="myQuickCastsClick:">id</string>
-						<string key="previewCloseClick:">id</string>
-						<string key="quitClick:">id</string>
-						<string key="recordClick:">id</string>
-						<string key="showInFinderClick:">id</string>
-						<string key="signInClick:">id</string>
-						<string key="startRecording:">id</string>
-						<string key="stopRecordingClick:">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="mirrorButtonClick:">
-							<string key="name">mirrorButtonClick:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="myQuickCastsClick:">
-							<string key="name">myQuickCastsClick:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="previewCloseClick:">
-							<string key="name">previewCloseClick:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="quitClick:">
-							<string key="name">quitClick:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="recordClick:">
-							<string key="name">recordClick:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="showInFinderClick:">
-							<string key="name">showInFinderClick:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="signInClick:">
-							<string key="name">signInClick:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="startRecording:">
-							<string key="name">startRecording:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="stopRecordingClick:">
-							<string key="name">stopRecordingClick:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="closeButtonView">NSView</string>
-						<string key="countdownNumber">NSTextField</string>
-						<string key="countdownView">NSView</string>
-						<string key="mirrorView">NSView</string>
-						<string key="myQuickCastsItem">NSMenuItem</string>
-						<string key="previewPanel">NSPanel</string>
-						<string key="previewView">NSView</string>
-						<string key="quitItem">NSMenuItem</string>
-						<string key="recordItem">NSMenuItem</string>
-						<string key="resizeView">NSView</string>
-						<string key="showInFinderItem">NSMenuItem</string>
-						<string key="signInItem">NSMenuItem</string>
-						<string key="statusMenu">NSMenu</string>
-						<string key="stopRecordingButton">NSButton</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="closeButtonView">
-							<string key="name">closeButtonView</string>
-							<string key="candidateClassName">NSView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="countdownNumber">
-							<string key="name">countdownNumber</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="countdownView">
-							<string key="name">countdownView</string>
-							<string key="candidateClassName">NSView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="mirrorView">
-							<string key="name">mirrorView</string>
-							<string key="candidateClassName">NSView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="myQuickCastsItem">
-							<string key="name">myQuickCastsItem</string>
-							<string key="candidateClassName">NSMenuItem</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="previewPanel">
-							<string key="name">previewPanel</string>
-							<string key="candidateClassName">NSPanel</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="previewView">
-							<string key="name">previewView</string>
-							<string key="candidateClassName">NSView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="quitItem">
-							<string key="name">quitItem</string>
-							<string key="candidateClassName">NSMenuItem</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="recordItem">
-							<string key="name">recordItem</string>
-							<string key="candidateClassName">NSMenuItem</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="resizeView">
-							<string key="name">resizeView</string>
-							<string key="candidateClassName">NSView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="showInFinderItem">
-							<string key="name">showInFinderItem</string>
-							<string key="candidateClassName">NSMenuItem</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="signInItem">
-							<string key="name">signInItem</string>
-							<string key="candidateClassName">NSMenuItem</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="statusMenu">
-							<string key="name">statusMenu</string>
-							<string key="candidateClassName">NSMenu</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="stopRecordingButton">
-							<string key="name">stopRecordingButton</string>
-							<string key="candidateClassName">NSButton</string>
-						</object>
-					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/AppDelegate.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSLayoutConstraint</string>
-					<string key="superclassName">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/NSLayoutConstraint.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">SUUpdater</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">checkForUpdates:</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">checkForUpdates:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">checkForUpdates:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">delegate</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<string key="NS.key.0">delegate</string>
-						<object class="IBToOneOutletInfo" key="NS.object.0">
-							<string key="name">delegate</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/SUUpdater.h</string>
-					</object>
-				</object>
-			</array>
-		</object>
+		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">

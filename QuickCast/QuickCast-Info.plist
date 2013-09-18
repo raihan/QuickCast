@@ -34,11 +34,5 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>SUAllowsAutomaticUpdates</key>
-	<string>YES</string>
-	<key>SUEnableAutomaticChecks</key>
-	<string>YES</string>
-	<key>SUFeedURL</key>
-	<string>https://s3.amazonaws.com/quickcast-app/mac/appcast.xml</string>
 </dict>
 </plist>

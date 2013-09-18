@@ -20,6 +20,9 @@
     
     if([inputPath.pathExtension isEqualToString:@"gif"]){
         // ffmpeg  -i quickcast.gif -loop 0 quickcast.gif
+          
+        [arguments addObject:@"-loglevel"];
+        [arguments addObject:@"panic"];
         [arguments addObject:@"-i"];
         [arguments addObject:inputPath];
         [arguments addObject:@"-loop"];
@@ -27,6 +30,8 @@
     }
     else if([outputPath.pathExtension isEqualToString:@"gif"]){
         // ./ffmpeg -i quickcast.mov -t 10 quickcast.gif
+        [arguments addObject:@"-loglevel"];
+        [arguments addObject:@"panic"];
         [arguments addObject:@"-i"];
         [arguments addObject:inputPath];
         [arguments addObject:@"-t"];
@@ -34,6 +39,8 @@
     }
     else{
         // running: ./ffmpeg -i quickcast.mov -c:v libx264 -preset veryfast -crf 22 output.mp4
+        [arguments addObject:@"-loglevel"];
+        [arguments addObject:@"panic"];
         [arguments addObject:@"-i"];
         [arguments addObject:inputPath];
         [arguments addObject:@"-c:v"];

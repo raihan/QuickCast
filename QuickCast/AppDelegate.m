@@ -20,7 +20,7 @@
 #import "LaunchAtLoginController.h"
 #import <Carbon/Carbon.h>
 #import <SGHotKeyCenter.h>
-#import <Sparkle/Sparkle.h>
+
 #import <Growl/Growl.h>
 #import <Reachability.h>
 #import "FFMPEGEngine.h"
@@ -870,8 +870,6 @@ NSString *kGlobalHotKey = @"Global Hot Key";
     }
     else{
         
-        //check for updates here
-        [[SUUpdater sharedUpdater] checkForUpdatesInBackground];
         
         if(![prepareWindowController.window isVisible]){
             //ensure other windows are shut ready to record again
