@@ -50,19 +50,21 @@
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSString *quickcastPath = [prefs objectForKey:@"quickcastNewSavePath"];
     
+    AppDelegate *app = (AppDelegate *)[NSApp delegate];
+    
     if(quickcastPath.length > 0)
     {
         [_pathControl setURL: [NSURL fileURLWithPath: quickcastPath ]];
     }
     else
     {
-        [_pathControl setURL: [NSURL fileURLWithPath: [NSHomeDirectory() stringByAppendingPathComponent:MoviePath] ]];
+        [_pathControl setURL: [NSURL fileURLWithPath: [NSHomeDirectory() stringByAppendingPathComponent:@"Movies/QuickCast"]]];
     }
     
     // Registers the esc key to cancel screen selection
     NSEvent* (^handler)(NSEvent*) = ^(NSEvent *theEvent) {
         
-        AppDelegate *app = (AppDelegate *)[NSApp delegate];
+        
         NSWindow *targetWindow = theEvent.window;
         
         if (targetWindow != self.window) {

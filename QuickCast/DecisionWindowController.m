@@ -38,8 +38,9 @@
 - (void)compress{
     
     [self completedProcessing:NO];
-    NSString *input = [[NSHomeDirectory() stringByAppendingPathComponent:MoviePath] stringByAppendingPathComponent:@"quickcast.mov"];
-    NSString *output = [[NSHomeDirectory() stringByAppendingPathComponent:MoviePath] stringByAppendingPathComponent:@"quickcast-compressed.mp4"];
+    AppDelegate *app = (AppDelegate *)[NSApp delegate];
+    NSString *input = [app.applicationSupport.path stringByAppendingPathComponent:@"quickcast.mov"];
+    NSString *output = [app.applicationSupport.path stringByAppendingPathComponent:@"quickcast-compressed.mp4"];
     NSError *error;
     // Delete any existing movie file first
     if ([[NSFileManager defaultManager] fileExistsAtPath:output]){
@@ -55,7 +56,8 @@
 }
 
 - (IBAction)previewButtonClick:(id)sender {
-    NSString *quickcast = [[NSHomeDirectory() stringByAppendingPathComponent:MoviePath] stringByAppendingPathComponent:@"quickcast-compressed.mp4"];
+    AppDelegate *app = (AppDelegate *)[NSApp delegate];
+    NSString *quickcast = [app.applicationSupport.path stringByAppendingPathComponent:@"quickcast-compressed.mp4"];
     [[NSWorkspace sharedWorkspace] openFile:quickcast];
 }
 

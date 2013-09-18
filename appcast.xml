@@ -463,6 +463,21 @@
 								</description>
 
 		         </item>
+		         <item>
+		            <title>Version 0.83 beta</title>
+								<sparkle:minimumSystemVersion>10.7.0</sparkle:minimumSystemVersion>
+
+		            <pubDate>Wed, 18 Sep 2013 12:40:11 +0000</pubDate>
+		            <enclosure url="https://s3.amazonaws.com/quickcast-app/mac/QuickCast.zip" sparkle:version="0.83" length="8899392" type="application/octet-stream" />
+								<description><![CDATA[
+										<h2>QuickCast</h2> 
+										<p>Fix animated gifs working with custom save path chosen</p>
+										
+										
+									]]>
+								</description>
+
+		         </item>
 		         
 
 

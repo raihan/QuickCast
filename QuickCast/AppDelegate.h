@@ -56,6 +56,8 @@ extern NSString *kGlobalHotKey;
 
     S3TransferManager *transferManager;
     
+    NSURL *applicationSupport;
+    
     
 }
 
@@ -71,7 +73,7 @@ extern NSString *kGlobalHotKey;
 
 #pragma mark Constants
 
-FOUNDATION_EXPORT NSString *const MoviePath;
+//FOUNDATION_EXPORT NSString *const MoviePath;
 
 #pragma mark Preview Panel
 
@@ -83,6 +85,7 @@ FOUNDATION_EXPORT NSString *const MoviePath;
 #pragma mark Countdown
 @property (weak) IBOutlet NSView *countdownView;
 
+@property (strong) NSURL *applicationSupport;
 
 @property (weak) IBOutlet NSTextField *countdownNumber;
 

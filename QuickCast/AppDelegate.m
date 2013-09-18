@@ -114,7 +114,7 @@ NSString *kGlobalHotKey = @"Global Hot Key";
     
 }
 
-NSString *const MoviePath = @"Movies/QuickCast";
+//NSString *const MoviePath = @"Movies/QuickCast";
 
 
 @synthesize exporter;
@@ -126,11 +126,17 @@ NSString *const MoviePath = @"Movies/QuickCast";
 @synthesize countdownNumberString;
 @synthesize audioDataOutput;
 @synthesize transferManager;
+@synthesize applicationSupport;
 
 
 @synthesize videoFrameRate, videoDimensions, videoType, recording;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification{
+    
+    NSError *error;
+    applicationSupport = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:&error];
+    applicationSupport = [applicationSupport URLByAppendingPathComponent:@"io.quickcast.QuickCast"];
+    
     
     statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
     [statusItem setMenu:_statusMenu];
@@ -365,7 +371,7 @@ NSString *const MoviePath = @"Movies/QuickCast";
             [self failed:error.description];
         });
     }
-    else if (![[NSFileManager defaultManager] fileExistsAtPath:[[NSHomeDirectory() stringByAppendingPathComponent:MoviePath] stringByAppendingPathComponent:@"quickcast.mov"]]){
+    else if (![[NSFileManager defaultManager] fileExistsAtPath:[applicationSupport.path stringByAppendingPathComponent:@"quickcast.mov"]]){
         dispatch_async(dispatch_get_main_queue(), ^{
             [self failed:@"Could not capture or write file"];
         });
@@ -745,10 +751,10 @@ NSString *const MoviePath = @"Movies/QuickCast";
 
 - (void)setupFolder{
     
-    NSString *quickcast = [NSHomeDirectory() stringByAppendingPathComponent:MoviePath];
+    //NSString *quickcast = [NSHomeDirectory() stringByAppendingPathComponent:MoviePath];
     NSError *error;
-    if (![[NSFileManager defaultManager] fileExistsAtPath:quickcast])
-        [[NSFileManager defaultManager] createDirectoryAtPath:quickcast withIntermediateDirectories:NO attributes:nil error:&error];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:applicationSupport.path])
+        [[NSFileManager defaultManager] createDirectoryAtPath:applicationSupport.path  withIntermediateDirectories:NO attributes:nil error:&error];
     
 }
 
@@ -902,7 +908,7 @@ NSString *const MoviePath = @"Movies/QuickCast";
 
 - (IBAction)showInFinderClick:(id)sender {
     
-    NSString *quickcast = [NSHomeDirectory() stringByAppendingPathComponent:MoviePath];
+    NSString *quickcast = [NSHomeDirectory() stringByAppendingPathComponent:@"Movies/QuickCast"];
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
@@ -1553,7 +1559,7 @@ NSString *const MoviePath = @"Movies/QuickCast";
 		// recordingDidStart is called from captureOutput:didOutputSampleBuffer:fromConnection: once the asset writer is setup
 		//[self.delegate recordingWillStart];
         
-		NSString *quickcast = [[NSHomeDirectory() stringByAppendingPathComponent:MoviePath] stringByAppendingPathComponent:@"quickcast.mov"];
+		NSString *quickcast = [applicationSupport.path stringByAppendingPathComponent:@"quickcast.mov"];
         
         // Delete any existing movie file first
         if ([[NSFileManager defaultManager] fileExistsAtPath:quickcast]){
@@ -1599,7 +1605,7 @@ NSString *const MoviePath = @"Movies/QuickCast";
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 // prepare thumb for finish window
-                NSString *quickcast = [[NSHomeDirectory() stringByAppendingPathComponent:MoviePath] stringByAppendingPathComponent:@"quickcast.mov"];
+                NSString *quickcast = [applicationSupport.path stringByAppendingPathComponent:@"quickcast.mov"];
                 
                 finishWindowController = [[FinishWindowController alloc] initWithWindowNibName:@"FinishWindowController"];
                 decisionWindowController = [[DecisionWindowController alloc] initWithWindowNibName:@"DecisionWindowController"];

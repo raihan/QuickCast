@@ -80,80 +80,86 @@
     
     //dispatch_async(dispatch_get_main_queue(),^ {
         
-        NSDate *time = [NSDate date];
-        NSDateFormatter* df = [NSDateFormatter new];
-        [df setDateFormat:@"dd-MM-yyyy-hh-mm-ss"];
-        NSString *timeString = [df stringFromDate:time];
+    NSDate *time = [NSDate date];
+    NSDateFormatter* df = [NSDateFormatter new];
+    [df setDateFormat:@"dd-MM-yyyy-hh-mm-ss"];
+    NSString *timeString = [df stringFromDate:time];
+    
+    filename = [NSString stringWithFormat:@"quickcast-%@.%@", timeString, @"mp4"];
+
+    AppDelegate *app = (AppDelegate *)[NSApp delegate];
+    NSString *quickcast = app.applicationSupport.path;
+    
+    tempUrl = [NSURL fileURLWithPath:[quickcast stringByAppendingPathComponent:@"quickcast-compressed.mp4"]];
+    
+    videoAsset = [AVAsset assetWithURL:tempUrl];
+    //CMTime totalTime = CMTimeMakeWithSeconds(CMTimeGetSeconds(videoAsset.duration), videoAsset.duration.timescale);
+    NSString *length = [NSString stringWithFormat:@"%f",CMTimeGetSeconds(videoAsset.duration)];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *quickcastPath = [prefs objectForKey:@"quickcastNewSavePath"];
+    
+    NSString *chosenPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Movies/QuickCast"];
+    
+    if(quickcastPath.length > 0){
         
-        filename = [NSString stringWithFormat:@"quickcast-%@.%@", timeString, @"mp4"];
+        finishedUrl = [NSURL fileURLWithPath:[quickcastPath stringByAppendingPathComponent:filename]];
+        chosenPath = quickcastPath;
+    }
+    else{
         
-        NSString *quickcast = [NSHomeDirectory() stringByAppendingPathComponent:MoviePath];
+        finishedUrl = [NSURL fileURLWithPath:[chosenPath stringByAppendingPathComponent:filename]];
         
-        tempUrl = [NSURL fileURLWithPath:[quickcast stringByAppendingPathComponent:@"quickcast-compressed.mp4"]];
-        
-        videoAsset = [AVAsset assetWithURL:tempUrl];
-        //CMTime totalTime = CMTimeMakeWithSeconds(CMTimeGetSeconds(videoAsset.duration), videoAsset.duration.timescale);
-        NSString *length = [NSString stringWithFormat:@"%f",CMTimeGetSeconds(videoAsset.duration)];
-        
-        if(CMTimeGetSeconds(videoAsset.duration) < 10.0 && (width.intValue < 300 || height.intValue < 300)){
-        
-            NSString *input = [[NSHomeDirectory() stringByAppendingPathComponent:MoviePath] stringByAppendingPathComponent:@"quickcast.mov"];
-            NSString *tempOutput = [[NSHomeDirectory() stringByAppendingPathComponent:MoviePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"quickcast.%@", @"gif"]];
-            NSString *output = [[NSHomeDirectory() stringByAppendingPathComponent:MoviePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"quickcast-%@.%@", timeString, @"gif"]];
-            NSError *error;
-            // Delete any existing movie file first
-            if ([[NSFileManager defaultManager] fileExistsAtPath:output]){
-                
-                if (![[NSFileManager defaultManager] removeItemAtPath:output error:&error]){
-                    NSLog(@"Error deleting compressed gif %@",[error localizedDescription]);
-                }
-            }
-            if ([[NSFileManager defaultManager] fileExistsAtPath:tempOutput]){
-                
-                if (![[NSFileManager defaultManager] removeItemAtPath:tempOutput error:&error]){
-                    NSLog(@"Error deleting compressed gif %@",[error localizedDescription]);
-                }
-            }
-            
-            FFMPEGEngine *engine = [[FFMPEGEngine alloc] init];
-            [engine process:input output:tempOutput];
-            
-            //then to looping gif
-            [engine process:tempOutput output:output];
-            
-            //remove temp gif
-            if ([[NSFileManager defaultManager] fileExistsAtPath:tempOutput]){
-                
-                if (![[NSFileManager defaultManager] removeItemAtPath:tempOutput error:&error]){
-                    NSLog(@"Error deleting compressed gif %@",[error localizedDescription]);
-                }
-            }
-            
-        }
-        
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        NSString *quickcastPath = [prefs objectForKey:@"quickcastNewSavePath"];
-        
-        if(quickcastPath.length > 0){
-            
-            finishedUrl = [NSURL fileURLWithPath:[quickcastPath stringByAppendingPathComponent:filename]];
-        }
-        else{
-            
-            finishedUrl = [NSURL fileURLWithPath:[quickcast stringByAppendingPathComponent:filename]];
-        
-        }
-        
-        
+    }
+    
+    if(CMTimeGetSeconds(videoAsset.duration) < 10.0 && (width.intValue < 300 || height.intValue < 300)){
+    
+        NSString *input = [quickcast stringByAppendingPathComponent:@"quickcast.mov"];
+        NSString *tempOutput = [quickcast stringByAppendingPathComponent:[NSString stringWithFormat:@"quickcast.%@", @"gif"]];
+        NSString *output = [chosenPath stringByAppendingPathComponent:[NSString stringWithFormat:@"quickcast-%@.%@", timeString, @"gif"]];
         NSError *error;
-        //copy temp to finished
-        [[NSFileManager defaultManager] copyItemAtURL:tempUrl toURL:finishedUrl error:&error];
-        
-        if (error) {
-            NSLog(@"%@", error);
+        // Delete any existing movie file first
+        if ([[NSFileManager defaultManager] fileExistsAtPath:output]){
+            
+            if (![[NSFileManager defaultManager] removeItemAtPath:output error:&error]){
+                NSLog(@"Error deleting compressed gif %@",[error localizedDescription]);
+            }
+        }
+        if ([[NSFileManager defaultManager] fileExistsAtPath:tempOutput]){
+            
+            if (![[NSFileManager defaultManager] removeItemAtPath:tempOutput error:&error]){
+                NSLog(@"Error deleting compressed gif %@",[error localizedDescription]);
+            }
         }
         
-        [self thumbnailAndUpload:details length:length width:width height:height];
+        FFMPEGEngine *engine = [[FFMPEGEngine alloc] init];
+        [engine process:input output:tempOutput];
+        
+        //then to looping gif
+        [engine process:tempOutput output:output];
+        
+        //remove temp gif
+        if ([[NSFileManager defaultManager] fileExistsAtPath:tempOutput]){
+            
+            if (![[NSFileManager defaultManager] removeItemAtPath:tempOutput error:&error]){
+                NSLog(@"Error deleting compressed gif %@",[error localizedDescription]);
+            }
+        }
+        
+    }
+    
+    
+    
+    
+    NSError *error;
+    //copy temp to finished
+    [[NSFileManager defaultManager] copyItemAtURL:tempUrl toURL:finishedUrl error:&error];
+    
+    if (error) {
+        NSLog(@"%@", error);
+    }
+    
+    [self thumbnailAndUpload:details length:length width:width height:height];
 }
 
 
