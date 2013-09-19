@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "QuickCast/AppDelegate.m"
-         timestampString = "401206838.463243"
+         timestampString = "401294372.481274"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1580"
-         endingLineNumber = "1580"
+         startingLineNumber = "1586"
+         endingLineNumber = "1586"
          landmarkName = "-startRecording"
          landmarkType = "5">
       </FileBreakpoint>
@@ -21,11 +21,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "QuickCast/AppDelegate.m"
-         timestampString = "401206838.463243"
+         timestampString = "401294372.481274"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1329"
-         endingLineNumber = "1329"
+         startingLineNumber = "1335"
+         endingLineNumber = "1335"
          landmarkName = "-markUploadCompleted"
          landmarkType = "5">
       </FileBreakpoint>
@@ -60,11 +60,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "QuickCast/AppDelegate.m"
-         timestampString = "401206838.463243"
+         timestampString = "401294372.481274"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1621"
-         endingLineNumber = "1621"
+         startingLineNumber = "1627"
+         endingLineNumber = "1627"
          landmarkName = "-stopRecording"
          landmarkType = "5">
       </FileBreakpoint>
@@ -164,11 +164,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "QuickCast/AppDelegate.m"
-         timestampString = "401206838.463243"
+         timestampString = "401294372.481274"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1766"
-         endingLineNumber = "1766"
+         startingLineNumber = "1772"
+         endingLineNumber = "1772"
          landmarkName = "-captureOutput:didOutputSampleBuffer:fromConnection:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -177,11 +177,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "QuickCast/AppDelegate.m"
-         timestampString = "401206838.463243"
+         timestampString = "401294372.481274"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "1683"
-         endingLineNumber = "1683"
+         startingLineNumber = "1689"
+         endingLineNumber = "1689"
          landmarkName = "-checkForGreen:"
          landmarkType = "5">
       </FileBreakpoint>

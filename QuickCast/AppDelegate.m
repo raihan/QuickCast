@@ -751,10 +751,15 @@ NSString *kGlobalHotKey = @"Global Hot Key";
 
 - (void)setupFolder{
     
-    //NSString *quickcast = [NSHomeDirectory() stringByAppendingPathComponent:MoviePath];
+    
     NSError *error;
     if (![[NSFileManager defaultManager] fileExistsAtPath:applicationSupport.path])
         [[NSFileManager defaultManager] createDirectoryAtPath:applicationSupport.path  withIntermediateDirectories:NO attributes:nil error:&error];
+    
+    //for new users need this
+    NSString *quickcast = [NSHomeDirectory() stringByAppendingPathComponent:@"Movies/QuickCast"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:quickcast])
+        [[NSFileManager defaultManager] createDirectoryAtPath:quickcast  withIntermediateDirectories:NO attributes:nil error:&error];
     
 }
 
@@ -923,6 +928,9 @@ NSString *kGlobalHotKey = @"Global Hot Key";
         [[NSWorkspace sharedWorkspace] openFile: quickcast];
         
     }
+    
+    //[prefs setObject:nil forKey:@"quickcastNewSavePath"];
+    //[prefs synchronize];
     
 }
 

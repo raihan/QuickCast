@@ -1426,7 +1426,6 @@
 											<array class="NSMutableArray" key="NSSubviews"/>
 											<string key="NSFrameSize">{24, 24}</string>
 											<reference key="NSSuperview" ref="113679350"/>
-											<reference key="NSWindow"/>
 											<string key="NSReuseIdentifierKey">_NS:9</string>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSButtonCell" key="NSCell" id="569346544">
@@ -1456,7 +1455,6 @@
 									</array>
 									<string key="NSFrame">{{0, 157}, {25, 25}}</string>
 									<reference key="NSSuperview" ref="793716598"/>
-									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="699234815"/>
 									<string key="NSReuseIdentifierKey">_NS:9</string>
 									<string key="NSClassName">NSView</string>
@@ -1464,7 +1462,6 @@
 							</array>
 							<string key="NSFrameSize">{198, 182}</string>
 							<reference key="NSSuperview" ref="7320273"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="113679350"/>
 							<bool key="NSViewIsLayerTreeHost">YES</bool>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -1488,7 +1485,6 @@
 									</set>
 									<string key="NSFrame">{{16, 0}, {12, 12}}</string>
 									<reference key="NSSuperview" ref="229734955"/>
-									<reference key="NSWindow"/>
 									<bool key="NSViewIsLayerTreeHost">YES</bool>
 									<string key="NSReuseIdentifierKey">_NS:9</string>
 									<bool key="NSEnabled">YES</bool>
@@ -1511,7 +1507,6 @@
 							</array>
 							<string key="NSFrame">{{170, 0}, {28, 28}}</string>
 							<reference key="NSSuperview" ref="7320273"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="622284763"/>
 							<bool key="NSViewIsLayerTreeHost">YES</bool>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -1527,7 +1522,6 @@
 									<array class="NSMutableArray" key="NSSubviews"/>
 									<string key="NSFrameSize">{20, 20}</string>
 									<reference key="NSSuperview" ref="429202890"/>
-									<reference key="NSWindow"/>
 									<bool key="NSViewIsLayerTreeHost">YES</bool>
 									<string key="NSReuseIdentifierKey">_NS:9</string>
 									<bool key="NSEnabled">YES</bool>
@@ -1554,7 +1548,6 @@
 							</array>
 							<string key="NSFrame">{{174, 158}, {21, 20}}</string>
 							<reference key="NSSuperview" ref="7320273"/>
-							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="405900455"/>
 							<bool key="NSViewIsLayerTreeHost">YES</bool>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -1563,7 +1556,6 @@
 					</array>
 					<string key="NSFrameSize">{198, 182}</string>
 					<reference key="NSSuperview"/>
-					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="793716598"/>
 					<bool key="NSViewIsLayerTreeHost">YES</bool>
 					<string key="NSReuseIdentifierKey">_NS:21</string>
@@ -1581,7 +1573,6 @@
 						<int key="NSvFlags">268</int>
 						<string key="NSFrame">{{-3, 44}, {361, 34}}</string>
 						<reference key="NSSuperview" ref="704732185"/>
-						<reference key="NSWindow"/>
 						<bool key="NSViewIsLayerTreeHost">YES</bool>
 						<double key="NSViewAlphaValue">0.70000000000000007</double>
 						<string key="NSReuseIdentifierKey">_NS:1535</string>
@@ -1611,7 +1602,6 @@
 				</array>
 				<string key="NSFrameSize">{355, 306}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="1071203644"/>
 				<bool key="NSViewIsLayerTreeHost">YES</bool>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -4557,179 +4547,7 @@
 			<nil key="sourceID"/>
 			<int key="maxID">1511</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes">
-			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
-				<object class="IBPartialClassDescription">
-					<string key="className">AppDelegate</string>
-					<string key="superclassName">NSObject</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="mirrorButtonClick:">id</string>
-						<string key="myQuickCastsClick:">id</string>
-						<string key="previewCloseClick:">id</string>
-						<string key="quitClick:">id</string>
-						<string key="recordClick:">id</string>
-						<string key="showInFinderClick:">id</string>
-						<string key="signInClick:">id</string>
-						<string key="startRecording:">id</string>
-						<string key="stopRecordingClick:">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="mirrorButtonClick:">
-							<string key="name">mirrorButtonClick:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="myQuickCastsClick:">
-							<string key="name">myQuickCastsClick:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="previewCloseClick:">
-							<string key="name">previewCloseClick:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="quitClick:">
-							<string key="name">quitClick:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="recordClick:">
-							<string key="name">recordClick:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="showInFinderClick:">
-							<string key="name">showInFinderClick:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="signInClick:">
-							<string key="name">signInClick:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="startRecording:">
-							<string key="name">startRecording:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="stopRecordingClick:">
-							<string key="name">stopRecordingClick:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="closeButtonView">NSView</string>
-						<string key="countdownNumber">NSTextField</string>
-						<string key="countdownView">NSView</string>
-						<string key="mirrorView">NSView</string>
-						<string key="myQuickCastsItem">NSMenuItem</string>
-						<string key="previewPanel">NSPanel</string>
-						<string key="previewView">NSView</string>
-						<string key="quitItem">NSMenuItem</string>
-						<string key="recordItem">NSMenuItem</string>
-						<string key="resizeView">NSView</string>
-						<string key="showInFinderItem">NSMenuItem</string>
-						<string key="signInItem">NSMenuItem</string>
-						<string key="statusMenu">NSMenu</string>
-						<string key="stopRecordingButton">NSButton</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="closeButtonView">
-							<string key="name">closeButtonView</string>
-							<string key="candidateClassName">NSView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="countdownNumber">
-							<string key="name">countdownNumber</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="countdownView">
-							<string key="name">countdownView</string>
-							<string key="candidateClassName">NSView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="mirrorView">
-							<string key="name">mirrorView</string>
-							<string key="candidateClassName">NSView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="myQuickCastsItem">
-							<string key="name">myQuickCastsItem</string>
-							<string key="candidateClassName">NSMenuItem</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="previewPanel">
-							<string key="name">previewPanel</string>
-							<string key="candidateClassName">NSPanel</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="previewView">
-							<string key="name">previewView</string>
-							<string key="candidateClassName">NSView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="quitItem">
-							<string key="name">quitItem</string>
-							<string key="candidateClassName">NSMenuItem</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="recordItem">
-							<string key="name">recordItem</string>
-							<string key="candidateClassName">NSMenuItem</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="resizeView">
-							<string key="name">resizeView</string>
-							<string key="candidateClassName">NSView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="showInFinderItem">
-							<string key="name">showInFinderItem</string>
-							<string key="candidateClassName">NSMenuItem</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="signInItem">
-							<string key="name">signInItem</string>
-							<string key="candidateClassName">NSMenuItem</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="statusMenu">
-							<string key="name">statusMenu</string>
-							<string key="candidateClassName">NSMenu</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="stopRecordingButton">
-							<string key="name">stopRecordingButton</string>
-							<string key="candidateClassName">NSButton</string>
-						</object>
-					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/AppDelegate.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSLayoutConstraint</string>
-					<string key="superclassName">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/NSLayoutConstraint.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">SUUpdater</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">checkForUpdates:</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">checkForUpdates:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">checkForUpdates:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">delegate</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<string key="NS.key.0">delegate</string>
-						<object class="IBToOneOutletInfo" key="NS.object.0">
-							<string key="name">delegate</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/SUUpdater.h</string>
-					</object>
-				</object>
-			</array>
-		</object>
+		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
