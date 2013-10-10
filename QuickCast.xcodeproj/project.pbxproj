@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		CF9698FD92A5451C9420DBBB /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C27D8E6DCD846968807301A /* libPods.a */; };
+		E402914E17FBFD5400DACFD5 /* ResizeHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = E402914D17FBFD5400DACFD5 /* ResizeHandle.m */; };
 		E45013A01799868A00D36DDF /* libMMMarkdown-Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E450139F1799868A00D36DDF /* libMMMarkdown-Mac.a */; };
 		E45013A21799872500D36DDF /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45013A11799872500D36DDF /* WebKit.framework */; };
 		E45013A8179998D300D36DDF /* app.css in Resources */ = {isa = PBXBuildFile; fileRef = E45013A7179998D300D36DDF /* app.css */; };
@@ -296,6 +297,8 @@
 /* Begin PBXFileReference section */
 		4C27D8E6DCD846968807301A /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CEEA151B67F4A4B934B7B54 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
+		E402914C17FBFD5400DACFD5 /* ResizeHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResizeHandle.h; sourceTree = "<group>"; };
+		E402914D17FBFD5400DACFD5 /* ResizeHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResizeHandle.m; sourceTree = "<group>"; };
 		E450139F1799868A00D36DDF /* libMMMarkdown-Mac.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libMMMarkdown-Mac.a"; sourceTree = "<group>"; };
 		E45013A11799872500D36DDF /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		E45013A7179998D300D36DDF /* app.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = app.css; sourceTree = "<group>"; };
@@ -3788,6 +3791,8 @@
 				E4DA027B17B4E6A40017D648 /* MMMarkdown.h */,
 				E4DA027E17C264610017D648 /* QuickCastAPIClient.h */,
 				E4DA027F17C264620017D648 /* QuickCastAPIClient.m */,
+				E402914C17FBFD5400DACFD5 /* ResizeHandle.h */,
+				E402914D17FBFD5400DACFD5 /* ResizeHandle.m */,
 			);
 			path = QuickCast;
 			sourceTree = "<group>";
@@ -7740,6 +7745,7 @@
 				E4DA027817B4E5AC0017D648 /* AWS_SBJsonUTF8Stream.m in Sources */,
 				E4DA027917B4E5AC0017D648 /* AWS_SBJsonWriter.m in Sources */,
 				E4DA028017C264620017D648 /* QuickCastAPIClient.m in Sources */,
+				E402914E17FBFD5400DACFD5 /* ResizeHandle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

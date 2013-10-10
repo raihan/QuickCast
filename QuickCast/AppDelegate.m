@@ -75,6 +75,8 @@ NSString *kGlobalHotKey = @"Global Hot Key";
     SignInWindowController *signInWindowController;
     DecisionWindowController *decisionWindowController;
     
+    VideoView *video;
+    
     NSView *numberView;
     NSTextField *numberTextField ;
     
@@ -130,6 +132,7 @@ NSString *kGlobalHotKey = @"Global Hot Key";
 
 
 @synthesize videoFrameRate, videoDimensions, videoType, recording;
+
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification{
     
@@ -484,6 +487,39 @@ NSString *kGlobalHotKey = @"Global Hot Key";
 
 #pragma mark Crop Rect
 
+- (void)setSelection:(NSView *)view selected:(NSRect)selectedRect{
+    
+    //Because of an Amazon Elastic Transcoder bug we need to make sure width is even numbered
+    int selectedX = ceilf(selectedRect.origin.x);
+    int selectedY = ceilf(selectedRect.origin.y);
+    int selectedWidth = ceilf(selectedRect.size.width);
+    int selectedHeight = ceilf(selectedRect.size.height);
+    
+    if(selectedWidth % 2){
+        selectedWidth = selectedWidth + 1;
+    }
+    
+    NSRect rect = NSMakeRect(selectedX, selectedY, selectedWidth, selectedHeight);
+    
+	/* Map point into global coordinates. */
+    NSRect globalRect = rect;
+    
+    NSRect windowRect = [[view window] frame];
+    globalRect = NSOffsetRect(globalRect, windowRect.origin.x, windowRect.origin.y);
+	globalRect.origin.y = CGDisplayPixelsHigh(CGMainDisplayID()) - globalRect.origin.y;
+	CGDirectDisplayID displayID = selectedDisplay;
+	uint32_t matchingDisplayCount = 0;
+    /* Get a list of online displays with bounds that include the specified point. */
+	CGError e = CGGetDisplaysWithPoint(NSPointToCGPoint(globalRect.origin), 1, &displayID, &matchingDisplayCount);
+	if ((e == kCGErrorSuccess) && (1 == matchingDisplayCount))
+    {
+        /* Add the display as a capture input. */
+        selectedCrop = rect;
+        //[self addDisplayInputToCaptureSession:displayID cropRect:NSRectToCGRect(rect)];
+    }
+
+
+}
 
 /* Draws a crop rect on the display. */
 - (void)drawMouseBoxView:(DrawMouseBoxView*)view didSelectRect:(NSRect)selectedRect{
@@ -521,13 +557,21 @@ NSString *kGlobalHotKey = @"Global Hot Key";
        [testWindow orderOut:nil];
     
     transparentWindow = [[TransparentWindow alloc] initWithContentRect:windowRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
-    VideoView *video = [[VideoView alloc] init];
     
-    transparentWindow.contentView = video;
+    video = [[VideoView alloc] init];
     
-    //for some reason in the wrong position vertically - probably the menu bar - this could well be 21 on a non retina mac - need to test
-    //rect.origin.y = rect.origin.y - 42;
+    transparentWindow.contentView = [[NSView alloc] initWithFrame:windowRect];
+    [transparentWindow.contentView addSubview:video];
+    
+    //if is below min size just resize upwards
+    if(rect.size.height < 50)
+        rect.size.height = 50;
+        
+    if(rect.size.width < 50)
+        rect.size.width = 50;
+        
     [video setFrame:rect];
+    [video setupHandles];
     [transparentWindow makeKeyAndOrderFront:nil];
     
 	[[NSCursor currentCursor] pop];
@@ -858,6 +902,112 @@ NSString *kGlobalHotKey = @"Global Hot Key";
 
 #pragma mark menu clicks
 
+- (IBAction)reupload:(id)sender {
+    
+    NSString *quickcast = [NSHomeDirectory() stringByAppendingPathComponent:@"Movies/QuickCast"];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    
+    NSString *quickcastPath = [prefs objectForKey:@"quickcastNewSavePath"];
+    NSString *openAt = quickcast;
+    if(quickcastPath.length > 0){
+        
+        openAt = quickcastPath;
+    }
+    
+    // Create a File Open Dialog class.
+    NSOpenPanel* openDlg = [NSOpenPanel openPanel];
+    
+    // Set array of file types
+    NSArray *fileTypesArray;
+    fileTypesArray = [NSArray arrayWithObjects:@"mp4", nil];
+    
+    // Enable options in the dialog.
+    [openDlg setCanChooseFiles:YES];
+    [openDlg setCanChooseDirectories:NO];
+    [openDlg setAllowedFileTypes:fileTypesArray];
+    [openDlg setAllowsMultipleSelection:NO];
+    [openDlg setDirectoryURL:[NSURL fileURLWithPath:openAt]];
+    
+    // Display the dialog box.  If the OK pressed,
+    // process the files.
+    if ( [openDlg runModal] == NSOKButton ) {
+        
+        // Gets list of all files selected
+        NSArray *files = [openDlg URLs];
+        
+        // Loop through the files and process them.
+        for(int i = 0; i < [files count]; i++ ) {
+            
+            
+            NSString *thePath = [[files objectAtIndex:i] path];
+            //look at the metadata
+            NSURL *url = [[NSURL alloc] initFileURLWithPath:thePath];
+            AVAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
+            NSString *checkMeta = @"";
+            
+            NSArray *metadata = [asset commonMetadata];
+            for ( AVMetadataItem* item in metadata ) {
+                
+                NSString *key = [item commonKey];
+                //NSLog(@"%@--%@",[item commonKey],[item stringValue]);
+                //This was the only key I could get working after testing loads
+                if([key isEqualToString:@"albumName"]){
+                    checkMeta = [item stringValue];
+                    break;
+                }
+                
+            }
+            
+            if([checkMeta hasPrefix:@"QuickCast|"]){
+                
+                //copy the chosen movie to the application support dir - overwrite both compressed and uncompressed as uncompressed is used for thumbnail generation
+                NSError *error;
+                
+                NSString *copyTo = [applicationSupport.path stringByAppendingPathComponent:@"quickcast.mov"];
+                //firstly remove
+                if([[NSFileManager defaultManager] fileExistsAtPath:copyTo]){
+                    [[NSFileManager defaultManager] removeItemAtPath:copyTo error:&error];
+                }
+                
+                [[NSFileManager defaultManager] copyItemAtPath:thePath toPath:copyTo error:&error];
+                
+                NSString *copyToCompressed = [applicationSupport.path stringByAppendingPathComponent:@"quickcast-compressed.mp4"];
+                //firstly remove
+                if([[NSFileManager defaultManager] fileExistsAtPath:copyToCompressed]){
+                    [[NSFileManager defaultManager] removeItemAtPath:copyToCompressed error:&error];
+                }
+                
+                [[NSFileManager defaultManager] copyItemAtPath:thePath toPath:copyToCompressed error:&error];
+                
+                NSArray *components = [checkMeta componentsSeparatedByString:@"|"];
+                NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
+                [f setNumberStyle:NSNumberFormatterDecimalStyle];
+                
+                movieSize.width =  [f numberFromString:[components objectAtIndex:1]].floatValue;
+                movieSize.height =  [f numberFromString:[components objectAtIndex:2]].floatValue;
+                
+                [self prepareMovie:NO];
+            }
+            else{
+                //show alert
+                NSAlert * alert = [NSAlert alertWithMessageText:@"Sorry"
+                                                  defaultButton:@"OK"
+                                                alternateButton:nil
+                                                    otherButton:nil
+                                      informativeTextWithFormat:@"You may only upload movies that have been created with the most recent version of QuickCast"];
+                
+                
+                [[NSRunningApplication currentApplication] activateWithOptions:NSApplicationActivateIgnoringOtherApps];
+                [alert runModal];
+            }
+            
+        }
+        
+    
+    }
+}
+
 - (IBAction)previewCloseClick:(id)sender {
     
     [_previewPanel orderOut:nil];
@@ -1023,8 +1173,13 @@ NSString *kGlobalHotKey = @"Global Hot Key";
                                                     userInfo:nil
                                                      repeats:YES];
     
-    if(transparentWindow)
+    if(transparentWindow){
         [transparentWindow makeKeyAndOrderFront:nil];
+        [transparentWindow goingToRecord];
+    }
+    
+    if(video)
+        [video hideHandles];
     
     
     // If the user clicked rerecord and they had the camera on then reopen the camera during countdown
@@ -1580,6 +1735,7 @@ NSString *kGlobalHotKey = @"Global Hot Key";
 		// Create an asset writer
 		NSError *error;
 		assetWriter = [[AVAssetWriter alloc] initWithURL:[NSURL fileURLWithPath:quickcast] fileType:(NSString *)kUTTypeQuickTimeMovie error:&error];
+        
 		if (error)
 			[self showError:error];
         
@@ -1610,67 +1766,76 @@ NSString *kGlobalHotKey = @"Global Hot Key";
             recordingWillBeStopped = NO;
             self.recording = NO;
 			
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                // prepare thumb for finish window
-                NSString *quickcast = [applicationSupport.path stringByAppendingPathComponent:@"quickcast.mov"];
-                
-                finishWindowController = [[FinishWindowController alloc] initWithWindowNibName:@"FinishWindowController"];
-                decisionWindowController = [[DecisionWindowController alloc] initWithWindowNibName:@"DecisionWindowController"];
-                
-                if(movieSize.height < 300 || movieSize.width < 300)
-                    [finishWindowController setMicroVideo:YES];
-                else
-                    [finishWindowController setMicroVideo:NO];
-                
-                NSLog(@"seeting height and width in finishwin %@",[NSString stringWithFormat:@"%0.0f", round(movieSize.width)]);
-                [finishWindowController setWidth:[NSString stringWithFormat:@"%0.0f", round(movieSize.width)]];
-                [finishWindowController setHeight:[NSString stringWithFormat:@"%0.0f", round(movieSize.height)]];
-                
-                [decisionWindowController.window setLevel: NSNormalWindowLevel];
-                [decisionWindowController.window makeKeyAndOrderFront:nil];
-            
-                
-                //perform in the background
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                    [decisionWindowController compress];
-                });
-                
-                
-                // Ensure is at the front
-                [NSApp activateIgnoringOtherApps:YES];
-                
-                
-                
-                NSImage *thumb = [Utilities thumbnailImageForVideo:[NSURL fileURLWithPath:quickcast] atTime:(NSTimeInterval)0.5];
-                [thumb setScalesWhenResized:YES];
-                
-                // Report an error if the source isn't a valid image
-                if (![thumb isValid])
-                {
-                    NSLog(@"Invalid Image");
-                }
-                else
-                {
-                    NSSize newSize = [Utilities resize:thumb.size withMax:200];
-                    NSString *thumbPath = [self saveThumbnail:newSize thumb:thumb suffix:@"_form"];
-                    
-                    NSImage *image = [[NSImage alloc] initWithContentsOfFile:thumbPath];
-                    
-                    dispatch_async(dispatch_get_main_queue(),^ {
-                        
-                        [decisionWindowController updateImage:image];
-                        
-                    });
-                }
-                
-             });
-
+            [self prepareMovie:YES];
 		}
 		else {
 			[self showError:[assetWriter error]];
 		}
 	});
+}
+
+- (void)prepareMovie:(BOOL)compress{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        // prepare thumb for finish window
+        NSString *quickcast = [applicationSupport.path stringByAppendingPathComponent:@"quickcast.mov"];
+        
+        finishWindowController = [[FinishWindowController alloc] initWithWindowNibName:@"FinishWindowController"];
+        decisionWindowController = [[DecisionWindowController alloc] initWithWindowNibName:@"DecisionWindowController"];
+        
+        if(movieSize.height < 300 || movieSize.width < 300)
+            [finishWindowController setMicroVideo:YES];
+        else
+            [finishWindowController setMicroVideo:NO];
+        
+        [finishWindowController setWidth:[NSString stringWithFormat:@"%0.0f", round(movieSize.width)]];
+        [finishWindowController setHeight:[NSString stringWithFormat:@"%0.0f", round(movieSize.height)]];
+        
+        [decisionWindowController.window setLevel: NSNormalWindowLevel];
+        [decisionWindowController.window makeKeyAndOrderFront:nil];
+        
+        //if not reuploading
+        if(compress){
+            //perform in the background
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                [decisionWindowController compress:[NSString stringWithFormat:@"%0.0f", round(movieSize.width)] height:[NSString stringWithFormat:@"%0.0f", round(movieSize.height)]];
+            });
+        }
+        else{
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                [decisionWindowController completedProcessing:YES];
+            });
+        }
+        
+        
+        // Ensure is at the front
+        [NSApp activateIgnoringOtherApps:YES];
+        
+        
+        
+        NSImage *thumb = [Utilities thumbnailImageForVideo:[NSURL fileURLWithPath:quickcast] atTime:(NSTimeInterval)0.5];
+        [thumb setScalesWhenResized:YES];
+        
+        // Report an error if the source isn't a valid image
+        if (![thumb isValid])
+        {
+            NSLog(@"Invalid Image");
+        }
+        else
+        {
+            NSSize newSize = [Utilities resize:thumb.size withMax:200];
+            NSString *thumbPath = [self saveThumbnail:newSize thumb:thumb suffix:@"_form"];
+            
+            NSImage *image = [[NSImage alloc] initWithContentsOfFile:thumbPath];
+            
+            dispatch_async(dispatch_get_main_queue(),^ {
+                
+                [decisionWindowController updateImage:image];
+                
+            });
+        }
+        
+    });
 }
 
 #pragma mark Processing

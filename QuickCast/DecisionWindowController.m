@@ -35,7 +35,7 @@
     
 }
 
-- (void)compress{
+- (void)compress:(NSString *)width height:(NSString *)height{
     
     [self completedProcessing:NO];
     AppDelegate *app = (AppDelegate *)[NSApp delegate];
@@ -51,7 +51,7 @@
     }
     
     FFMPEGEngine *engine = [[FFMPEGEngine alloc] init];
-    NSString *err = [engine process:input output:output];
+    NSString *err = [engine process:input output:output width:width height:height];
     [self completedProcessing:YES];
 }
 

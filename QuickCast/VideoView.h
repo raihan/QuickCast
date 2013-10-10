@@ -5,7 +5,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "ResizeHandle.h"
 
-@interface VideoView : NSView
+@interface VideoView : NSView <ResizeHandleDelegate>
+
+- (void)setupHandles;
+- (void)hideHandles;
 
 @end

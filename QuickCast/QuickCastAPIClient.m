@@ -7,6 +7,7 @@ static NSString * const kAFQuickCastAPIBaseURLString = @"http://quick.as/";
 @implementation QuickCastAPIClient
 
 + (QuickCastAPIClient *)sharedClient {
+    
     static QuickCastAPIClient *_sharedClient = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

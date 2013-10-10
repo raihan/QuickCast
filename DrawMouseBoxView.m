@@ -54,6 +54,7 @@
 	NSPoint _mouseDownPoint;
 	NSRect _selectionRect;
     NSTextField *selectionDimensions;
+    
 }
 
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
@@ -92,6 +93,7 @@
 		MAX(_mouseDownPoint.x, mouseUpPoint.x) - MIN(_mouseDownPoint.x, mouseUpPoint.x),
 		MAX(_mouseDownPoint.y, mouseUpPoint.y) - MIN(_mouseDownPoint.y, mouseUpPoint.y));
 	[self.delegate drawMouseBoxView:self didSelectRect:selectionRect];
+    
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent

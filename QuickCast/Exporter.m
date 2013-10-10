@@ -133,10 +133,10 @@
         }
         
         FFMPEGEngine *engine = [[FFMPEGEngine alloc] init];
-        [engine process:input output:tempOutput];
+        [engine process:input output:tempOutput width:@"" height:@""];
         
         //then to looping gif
-        [engine process:tempOutput output:output];
+        [engine process:tempOutput output:output width:@"" height:@""];
         
         //remove temp gif
         if ([[NSFileManager defaultManager] fileExistsAtPath:tempOutput]){

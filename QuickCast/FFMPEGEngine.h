@@ -8,6 +8,6 @@
 
 @interface FFMPEGEngine : NSObject
 
-- (NSString *)process:(NSString *)inputPath output:(NSString *)outputPath;
+- (NSString *)process:(NSString *)inputPath output:(NSString *)outputPath width:(NSString *)width height:(NSString *)height;
 
 @end

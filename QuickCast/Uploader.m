@@ -223,6 +223,7 @@
     NSString *relativePath = [NSString stringWithFormat:@"%@/%@/%@",userId,castId,@"quickcast.mp4"];
     
     S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:relativePath inBucket:rawBucket];
+    //harde code here videoUrl =[NSURL fileURLWithPath: @"/Users/petenelson/Movies/QuickCast/quickcast-27-09-2013-02-54-50.mp4"];
     por.data  = [NSData dataWithContentsOfURL:videoUrl];
    
     //por.expires = 2147483647; //max int value

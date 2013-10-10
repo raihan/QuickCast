@@ -5,7 +5,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "ResizeHandle.h"
 
 @interface TransparentWindow : NSWindow
 
+- (void)updateSelectionDimentions:(NSRect)dimensions;
+- (void)goingToRecord;
 @end

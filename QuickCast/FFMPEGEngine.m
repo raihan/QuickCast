@@ -8,7 +8,7 @@
 
 @implementation FFMPEGEngine
 
-- (NSString *)process:(NSString *)inputPath output:(NSString *)outputPath{
+- (NSString *)process:(NSString *)inputPath output:(NSString *)outputPath width:(NSString *)width height:(NSString *)height{
     
     NSString *ffmpegPath = [[NSBundle mainBundle] pathForResource:@"ffmpeg" ofType:nil];
       
@@ -42,6 +42,11 @@
         [arguments addObject:@"veryfast"];
         [arguments addObject:@"-crf"];
         [arguments addObject:@"22"];
+        //required if reuploading
+        [arguments addObject:@"-metadata"];
+        [arguments addObject:[NSString stringWithFormat:@"album=QuickCast|%@|%@",width,height]];
+        
+        
     }
     
     [arguments addObject:outputPath];

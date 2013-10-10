@@ -330,7 +330,7 @@ static NSTimeInterval _clockskew = 0.0;
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 
     [dateFormatter setDateFormat:dateFormat];
-    [dateFormatter setLocale:[AmazonSDKUtil timestampLocale]];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
 
     NSDate *parsed = [dateFormatter dateFromString:string];
@@ -348,7 +348,7 @@ static NSTimeInterval _clockskew = 0.0;
     
     [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
     [dateFormatter setDateFormat:dateFormat];
-    [dateFormatter setLocale:[AmazonSDKUtil timestampLocale]];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     
     NSDate *realDate =  [date dateByAddingTimeInterval:-1*_clockskew];
     

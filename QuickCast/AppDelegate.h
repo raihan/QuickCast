@@ -112,6 +112,7 @@ extern NSString *kGlobalHotKey;
 @property (weak) IBOutlet NSMenuItem *showInFinderItem;
 @property (weak) IBOutlet NSMenuItem *signInItem;
 @property (weak) IBOutlet NSMenuItem *quitItem;
+- (IBAction)reupload:(id)sender;
 
 
 - (IBAction)previewCloseClick:(id)sender;
@@ -138,6 +139,7 @@ extern NSString *kGlobalHotKey;
 - (void)complete:(NSString *)castId filesize:(NSString *)videoFilesize length:(NSString *)videoLength width:(NSString *)videoWidth height:(NSString *)videoHeight;
 - (void)metaOk;
 - (void)goToPublish;
+- (void)setSelection:(NSView *)view selected:(NSRect)selectedRect;
 
 #pragma mark General Variables
 
