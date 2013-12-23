@@ -63,6 +63,8 @@
 		E4B5F92917973295003A452E /* SignInWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4B5F92717973294003A452E /* SignInWindowController.xib */; };
 		E4B5F92C17993B01003A452E /* ScreenDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B5F92B17993B00003A452E /* ScreenDetails.m */; };
 		E4C7C86817A9291500DD478A /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E4C7C86717A9291500DD478A /* README.md */; };
+		E4D626BF1807358600438F61 /* cross@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E4D626BE1807358600438F61 /* cross@2x.png */; };
+		E4D626C11807358D00438F61 /* cross.png in Resources */ = {isa = PBXBuildFile; fileRef = E4D626C01807358D00438F61 /* cross.png */; };
 		E4D9793217A6BCF300379D2B /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D9793117A6BCF300379D2B /* Growl.framework */; };
 		E4D9793917A6BEBD00379D2B /* Growl Registration Ticket.growlRegDict in Resources */ = {isa = PBXBuildFile; fileRef = E4D9793817A6BEBD00379D2B /* Growl Registration Ticket.growlRegDict */; };
 		E4D9793A17A6BF3D00379D2B /* Growl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E4D9793117A6BCF300379D2B /* Growl.framework */; };
@@ -1740,6 +1742,8 @@
 		E4B5F92A17993B00003A452E /* ScreenDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreenDetails.h; sourceTree = "<group>"; };
 		E4B5F92B17993B00003A452E /* ScreenDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScreenDetails.m; sourceTree = "<group>"; };
 		E4C7C86717A9291500DD478A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		E4D626BE1807358600438F61 /* cross@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cross@2x.png"; sourceTree = "<group>"; };
+		E4D626C01807358D00438F61 /* cross.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cross.png; sourceTree = "<group>"; };
 		E4D9793117A6BCF300379D2B /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Growl.framework; sourceTree = "<group>"; };
 		E4D9793817A6BEBD00379D2B /* Growl Registration Ticket.growlRegDict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Growl Registration Ticket.growlRegDict"; sourceTree = "<group>"; };
 		E4DA000017B4E57D0017D648 /* SimpleDBNumberDomainAttributesExceededException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleDBNumberDomainAttributesExceededException.h; sourceTree = "<group>"; };
@@ -3812,6 +3816,7 @@
 		E4B5F21C17968B63003A452E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				E4D626BE1807358600438F61 /* cross@2x.png */,
 				E5232753179C508700167172 /* flip@2x.png */,
 				E5232754179C508700167172 /* flip.png */,
 				E45013BE179A822100D36DDF /* grabber.png */,
@@ -3819,6 +3824,7 @@
 				E45013A91799DD2F00D36DDF /* error.png */,
 				E45013AA1799DD2F00D36DDF /* error@2x.png */,
 				E45013AB1799DD2F00D36DDF /* go.png */,
+				E4D626C01807358D00438F61 /* cross.png */,
 				E45013AC1799DD2F00D36DDF /* go@2x.png */,
 				E45013BA1799F6A700D36DDF /* whiteclose@2x.png */,
 				E45013AD1799DD2F00D36DDF /* warning@2x.png */,
@@ -7490,6 +7496,8 @@
 				E4E4566B17A86BD700999CA6 /* ffmpeg in Resources */,
 				E4C7C86817A9291500DD478A /* README.md in Resources */,
 				E4DA027A17B4E5AC0017D648 /* LICENSE-2.0.txt in Resources */,
+				E4D626BF1807358600438F61 /* cross@2x.png in Resources */,
+				E4D626C11807358D00438F61 /* cross.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7856,7 +7864,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -7879,7 +7887,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

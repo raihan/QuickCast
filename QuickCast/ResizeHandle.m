@@ -10,6 +10,7 @@
     NSPoint _mouseDownPoint;
     NSRect currentRect;
     NSPoint offset;
+    NSImage *image;
 }
 
 @synthesize whichCorner;
@@ -22,6 +23,7 @@
         [super setFillColor:[NSColor colorWithDeviceRed:1 green:1 blue:1 alpha:0.5]];
         [super setBorderType:NSNoBorder];
         [super setBoxType:NSBoxCustom];
+        image = [NSImage imageNamed:@"cross"];
         currentRect = frame;
     }
     
@@ -101,6 +103,8 @@
 - (void)drawRect:(NSRect)dirtyRect
 {
     [super drawRect:dirtyRect];
+    [image drawInRect:NSMakeRect(0.0f, 0.0f, 21.0f, 19.0f) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0f];
+    
 }
 
 @end

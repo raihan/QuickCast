@@ -307,11 +307,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "QuickCast/ResizeHandle.m"
-         timestampString = "403014554.392801"
+         timestampString = "403175409.034897"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "49"
-         endingLineNumber = "49"
+         startingLineNumber = "51"
+         endingLineNumber = "51"
          landmarkName = "-mouseDown:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -430,6 +430,19 @@
          startingLineNumber = "950"
          endingLineNumber = "950"
          landmarkName = "-reupload:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "QuickCast/ResizeHandle.m"
+         timestampString = "403175409.034897"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "105"
+         endingLineNumber = "105"
+         landmarkName = "-drawRect:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

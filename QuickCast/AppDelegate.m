@@ -837,10 +837,9 @@ NSString *kGlobalHotKey = @"Global Hot Key";
                     
                     //call app delegate on the main thread
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        if([response objectForKey:@"casts"] != [NSNull null]){
+                        if(![[response objectForKey:@"casts"] isKindOfClass:[NSNull class]]){
                             NSDictionary *casts = [response objectForKey:@"casts"];
-                            if([casts objectForKey:@"rows"] != [NSNull null]){
-                                
+                            if(![[casts objectForKey:@"rows"] isKindOfClass:[NSNull class]]){
                                 NSDictionary *rows = [casts objectForKey:@"rows"];
                                 if(rows.count == 0){
                                     [_myQuickCastsItem setEnabled:NO];
@@ -848,17 +847,19 @@ NSString *kGlobalHotKey = @"Global Hot Key";
                                 else{
                                     NSMenu *submenu = [[NSMenu alloc] init];
                                     for(NSDictionary *row in rows){
-                                        
-                                        NSString *castName = [row objectForKey:@"name"];
-                                        NSString *uniqueId = [row objectForKey:@"uniqueid"];
-                                        NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:castName action:@selector(viewCast:) keyEquivalent:@""];
-                                        [item setRepresentedObject:uniqueId];
-                                        [submenu addItem:item];
+                                        if(![[row objectForKey:@"name"] isKindOfClass:[NSNull class]]){
+                                            NSString *castName = [row objectForKey:@"name"];
+                                            NSString *uniqueId = [row objectForKey:@"uniqueid"];
+                                            NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:castName action:@selector(viewCast:) keyEquivalent:@""];
+                                            [item setRepresentedObject:uniqueId];
+                                            [submenu addItem:item];
+                                        }
                                         
                                     }
-                                    
-                                    [_myQuickCastsItem setSubmenu:submenu];
-                                    [_myQuickCastsItem setEnabled:YES];
+                                    if(submenu.itemArray.count > 0){
+                                        [_myQuickCastsItem setSubmenu:submenu];
+                                        [_myQuickCastsItem setEnabled:YES];
+                                    }
                                 }
                                 
                             }
