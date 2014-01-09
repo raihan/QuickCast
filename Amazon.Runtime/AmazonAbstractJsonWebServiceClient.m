@@ -40,7 +40,7 @@
     AmazonServiceResponse *response = nil;
     int retries = 0;
     while (retries < self.maxRetries) {
-        NSLog(@"Begin Request: %@:%d", NSStringFromClass([generatedRequest class]), retries);
+        //NSLog(@"Begin Request: %@:%d", NSStringFromClass([generatedRequest class]), retries);
         
         response = [self createResponse:generatedRequest withUnmarshallerDelegate:unmarshallerDelegate];
         [self setupRequestTimeout:urlRequest];
@@ -53,9 +53,9 @@
                     
         [self startSyncRequest:generatedRequest forRequest:urlRequest response:response originalRequest:originalRequest];
         
-        NSLog(@"Response Status Code : %d", response.httpStatusCode);
+        //NSLog(@"Response Status Code : %d", response.httpStatusCode);
         if ( [self shouldRetry:response exception:((AmazonRequestDelegate *)generatedRequest.delegate).exception]) {
-            NSLog(@"Retring Request: %d", retries);
+            //NSLog(@"Retring Request: %d", retries);
             
             [self pauseExponentially:retries];
             retries++;

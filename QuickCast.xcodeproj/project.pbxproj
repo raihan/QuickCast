@@ -273,10 +273,9 @@
 		E4E4566E17A86C6A00999CA6 /* FFMPEGEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = E4E4566D17A86C6A00999CA6 /* FFMPEGEngine.m */; };
 		E4EB419317A6761D004E5AD9 /* DecisionWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = E4EB419117A6761D004E5AD9 /* DecisionWindowController.m */; };
 		E4EB419417A6761D004E5AD9 /* DecisionWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4EB419217A6761D004E5AD9 /* DecisionWindowController.xib */; };
-		E4FADB04179B275900A24EBC /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4FADB03179B275900A24EBC /* Sparkle.framework */; };
-		E4FADB06179B27B700A24EBC /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E4FADB03179B275900A24EBC /* Sparkle.framework */; };
 		E4FADB0A179BEA7400A24EBC /* LaunchAtLoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = E4FADB09179BEA7400A24EBC /* LaunchAtLoginController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E4FADB11179D357400A24EBC /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4FADB10179D357400A24EBC /* Carbon.framework */; };
+		E4FF2127187D8CD200A9B69B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4FF2126187D8CD200A9B69B /* SystemConfiguration.framework */; };
 		E5232755179C508700167172 /* flip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E5232753179C508700167172 /* flip@2x.png */; };
 		E5232756179C508700167172 /* flip.png in Resources */ = {isa = PBXBuildFile; fileRef = E5232754179C508700167172 /* flip.png */; };
 		E5EF08C0179BB5EE005F4F4F /* quickcast.iconset in Resources */ = {isa = PBXBuildFile; fileRef = E5EF08BF179BB5EE005F4F4F /* quickcast.iconset */; };
@@ -289,7 +288,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				E4FADB06179B27B700A24EBC /* Sparkle.framework in CopyFiles */,
 				E4D9793A17A6BF3D00379D2B /* Growl.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3665,10 +3663,11 @@
 		E4EB419017A6761D004E5AD9 /* DecisionWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DecisionWindowController.h; sourceTree = "<group>"; };
 		E4EB419117A6761D004E5AD9 /* DecisionWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DecisionWindowController.m; sourceTree = "<group>"; };
 		E4EB419217A6761D004E5AD9 /* DecisionWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DecisionWindowController.xib; sourceTree = "<group>"; };
-		E4FADB03179B275900A24EBC /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		E4FADB08179BEA7400A24EBC /* LaunchAtLoginController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LaunchAtLoginController.h; sourceTree = "<group>"; };
 		E4FADB09179BEA7400A24EBC /* LaunchAtLoginController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LaunchAtLoginController.m; sourceTree = "<group>"; };
 		E4FADB10179D357400A24EBC /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		E4FF2126187D8CD200A9B69B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
+		E4FF2128187D9E4100A9B69B /* ffmpeg.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text; path = ffmpeg.entitlements; sourceTree = "<group>"; };
 		E50A0F6C179ADC090066E085 /* QuickCast.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = QuickCast.entitlements; sourceTree = "<group>"; };
 		E5232753179C508700167172 /* flip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "flip@2x.png"; sourceTree = "<group>"; };
 		E5232754179C508700167172 /* flip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flip.png; sourceTree = "<group>"; };
@@ -3680,6 +3679,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4FF2127187D8CD200A9B69B /* SystemConfiguration.framework in Frameworks */,
 				E4FADB11179D357400A24EBC /* Carbon.framework in Frameworks */,
 				E45013A21799872500D36DDF /* WebKit.framework in Frameworks */,
 				E4B5F91217969BBD003A452E /* QuartzCore.framework in Frameworks */,
@@ -3689,7 +3689,6 @@
 				E4B5F1F91795E54F003A452E /* Cocoa.framework in Frameworks */,
 				CF9698FD92A5451C9420DBBB /* libPods.a in Frameworks */,
 				E45013A01799868A00D36DDF /* libMMMarkdown-Mac.a in Frameworks */,
-				E4FADB04179B275900A24EBC /* Sparkle.framework in Frameworks */,
 				E4D9793217A6BCF300379D2B /* Growl.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3700,6 +3699,7 @@
 		E4B5F1EC1795E54F003A452E = {
 			isa = PBXGroup;
 			children = (
+				E4FF2128187D9E4100A9B69B /* ffmpeg.entitlements */,
 				E4DAFA3517B4E5220017D648 /* AWS */,
 				E4C7C86717A9291500DD478A /* README.md */,
 				E4E4566A17A86BD700999CA6 /* ffmpeg */,
@@ -7387,13 +7387,13 @@
 		E4FADB12179D358100A24EBC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E4FF2126187D8CD200A9B69B /* SystemConfiguration.framework */,
 				E4D9793117A6BCF300379D2B /* Growl.framework */,
 				E4B5F21A1795ECE4003A452E /* CoreMedia.framework */,
 				E4B5F2181795EC99003A452E /* AVFoundation.framework */,
 				E4B5F91117969BBD003A452E /* QuartzCore.framework */,
 				E4B5F90F17969A52003A452E /* IOKit.framework */,
 				E45013A11799872500D36DDF /* WebKit.framework */,
-				E4FADB03179B275900A24EBC /* Sparkle.framework */,
 				E4FADB10179D357400A24EBC /* Carbon.framework */,
 			);
 			name = Frameworks;
@@ -7430,6 +7430,15 @@
 			attributes = {
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Reissued Ltd";
+				TargetAttributes = {
+					E4B5F1F41795E54F003A452E = {
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
+					};
+				};
 			};
 			buildConfigurationList = E4B5F1F01795E54F003A452E /* Build configuration list for PBXProject "QuickCast" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -7850,6 +7859,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6CEEA151B67F4A4B934B7B54 /* Pods.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = QuickCast/QuickCast.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer: Peter Nelson (YUTKNK45HL)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -7873,6 +7884,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6CEEA151B67F4A4B934B7B54 /* Pods.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = QuickCast/QuickCast.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer: Peter Nelson (YUTKNK45HL)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

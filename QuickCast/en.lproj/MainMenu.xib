@@ -697,13 +697,6 @@
                         <action selector="signInClick:" target="494" id="557"/>
                     </connections>
                 </menuItem>
-                <menuItem isSeparatorItem="YES" id="1460"/>
-                <menuItem title="Check For Updates" id="1457">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="checkForUpdates:" target="1040" id="1459"/>
-                    </connections>
-                </menuItem>
                 <menuItem isSeparatorItem="YES" id="1458"/>
                 <menuItem title="Quit" id="545">
                     <modifierMask key="keyEquivalentModifierMask"/>
@@ -839,7 +832,6 @@
                 <constraint firstItem="1434" firstAttribute="trailing" secondItem="612" secondAttribute="trailing" id="1464"/>
             </constraints>
         </customView>
-        <customObject id="1040" customClass="SUUpdater"/>
         <userDefaultsController representsSharedInstance="YES" id="1504"/>
     </objects>
     <resources>

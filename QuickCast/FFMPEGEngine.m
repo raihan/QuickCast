@@ -76,18 +76,18 @@
     [errorData appendData:[errorHandle readDataToEndOfFile]];
     
     
-    NSString *string = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
+    //NSString *string = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
     
-    NSString *errorString = [[NSString alloc] initWithData: errorData encoding: NSUTF8StringEncoding];
+    //NSString *errorString = [[NSString alloc] initWithData: errorData encoding: NSUTF8StringEncoding];
     
-    if(string.length > 0){
+    /*if(string.length > 0){
         NSLog(@"-------------------string-------------------%@",string);
     }
     if(errorString.length > 0){
          NSLog(@"-------------------errorstring-------------------%@",errorString);
         NSLog(@"-------------------enderrorstring-------------------");
         return errorString;
-    }
+    }*/
     
     return nil;
         

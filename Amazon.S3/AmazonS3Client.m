@@ -440,7 +440,7 @@
         }
     }
 
-    NSLog(@"Begin Request: %@", NSStringFromClass([request class]));
+    //NSLog(@"Begin Request: %@", NSStringFromClass([request class]));
 
     S3Response *response = nil;
     NSInteger  retries   = 0;
@@ -518,16 +518,16 @@
             [timeoutTimer invalidate];      //  invalidate also releases the object.
         }
 
-        NSLog(@"Response Status Code : %d", response.httpStatusCode);
+        //NSLog(@"Response Status Code : %d", response.httpStatusCode);
         if ( [self shouldRetry:response]) {
-            NSLog(@"Retrying Request: %d", retries);
+           // NSLog(@"Retrying Request: %d", retries);
 
             [self pauseExponentially:retries];
             retries++;
         }
         else {
             if (response.exception) {
-                NSLog(@"Request threw exception: %@", [response.exception description]);
+                //NSLog(@"Request threw exception: %@", [response.exception description]);
                 if ([response.exception isMemberOfClass:[AmazonServiceException class]]) {
                     NSLog(@"HTTP: %d, S3 Error Code: %@", ((AmazonServiceException *)response.exception).statusCode, ((AmazonServiceException *)response.exception).errorCode);
                 }
@@ -552,8 +552,8 @@
         return response;
     }
 
-    NSLog(@"Received response from server. RequestId: %@. HTTP: %d. Id2: %@.", response.requestId, response.httpStatusCode, response.id2);
-    NSLog(@"Response [%@]", response);
+   // NSLog(@"Received response from server. RequestId: %@. HTTP: %d. Id2: %@.", response.requestId, response.httpStatusCode, response.id2);
+    //NSLog(@"Response [%@]", response);
 
     return response;
 }
@@ -643,7 +643,7 @@
 
     NSString *stringToSign = [NSString stringWithFormat:@"%@\n%@\n%@\n%@\n%@%@", [urlRequest HTTPMethod], contentMd5, contentType, timestamp, canonicalizedAmzHeaders, canonicalizedResource];
 
-    NSLog(@"In SignURLRequest: String to Sign = [%@]", stringToSign);
+    //NSLog(@"In SignURLRequest: String to Sign = [%@]", stringToSign);
 
     NSString *signature = nil;
     if (request.credentials != nil) {

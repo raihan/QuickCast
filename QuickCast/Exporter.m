@@ -97,20 +97,35 @@
     NSString *length = [NSString stringWithFormat:@"%f",CMTimeGetSeconds(videoAsset.duration)];
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSString *quickcastPath = [prefs objectForKey:@"quickcastNewSavePath"];
+    //NSString *quickcastPath = [prefs objectForKey:@"quickcastNewSavePath"];
     
     NSString *chosenPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Movies/QuickCast"];
     
-    if(quickcastPath.length > 0){
+    if([prefs objectForKey:@"quickcastSavePathBookmark"] != nil){
         
-        finishedUrl = [NSURL fileURLWithPath:[quickcastPath stringByAppendingPathComponent:filename]];
-        chosenPath = quickcastPath;
+        NSData *bookmark = [prefs objectForKey:@"quickcastSavePathBookmark"];
+        NSError* theError;
+        NSURL* bookmarkURL = [NSURL URLByResolvingBookmarkData:bookmark
+                                                       options:NSURLBookmarkResolutionWithSecurityScope
+                                                 relativeToURL:nil
+                                           bookmarkDataIsStale:nil
+                                                         error:&theError];
+        
+        finishedUrl = [bookmarkURL URLByAppendingPathComponent:filename];//[NSURL fileURLWithPath:[quickcastPath stringByAppendingPathComponent:filename]];
+        chosenPath = bookmarkURL.path;
     }
     else{
         
         finishedUrl = [NSURL fileURLWithPath:[chosenPath stringByAppendingPathComponent:filename]];
         
     }
+    
+    //if(quickcastPath.length > 0){
+        
+        
+    //}
+    if([prefs objectForKey:@"quickcastSavePathBookmark"] != nil)
+        [finishedUrl startAccessingSecurityScopedResource];
     
     if(CMTimeGetSeconds(videoAsset.duration) < 10.0 && (width.intValue < 300 || height.intValue < 300)){
     
@@ -147,6 +162,9 @@
         }
         
     }
+    
+    if([prefs objectForKey:@"quickcastSavePathBookmark"] != nil)
+        [finishedUrl stopAccessingSecurityScopedResource];
     
     
     

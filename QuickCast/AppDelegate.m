@@ -20,7 +20,6 @@
 #import "LaunchAtLoginController.h"
 #import <Carbon/Carbon.h>
 #import <SGHotKeyCenter.h>
-#import <Sparkle/Sparkle.h>
 #import <Growl/Growl.h>
 #import <Reachability.h>
 #import "FFMPEGEngine.h"
@@ -468,7 +467,7 @@ NSString *kGlobalHotKey = @"Global Hot Key";
         
         NSLog(@"got to publsih %@", finishWindowController.width);
         // Finish Window Controller was instantiated when DecisionWindow was so is ready to go
-        [finishWindowController.window setLevel: NSNormalWindowLevel];
+        [finishWindowController.window setLevel: NSScreenSaverWindowLevel + 2];
         [finishWindowController.window makeKeyAndOrderFront:nil];
         [finishWindowController startUpload];
     }
@@ -1027,7 +1026,7 @@ NSString *kGlobalHotKey = @"Global Hot Key";
     else{
         
         //check for updates here
-        [[SUUpdater sharedUpdater] checkForUpdatesInBackground];
+        //[[SUUpdater sharedUpdater] checkForUpdatesInBackground];
         
         if(![prepareWindowController.window isVisible]){
             //ensure other windows are shut ready to record again
@@ -1068,11 +1067,22 @@ NSString *kGlobalHotKey = @"Global Hot Key";
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
-    NSString *quickcastPath = [prefs objectForKey:@"quickcastNewSavePath"];
-    
-    if(quickcastPath.length > 0){
+    //NSString *quickcastPath = [prefs objectForKey:@"quickcastNewSavePath"];
+    if([prefs objectForKey:@"quickcastSavePathBookmark"] != nil){
         
-        [[NSWorkspace sharedWorkspace] openFile: quickcastPath];
+        NSData *bookmark = [prefs objectForKey:@"quickcastSavePathBookmark"];
+        NSError* theError;
+        NSURL* bookmarkURL = [NSURL URLByResolvingBookmarkData:bookmark
+                                                       options:NSURLBookmarkResolutionWithSecurityScope
+                                                 relativeToURL:nil
+                                           bookmarkDataIsStale:nil
+                                                         error:&theError];
+        
+        
+    
+    
+        
+        [[NSWorkspace sharedWorkspace] openFile: bookmarkURL.path];
     }
     else{
         
@@ -1792,7 +1802,8 @@ NSString *kGlobalHotKey = @"Global Hot Key";
         [finishWindowController setWidth:[NSString stringWithFormat:@"%0.0f", round(movieSize.width)]];
         [finishWindowController setHeight:[NSString stringWithFormat:@"%0.0f", round(movieSize.height)]];
         
-        [decisionWindowController.window setLevel: NSNormalWindowLevel];
+        
+        [decisionWindowController.window setLevel: NSScreenSaverWindowLevel + 2];
         [decisionWindowController.window makeKeyAndOrderFront:nil];
         
         //if not reuploading

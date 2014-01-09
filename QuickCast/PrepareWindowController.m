@@ -47,14 +47,21 @@
     [_availableAudioDevices selectItemWithTitle:[Utilities defaultAudioInputName]];
     [_availableScreens selectItemWithTitle:[Utilities getMainDisplayDetails].screenName];
     
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSString *quickcastPath = [prefs objectForKey:@"quickcastNewSavePath"];
-    
     AppDelegate *app = (AppDelegate *)[NSApp delegate];
     
-    if(quickcastPath.length > 0)
-    {
-        [_pathControl setURL: [NSURL fileURLWithPath: quickcastPath ]];
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    //NSString *quickcastPath = [prefs objectForKey:@"quickcastNewSavePath"];
+    if([prefs objectForKey:@"quickcastSavePathBookmark"] != nil){
+        
+        NSData *bookmark = [prefs objectForKey:@"quickcastSavePathBookmark"];
+        NSError* theError;
+        NSURL* bookmarkURL = [NSURL URLByResolvingBookmarkData:bookmark
+                                                       options:NSURLBookmarkResolutionWithSecurityScope
+                                                 relativeToURL:nil
+                                           bookmarkDataIsStale:nil
+                                                         error:&theError];
+   
+        [_pathControl setURL: [NSURL fileURLWithPath: bookmarkURL.path ]];
     }
     else
     {
@@ -208,7 +215,16 @@
     
     NSURL *pathURL = [_pathControl URL];
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setObject:pathURL.path forKey:@"quickcastNewSavePath"];
+    
+    NSError *error;
+    NSData *bookmark = [pathURL bookmarkDataWithOptions:NSURLBookmarkCreationWithSecurityScope includingResourceValuesForKeys:nil relativeToURL:nil error:&error];
+    
+    if(!error)
+        [prefs setObject:bookmark forKey:@"quickcastSavePathBookmark"];
+    else
+        NSLog(@"error setting url is %@",error);
+    
+    //[prefs setObject:pathURL.path forKey:@"quickcastNewSavePath"];
     [prefs synchronize];
 }
 
