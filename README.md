@@ -1,6 +1,6 @@
 # quickcast.io mac app
 
-# This repository is now outdated but remains here for posterity.  Version 2 of QuickCast is in the making.
+**This repository is now outdated but remains here for posterity.  Version 2 of QuickCast is in the making.**
 _____
 
 
