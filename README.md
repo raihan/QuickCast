@@ -1,8 +1,6 @@
-# quickcast.io mac app
+# This repository is now outdated version 2 of QuickCast is in the making
 
-**This repository is now outdated but remains here for posterity.  Version 2 of QuickCast is in the making.**
-_____
-
+### quickcast.io mac app
 
 You will need http://cocoapods.org to build with the required external libraries.
 
